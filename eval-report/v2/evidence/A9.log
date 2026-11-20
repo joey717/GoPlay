@@ -1,0 +1,11 @@
+# 用例 A9（L2/机）：snippet 上限
+# 断言（用例文档 v1.4 原文）：每 Visit/Stop ≤2 条；≤40 字硬上限；截断不回写存储
+# 实现状态：已实现｜backlog：-｜复用：新建内联（parsePlannerOutput 生产解析链）＋ shared/src/verify-dedupe.ts（每实体 ≤2 条挂载上限）
+# 时间：2026-11-03T15:54:40.320Z
+
+A9 assert: 输入 5 条 → 输出 2 条（期望 2：超长截断保留 + 3 引用保留；引用超限/非法引用/非法 targetRef 三条丢弃）
+A9 assert: [..."西岛拍照路线从码头出发走…"].length = 40 ≤ 40（GUIDE_SNIPPET_MAX_CHARS 硬上限，截断不回写存储）
+A9 assert: sourceMentionRefs.length = 3 ≤ 3（GUIDE_SNIPPET_MAX_MENTION_REFS；>3 整条丢弃已验证）
+A9 note: 每实体 ≤2 条上限由挂载层 appendGuideSnippet 保证，复用 shared/src/verify-dedupe.ts 覆盖
+
+result: pass（0ms）

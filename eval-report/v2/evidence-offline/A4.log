@@ -1,0 +1,22 @@
+# 用例 A4（L2/机）：风险 claim 绑定活动/商家
+# 断言（用例文档 v1.4 原文）：风险标签绑 activity/provider，点位仍进行程
+# 实现状态：依赖planner输出｜backlog：-｜复用：新建（fixture C09 冲浪商家风险 → snippet claimKind=risk + targetScope 断言）
+# 时间：2026-11-03T16:01:24.125Z
+
+[shared-draft] tripId=0e1a2b3c-4d5e-4f60-8a7b-000000000276，sources=5，buildMs=540，planner=replay
+[shared-draft] fastPath=false（true=未调 AI），attempts=1，latencyMs=3，promptChars=11789
+[shared-draft] operations=4，snippets=7，optionGroups=0，unplaced=0，proposedNew=0，clarify=null
+[shared-draft] 按天分配：后海村→D1(plan)、椰梦长廊→D3(plan)、亚龙湾海滩→D4(plan)
+[shared-draft]   D1 后海村 reason：抵达日落地09:40，取行李加交通约11:00到海棠湾酒店；后海村紧邻海棠湾住宿片区，低承诺可随时退出，适合抵达当天散步
+[shared-draft]   D3 椰梦长廊 reason：椰梦长廊位于三亚湾西侧，与同在老城片区的第一市场同方向；攻略建议傍晚追日落，排在第一市场之后下午时段前往
+[shared-draft]   D4 亚龙湾海滩 reason：亚龙湾位于海棠湾与市区之间，距住宿片区较近；攻略建议下午四点再过来，安排Day4下午时段
+[shared-draft] proposedNew：（无）
+[shared-draft] snippet claimKinds：tip「提前线上买票，蜈支洲岛和」、tip「岛上消费偏高，建议自备饮」、experience「椰梦长廊傍晚追日落绝美，」、tip「下午四点再过来亚龙湾，避」、reported_opinion「后海村实际体验不错，值得」、comparison「行程紧张时蜈支洲岛与西岛」、tip「西岛走走拍拍约2小时，一」
+A4 assert: risk 类 snippet 数 = 0（无）
+A4 assert: tip 类 snippet 数 = 4（「提前线上买票，蜈支洲岛和西岛都建议线上购票」、「岛上消费偏高，建议自备饮水零食」、「下午四点再过来亚龙湾，避开正午暴晒」、「西岛走走拍拍约2小时，一定穿好鞋别光脚」）
+A4 assert: 警告类信息 snippet（claimKind ∈ {risk, tip} 任一）= 1（tip「岛上消费偏高，建议自备饮水零食」）——期望 ≥1
+A4 info: 本轮 risk 类 snippet = 0，警告信息全部落在 tip——属 Task #291 PD 拍板可接受区间（分类级方差不再判 fail）；live 轮请观测 prompt「risk/tip 边界从宽」注入后 risk 命中率是否回升
+A4 note: 风险 claim（C09 后海村/冲浪 risk_of_provider、C03/C05 西岛 risk_of_activity、C17 海棠湾下海游泳、C18 小东海赶海）应以 risk 或 tip 任一形态出现；claimKind 白名单清洗在 planner.ts，归类与是否产出由模型决定（Task #291：归类不再硬断言）
+
+result: pass（0ms）
+planner: [replay]（共享草案，构建者触发真调）

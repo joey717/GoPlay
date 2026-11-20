@@ -1,0 +1,24 @@
+node_modules/
+dist/
+*.tmp.json
+.env
+server/data/*.json
+!server/data/.gitkeep
+# Task #374：迁移/修复任务的就地备份行程（.bak-task*，可再生且不入库，仅本机保留）
+server/data/*.bak-*
+# Task #65：攻略截图原图（随行程删除，不入库）
+server/uploads/
+# Task #275：评测证据截图/压缩包不入库（report.md / perf.md / *.log / *.md 证据保留进 git）
+# Task #385：png 规则补子目录漏洞（evidence/**，防 Q7-annotation/ 类嵌套目录再漏）
+eval-report/**/evidence/**/*.png
+eval-report/**/evidence/*.zip
+# Task #295：归档式清理的测试残留行程（只移动不删除，可恢复）
+server/data-archive/
+# planner 录制缓存与抽取缓存（可再生，且含模型原始响应，不入库）
+eval/cache/
+# Task #335：服务端 FlyAI 搜索缓存（24h TTL、可再生，不入库；与 eval/cache/ 评测缓存物理隔离）
+# 只忽略缓存 json，保留 server/cache/flyai/.gitkeep 占位目录
+server/cache/**/*.json
+# Task #385：Qoder 后台索引产物（本地工具缓存，含内网字样、对参赛无用，不入库）
+.qoder/
+.DS_Store

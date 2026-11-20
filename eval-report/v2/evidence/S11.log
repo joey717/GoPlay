@@ -1,0 +1,12 @@
+# 用例 S11（L3/机）：锚点变更同操作重算
+# 断言（用例文档 v1.4 原文）：改航班/改锁酒店后 role 与来源标签在同一操作内同步重算，无 stale 标签
+# 实现状态：已实现｜backlog：-｜复用：新建内联断言（改航班约束 + 改锁酒店 → recomputeDerivedFields → role 与 timeSourceLabel 同步更新验证）
+# 时间：2026-10-29T05:49:30.285Z
+
+S11 assert: 初始状态 Day1=arrival+航班标签, Day5=departure+倒推标签
+S11 assert: 改航班后 Day1 role=full_play, label=null（无 stale）
+S11 assert: 改航班后 Day3 role=arrival, label='按你的到达航班 14:30 算'（同步重算）
+S11 assert: 改锁酒店后 Day2 role=transit（换区日），label 仍为 null（无航班锚点）
+S11 pass: role 与 timeSourceLabel 在同一 recomputeDerivedFields 调用内同步重算，无 stale
+
+result: pass（1ms）

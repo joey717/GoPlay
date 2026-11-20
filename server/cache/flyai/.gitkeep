@@ -1,0 +1,2 @@
+# Task #335：服务端 FlyAI 搜索缓存落盘目录（24h TTL、可再生、不入库）。
+# 与 eval/cache/flyai/（评测录制/回放缓存）物理隔离，语义见 server/src/flyai/searchCache.ts。

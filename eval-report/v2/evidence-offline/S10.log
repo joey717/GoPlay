@@ -1,0 +1,18 @@
+# 用例 S10（L3/机）：Day 角色字段
+# 断言（用例文档 v1.4 原文）：每天有 day 角色字段且与航班/酒店锚点一致（role 由 deriveDayRoles 纯函数派生：返程＞抵达＞换区＞完整游玩；锚点变更同操作重算落盘，读时迁移存量）
+# 实现状态：已实现｜backlog：-｜复用：新建内联断言（deriveDayRoles 纯函数 + buildFixtureSanyaTrip 夹具验证）＋ shared/src/verify-dayRoles.ts 全矩阵
+# 时间：2026-11-03T16:01:26.072Z
+
+S10 assert: 夹具行程天数 = 5
+S10 assert: constraints = flight_arrive@day1, flight_depart@day5
+S10 assert: day_1.role = "arrival"
+S10 assert: day_2.role = "full_play"
+S10 assert: day_3.role = "full_play"
+S10 assert: day_4.role = "full_play"
+S10 assert: day_5.role = "departure"
+S10 pass: Day1=arrival（flight_arrive MU5831）、Day5=departure（flight_depart MU5832）
+S10 pass: Day2/3/4=full_play（lodging locked=false → 非锚点，不推导换区）
+S10 pass: 优先级冲突 departure > arrival 验证通过
+S10 pass: recomputeDerivedFields 幂等验证通过
+
+result: pass（0ms）

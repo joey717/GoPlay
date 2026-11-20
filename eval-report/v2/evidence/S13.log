@@ -1,0 +1,12 @@
+# 用例 S13（L3/机）：名称溯源
+# 断言（用例文档 v1.4 原文）：每个 item.name ∈ {攻略原文串, FlyAI canonical name, A13 归一化别名表}；不满足则 item.provenance 必须为 ai_supplement（走 C4 路径），禁止悄悄以攻略点位名义落地
+# 实现状态：依赖planner输出｜backlog：-｜复用：新建内联（共享草案 itemRegistry+proposedNew 名称合法性 ＋ poiAlias resolvePoiAlias 别名折叠 ＋ C4 itemProvenance/validateAiSupplementProvenance 回退断言）
+# 时间：2026-11-03T15:54:41.951Z
+
+S13 检查面: itemRegistry=13 条 ＋ draft.proposedNew=0 条；用户既有行程种子=6 名（豁免溯源，provenance=guide 正确）
+S13 assert(护栏): validateAiSupplementProvenance → 违规=0（期望 0；ai_supplement 恒引用真实飞猪 POI）
+S13 assert: 不可溯源名=0；其中未走 ai_supplement 回退=0（期望 0——禁止悄悄以攻略点位名义落地，C4 已落地故硬断言）
+S13 note: C4/Task #283 已落地 Item.provenance —— 名称合法性＋A13 别名折叠＋provenance=ai_supplement 回退三段全量硬断言（#285 的 blocked 回退分支本轮转绿）；ai_supplement 护栏兜底核验通过
+
+result: pass（1ms）
+planner: [live]（共享草案，构建者触发真调）

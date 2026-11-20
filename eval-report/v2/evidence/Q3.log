@@ -1,0 +1,20 @@
+# 用例 Q3（L5/机）：0 snippet 卡无原文入口
+# 断言（用例文档 v1.4 原文）：0 snippet 卡无原文入口、无「攻略未明确」
+# 实现状态：已实现｜backlog：-｜复用：web vitest：VisitCard.test.tsx（snippets.length===0 分支整体隐藏引用块）；「攻略未明确」全仓无命中
+# 时间：2026-11-03T15:54:48.263Z
+
+$ (cwd=web) npx vitest run src/components/VisitCard.test.tsx src/components/EvidenceSheet.test.tsx  [memoized：复用首次执行结果]
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/Users/zhengying/goplay/web[39m
+
+ [32m✓[39m src/components/EvidenceSheet.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[32m 114[2mms[22m[39m
+ [32m✓[39m src/components/VisitCard.test.tsx [2m([22m[2m78 tests[22m[2m)[22m[33m 449[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m91 passed[39m[22m[90m (91)[39m
+[2m   Start at [22m 23:54:46
+[2m   Duration [22m 1.52s[2m (environment 46%, tests 36%, import 7%, setup 6%, transform 4%)[22m
+exit=0
+
+result: pass（0ms）
+screenshot: evidence/Q3.png（eval:ui playwright 产出）

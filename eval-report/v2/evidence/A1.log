@@ -1,0 +1,73 @@
+# 用例 A1（L2/机）：双源 firsthand 强推进行程
+# 断言（用例文档 v1.4 原文）：≥2 篇独立 firsthand 强推某实体 → 该实体进入行程（非候选池）
+# 实现状态：依赖planner输出｜backlog：-｜复用：新建（generateGuideDraft + planner 回放缓存后断言 operations 含 plan/assign）
+# 时间：2026-11-03T15:53:42.224Z
+
+[EVAL-FIXTURE] extractEntries 已替换为 fixture：来源=S1，条目=2（西岛、椰梦长廊）
+[AI] 抽取点位「西岛」对齐飞猪 POI「西岛」（id=2611）
+[AI] 抽取点位「椰梦长廊」对齐飞猪 POI「椰梦长廊」（id=163575）
+[AI] GUIDES 装配搜索（Task #313）：对齐请求 2 次 → 唯一查询 2 条（去重命中 0；scheduler=pool，concurrency=6）
+[GUIDES] 正文证据写盘：ev_note_2（mentions 2）
+[GUIDES] 文字来源分段耗时（Task #313）：抽取 0ms ＋ 装配写盘 2ms（entries=2，committed=true）
+[GUIDES] 来源结算：src_d5af63fa → ready（正文）
+[EVAL-FIXTURE] extractEntries 已替换为 fixture：来源=S2，条目=10（西岛、椰梦长廊、冲浪、亚龙湾海滩、入口、太阳湾公路、蜈支洲岛、下海游泳、赶海、景区预约）
+[AI] 抽取点位「亚龙湾海滩」对齐飞猪 POI「亚龙湾海滩」（id=2757）
+[AI] 抽取点位「太阳湾公路」搜索未命中飞猪 POI，降级 custom
+[AI] GUIDES 打卡点过滤：跳过泛化/疑似编造自定义点位「太阳湾公路」（Task #196）
+[AI] 抽取点位「冲浪」搜索未命中飞猪 POI，降级 custom
+[AI] 抽取点位「入口」搜索未命中飞猪 POI，降级 custom
+[AI] 抽取点位「下海游泳」搜索未命中飞猪 POI，降级 custom
+[AI] 抽取点位「赶海」搜索未命中飞猪 POI，降级 custom
+[AI] 抽取点位「景区预约」搜索未命中飞猪 POI，降级 custom
+[AI] GUIDES 打卡点过滤：跳过泛化/疑似编造自定义点位「冲浪」（Task #196）
+[AI] GUIDES 打卡点过滤：跳过泛化/疑似编造自定义点位「入口」（Task #196）
+[AI] 抽取点位「海棠湾」对齐飞猪 POI「海棠湾」（id=345067）
+[AI] GUIDES 所属景区「海棠湾」未显式提取，自动补建大景区壳
+[AI] GUIDES 打卡点过滤：跳过泛化/疑似编造自定义点位「赶海」（Task #196）
+[AI] GUIDES 打卡点过滤：跳过泛化/疑似编造自定义点位「景区预约」（Task #196）
+[AI] GUIDES 装配搜索（Task #313）：对齐请求 8 次 → 唯一查询 8 条（去重命中 0；scheduler=pool，concurrency=6）
+[GUIDES] 正文证据写盘：ev_note_3（mentions 5）
+[GUIDES] 文字来源分段耗时（Task #313）：抽取 0ms ＋ 装配写盘 6ms（entries=10，committed=true）
+[GUIDES] 来源结算：src_d9fbc6e5 → ready（正文）
+[EVAL-FIXTURE] extractEntries 已替换为 fixture：来源=S3，条目=2（西岛、牛王岭、海上书屋、珊瑚石墙）
+[AI] 抽取点位「牛王岭、海上书屋、珊瑚石墙」对齐飞猪 POI「牛王岭」（id=347890）
+[AI] GUIDES 装配搜索（Task #313）：对齐请求 1 次 → 唯一查询 1 条（去重命中 0；scheduler=pool，concurrency=6）
+[GUIDES] 正文证据写盘：ev_note_4（mentions 2）
+[GUIDES] 文字来源分段耗时（Task #313）：抽取 0ms ＋ 装配写盘 3ms（entries=2，committed=true）
+[GUIDES] 来源结算：src_30609215 → ready（正文）
+[EVAL-FIXTURE] extractEntries 已替换为 fixture：来源=S4，条目=2（西岛、木门与歪脖子椰子树）
+[AI] 抽取点位「木门与歪脖子椰子树」搜索未命中飞猪 POI，降级 custom
+[AI] GUIDES 打卡点过滤：跳过泛化/疑似编造自定义点位「木门与歪脖子椰子树」（Task #196）
+[AI] GUIDES 装配搜索（Task #313）：对齐请求 1 次 → 唯一查询 1 条（去重命中 0；scheduler=pool，concurrency=6）
+[GUIDES] 正文证据写盘：ev_note_5（mentions 1）
+[GUIDES] 文字来源分段耗时（Task #313）：抽取 0ms ＋ 装配写盘 4ms（entries=2，committed=true）
+[GUIDES] 来源结算：src_a55760f3 → ready（正文）
+[EVAL-FIXTURE] extractEntries 已替换为 fixture：来源=S5，条目=3（住宿、后海村、三和风味馆）
+[AI] 抽取点位「后海村」对齐飞猪 POI「后海村」（id=14937676）
+[AI] 抽取点位「三和风味馆」搜索未命中飞猪 POI，降级 custom
+[AI] GUIDES 打卡点过滤：跳过泛化/疑似编造自定义点位「三和风味馆」（Task #196）
+[AI] 抽取点位「住宿」搜索未命中飞猪 POI，降级 custom
+[AI] GUIDES 打卡点过滤：跳过泛化/疑似编造自定义点位「住宿」（Task #196）
+[AI] GUIDES 装配搜索（Task #313）：对齐请求 3 次 → 唯一查询 3 条（去重命中 0；scheduler=pool，concurrency=6）
+[GUIDES] 正文证据写盘：ev_note_6（mentions 1）
+[GUIDES] 文字来源分段耗时（Task #313）：抽取 0ms ＋ 装配写盘 4ms（entries=3，committed=true）
+[GUIDES] 来源结算：src_00e7102b → ready（正文）
+[SCENARIO] 跳过源 S6（亚龙湾热带天堂森林公园）：claims 数组无对应条目，非共享草案素材（S1–S5）；E9 语料源走 extraction cache
+[GUIDES] snippet-only 快速路径未命中，回落 AI：缺少补充句
+[EVAL-PLANNER] live 真调并录制：key=65c215a37dea…（57550ms）
+[GUIDES] 攻略草案生成完成：4 条操作 / 7 条提示 / 0 组实用参考（57553ms，尝试 1 次，prompt 11789 字符）
+[SCENARIO] 共享草案就绪：sources=5，fastPath=false，attempts=1，operations=4，snippets=7，optionGroups=0，placeCount=7，mentionCount=11，planner=live
+[shared-draft] tripId=0e1a2b3c-4d5e-4f60-8a7b-000000000276，sources=5，buildMs=58093，planner=live
+[shared-draft] fastPath=false（true=未调 AI），attempts=1，latencyMs=57553，promptChars=11789
+[shared-draft] operations=4，snippets=7，optionGroups=0，unplaced=0，proposedNew=0，clarify=null
+[shared-draft] 按天分配：后海村→D1(plan)、椰梦长廊→D3(plan)、亚龙湾海滩→D4(plan)
+[shared-draft]   D1 后海村 reason：抵达日落地09:40，取行李加交通约11:00到海棠湾酒店；后海村紧邻海棠湾住宿片区，低承诺可随时退出，适合抵达当天散步
+[shared-draft]   D3 椰梦长廊 reason：椰梦长廊位于三亚湾西侧，与同在老城片区的第一市场同方向；攻略建议傍晚追日落，排在第一市场之后下午时段前往
+[shared-draft]   D4 亚龙湾海滩 reason：亚龙湾位于海棠湾与市区之间，距住宿片区较近；攻略建议下午四点再过来，安排Day4下午时段
+[shared-draft] proposedNew：（无）
+[shared-draft] snippet claimKinds：tip「提前线上买票，蜈支洲岛和」、tip「岛上消费偏高，建议自备饮」、experience「椰梦长廊傍晚追日落绝美，」、tip「下午四点再过来亚龙湾，避」、reported_opinion「后海村实际体验不错，值得」、comparison「行程紧张时蜈支洲岛与西岛」、tip「西岛走走拍拍约2小时，一」
+A1 assert: 强推多源实体命中 = [后海村]（候选集 西岛/后海村；草案实体池 3 个）
+A1 note: 投票规则在 planner prompt 层，代码无独立投票器；本断言验证「多源 firsthand 强推实体确实被草案surface（proposedNew/按天分配），未被静默丢弃」
+
+result: pass（58094ms）
+planner: [live]

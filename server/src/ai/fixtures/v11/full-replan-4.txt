@@ -1,0 +1,1 @@
+{"baseVersion":1,"operations":[{"op":"setDuration","subjectRef":{"kind":"stop","id":"stop_beach"},"minutes":75,"reason":"海滨浴场缩短到 75 分钟，把午后时

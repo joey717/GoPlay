@@ -1,0 +1,13 @@
+# 用例 S12（L3/机）：点位齐全（C6 机器版）
+# 断言（用例文档 v1.4 原文）：攻略中 firsthand 强推且未被 A3/A5/A11 排除的实体，100% 出现在 items；缺一条即 fail 并输出缺失清单（含实体名＋源 URL＋原文位置）；本条为 C6 的机器版，与 C6 人审并存不冲突
+# 实现状态：依赖planner输出｜backlog：-｜复用：新建内联（共享草案 5 源 fixture 全量生成 ＋ fixture claims stance 词表圈定 firsthand 强推）
+# 时间：2026-11-03T16:01:26.072Z
+
+S12 口径: fixture claims stance ∈ {positive_experience, positive} ＝ firsthand 强推（v1 拍板词表，A1 同源）；A3/A5/A11 排除项不在该词表内自然豁免
+S12 餐饮建议豁免(非独立点位，单列供 PD 复核): 实体「三和风味馆」(C12) locator=「美食推荐第一项」——golden 归为已排点位内餐饮建议（C12 summary「可作为已排后海村内餐饮建议」），且无飞猪 POI 被 Task #196 反编造过滤确定性剔除，故不计入「点位齐全」硬断言
+S12 期望实体: 西岛(C04)、椰梦长廊(C07)、后海村(C11)
+S12 实体池: itemRegistry=13（蜈支洲岛、情人桥、蜈支洲岛海滨浴场、蜈支洲岛旅游风景区-观日岩、第一市场、大小洞天、西岛、椰梦长廊、亚龙湾海滩、下海游泳、海棠湾、牛王岭、海上书屋、珊瑚石墙、后海村）＋draft 面=1
+S12 assert: 缺失=0（期望 0；缺一条即 fail 并输出缺失清单——实体名＋源URL＋原文位置，v1.4 断言原文）
+
+result: pass（1ms）
+planner: [replay]（共享草案，构建者触发真调）

@@ -1,0 +1,20 @@
+# 用例 C3（L4/机）：澄清次数与回答持久化
+# 断言（用例文档 v1.4 原文）：同次 draft 请求 → 澄清 ≤1 次；回答持久化（按 trip+来源集合）
+# 实现状态：已实现｜backlog：参赛必须｜复用：内联 runC3（真实 generateGuideDraft 澄清短路 attempts=0 证「≤1 次」＋ tripStore.save/load round-trip 证 Trip 级字段持久化 + 读时迁移兼容 + 哈希门控失效）
+# 时间：2026-10-29T09:49:46.908Z
+
+[EVAL-FIXTURE] extractEntries 已替换为 fixture：来源=S1，条目=2（西岛、椰梦长廊）
+[AI] 抽取点位「西岛」对齐飞猪 POI「西岛」（id=2611）
+[AI] 抽取点位「椰梦长廊」对齐飞猪 POI「椰梦长廊」（id=163575）
+[GUIDES] 正文证据写盘：ev_note_2（mentions 2）
+[GUIDES] 来源结算：src_3d32a2a5 → ready（正文）
+setup: S1 稀疏源「第一次去三亚旅游，直接复制这条精华路线」→ ready（claims=2）
+[GUIDES] 稀疏攻略澄清：素材可支撑 1/5 天（已排 0 天＋未排素材点位 2 个），触发澄清（C1）
+C3 assert①: 同次 draft 请求恰好一次澄清（attempts=0、options=2）；澄清阶段 clarificationAnswer=null
+C3 assert②: 来源集合哈希 sourceHash=f704a349114de62a（trip+来源集合 持久化键）
+C3 assert③: 回答持久化 round-trip——clarificationAnswer=guide_only, clarificationSourceHash=f704a349114de62a
+C3 assert④: 读时迁移兼容——存量行程 clarificationAnswer=null（缺字段按未回答读，零迁移）
+C3 assert⑤: 哈希门控——匹配复用(true)、来源变化失效(false)；澄清按 trip+来源集合 ≤1 次
+C3 pass: 同次 draft 请求澄清 ≤1 次（attempts=0 短路）+ 回答按 trip+来源集合持久化（round-trip / 读时迁移兼容 / 哈希门控失效）
+
+result: pass（117ms）

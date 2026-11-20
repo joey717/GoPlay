@@ -1,0 +1,9416 @@
+/* ============================================================
+   GoPlay · 去玩 —— M1 全局样式
+   配色与组件样式对齐 handover/GoPlay_DEMO_v1.0.html（v1.0 交接视觉定版）
+   ============================================================ */
+
+:root {
+  --bg: #EDE8E1;
+  --bg2: #E4DED5;
+  --card: #FBF9F6;
+  --card2: #F4F0EA;
+  --ink: #33302C;
+  --ink2: #6B645C;
+  --ink3: #9A928A;
+  --line: #E0D9CF;
+  --line2: #D2C9BD;
+  --clay: #B9836A;
+  --clay-deep: #8B5C45;
+  --clay-line: #DFC6B6;
+  --clay-soft: #EADCD2;
+  --sage: #8A9A8B;
+  --sage-deep: #5D6F5E;
+  --sage-soft: #E3E9E2;
+  --slate: #7C8899;
+  --slate-deep: #5B6878;
+  --slate-soft: #E2E6EB;
+  --warn: #A8552F;
+  --warn-soft: #F1E0D6;
+  --cta: #FF6A00;
+  --lock: #007AFF;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100%;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+img {
+  display: block;
+}
+
+/* ---------- 应用壳：移动端优先，桌面居中呈手机比例 ---------- */
+.app {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  /* Task #106：--app-height 由 visualViewport 监听写入（App.tsx）。
+     手机键盘弹出时 vh/dvh 不变（布局视口不变），Sheet 贴底的「保存攻略」等
+     主行动会被键盘遮住；改绑视觉视口高度后 .app 随键盘缩小、Sheet 上移露出按钮。
+     不支持/未注入时回退 100dvh。 */
+  height: 100dvh;
+  height: var(--app-height, 100dvh);
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+@media (min-width: 560px) {
+  .app {
+    max-width: 420px;
+    height: calc(var(--app-height, 100dvh) - 56px);
+    min-height: 620px;
+    margin: 28px auto;
+    border-radius: 40px;
+    box-shadow: 0 0 0 10px #201E1B, 0 30px 70px -24px rgba(60, 48, 36, 0.5);
+  }
+}
+
+.boot {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--ink2);
+  font-size: 13px;
+  text-align: center;
+  padding: 0 24px;
+  line-height: 1.7;
+}
+
+.boot-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--ink);
+  color: #F6F2EC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.boot button {
+  margin-top: 6px;
+  font-size: 12px;
+  border: 1px solid var(--line2);
+  background: var(--card);
+  border-radius: 9px;
+  padding: 7px 14px;
+  color: var(--ink);
+}
+
+.boot button:hover {
+  border-color: var(--clay);
+  color: var(--clay-deep);
+}
+
+/* Task #158 启动临时断连状态：保留行程，只给一条重试出口 */
+.boot-error {
+  gap: 10px;
+}
+
+.boot-error .boot-mark {
+  background: var(--clay-deep);
+}
+
+.boot-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.boot-note {
+  max-width: 320px;
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--ink2);
+}
+
+.saving-flag {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  z-index: 6;
+  font-size: 10px;
+  color: var(--ink3);
+  background: rgba(251, 249, 246, 0.92);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 9px;
+  animation: fade-in 0.2s ease;
+}
+
+/* ---------- 头部 ---------- */
+.apphead {
+  flex: 0 0 auto;
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.apphead .row1 {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.apphead .name {
+  font-size: 16.5px;
+  font-weight: 650;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.apphead .ver {
+  font-size: 11px;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+
+.apphead .row2 {
+  margin-top: 7px;
+  font-size: 12px;
+  color: var(--ink2);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pill {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  color: var(--ink2);
+  white-space: nowrap;
+}
+
+.pill.pool {
+  cursor: pointer;
+}
+
+.pill.pool b {
+  color: var(--clay);
+  font-weight: 650;
+}
+
+.pill.pool:hover {
+  border-color: var(--clay);
+  color: var(--clay-deep);
+}
+
+.pill.lock {
+  background: var(--clay-soft);
+  border-color: var(--clay-line);
+  color: var(--clay-deep);
+}
+
+/* 新建行程（Task #66）：次要按钮风格，与统计标签同行靠右；删除中禁用 */
+.apphead .row2 .pill.new-trip {
+  margin-left: auto;
+  cursor: pointer;
+  background: transparent;
+}
+
+.apphead .row2 .pill.new-trip:hover:not(:disabled) {
+  border-color: var(--clay);
+  color: var(--clay-deep);
+}
+
+.apphead .row2 .pill.new-trip:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* 新建行程删除失败提示（自动消失，不阻断交互） */
+.apphead .new-trip-error {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--warn);
+}
+
+/* ---------- Day 切换条 ---------- */
+.daystrip-wrap {
+  flex: 0 0 auto;
+  display: flex;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--card);
+}
+
+.daystrip {
+  flex: 1 1 auto;
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.daystrip::-webkit-scrollbar {
+  display: none;
+}
+
+.dchip {
+  flex: 0 0 auto;
+  min-width: 60px;
+  padding: 7px 9px 8px;
+  border-radius: 13px;
+  border: 1px solid var(--line);
+  background: var(--card2);
+  text-align: center;
+  transition: background 0.16s, border-color 0.16s, box-shadow 0.16s;
+  animation: chip-in 0.32s ease both;
+}
+
+.dchip:nth-child(1) { animation-delay: 0.02s; }
+.dchip:nth-child(2) { animation-delay: 0.06s; }
+.dchip:nth-child(3) { animation-delay: 0.1s; }
+.dchip:nth-child(4) { animation-delay: 0.14s; }
+.dchip:nth-child(5) { animation-delay: 0.18s; }
+
+.dchip .d {
+  display: block;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--ink2);
+}
+
+.dchip .w {
+  display: block;
+  font-size: 10px;
+  color: var(--ink3);
+  margin-top: 2px;
+}
+
+.dchip .flag {
+  display: block;
+  font-size: 9.5px;
+  margin-top: 4px;
+  color: var(--clay);
+}
+
+.dchip.on {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.dchip.on .d {
+  color: #F7F3ED;
+}
+
+.dchip.on .w {
+  color: #B9B2A8;
+}
+
+.dchip.on .flag {
+  color: #D9B79F;
+}
+
+/* ---------- 当日内容区 ---------- */
+.screen {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 14px 16px 18px;
+  scrollbar-width: none;
+}
+
+.screen::-webkit-scrollbar {
+  width: 0;
+}
+
+.daycontent {
+  animation: fade-in 0.22s ease;
+}
+
+.dayhead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.dayhead .t {
+  font-size: 14.5px;
+  font-weight: 650;
+}
+
+.dayhead .s {
+  font-size: 11.5px;
+  color: var(--ink3);
+  margin-top: 3px;
+}
+
+.constraint {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: var(--clay-soft);
+  border: 1px solid var(--clay-line);
+  border-radius: 12px;
+  padding: 8px 11px;
+  margin: 8px 0 10px;
+  font-size: 11.5px;
+  color: #7E5540;
+}
+
+.constraint .lk {
+  font-size: 12px;
+}
+
+.depart {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card2);
+  border: 1px dashed var(--line2);
+  border-radius: 12px;
+  padding: 9px 12px;
+  margin-bottom: 11px;
+}
+
+.depart .lb {
+  font-size: 11.5px;
+  color: var(--ink2);
+}
+
+.depart .val {
+  font-size: 13.5px;
+  font-weight: 650;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.depart .val .ed {
+  font-size: 10px;
+  color: var(--ink3);
+  font-weight: 400;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1px 5px;
+}
+
+.depart .val.override {
+  color: var(--clay);
+}
+
+.depart-input {
+  border: 1px solid var(--clay-line);
+  background: #fff;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--clay-deep);
+  outline: none;
+  color-scheme: light;
+}
+
+/* ---------- F8 路线顺序条 ---------- */
+.mapcard {
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: linear-gradient(150deg, #F6F3EE, #EFEAE2);
+  overflow: hidden;
+  margin-bottom: 11px;
+  padding: 8px 10px 9px;
+}
+
+.mapcard .mh {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10.5px;
+  color: var(--ink2);
+  margin-bottom: 7px;
+}
+
+.mapcard .mh b {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 11.5px;
+}
+
+.routebar {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  /* Task #108：总览承载住宿 + 景点 + 岛内玩法，节点多时横向滚动而不是压扁 */
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.routebar::-webkit-scrollbar {
+  display: none;
+}
+
+.routepoint {
+  /* 等宽分配：少量节点平分整行，多量节点保持最小可读宽度并触发滚动 */
+  flex: 1 0 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.routepoint:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: calc(50% + 10px);
+  right: calc(-50% + 10px);
+  top: 9px;
+  border-top: 1.5px dashed var(--clay);
+  opacity: 0.75;
+}
+
+.routepoint .dot {
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border: 1.5px solid var(--clay);
+  color: var(--clay-deep);
+  font-size: 9px;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.routepoint .rname {
+  width: 100%;
+  margin-top: 4px;
+  font-size: 8.5px;
+  color: var(--ink2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+/* 节点类型轻量区分（编号圆点样式不变）：住宿描边加深、岛内玩法虚线、机场灰色 */
+.routepoint.hotel .dot {
+  border-color: var(--clay-deep);
+}
+
+.routepoint.stop .dot {
+  border-style: dashed;
+  color: var(--ink2);
+}
+
+.routepoint.stop .rname {
+  color: var(--ink3);
+}
+
+.routepoint.transit .dot {
+  border-color: var(--ink3);
+  color: var(--ink2);
+}
+
+.mapnote {
+  font-size: 8px;
+  color: var(--ink3);
+  margin-top: 6px;
+  text-align: right;
+}
+
+/* ---------- POI 卡片 ---------- */
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.transport {
+  height: 13px;
+  flex: 0 0 13px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-left: 30px;
+  font-size: 9.5px;
+  color: var(--ink3);
+}
+
+.transport .ln {
+  flex: 0 0 18px;
+  height: 1px;
+  background: var(--line2);
+}
+
+.item {
+  min-height: 112px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  position: relative;
+  transition: box-shadow 0.16s, border-color 0.16s;
+  animation: item-in 0.28s ease both;
+}
+
+.row:nth-child(2) .item { animation-delay: 0.03s; }
+.row:nth-child(3) .item { animation-delay: 0.06s; }
+.row:nth-child(4) .item { animation-delay: 0.09s; }
+.row:nth-child(5) .item { animation-delay: 0.12s; }
+
+/* ---------- 任务 220：普通景点卡两行栅格 ----------
+   Task #346：把手列移除后上行为「缩略图 · 正文」（内容全宽、视觉居中），
+   下行动作区（.card-actions）整行贴卡片底部、右对齐到同一个内缩位，
+   使景点卡/父卡/酒店卡的橙主按钮右缘落在同一条垂线上。
+   父卡 .parent-item 仍是 flex 容器，不受影响。
+   Task #347：thumb 列 120→132 = 图片窗 120 + 左内缩 12（PD：照片贴边似溢出）；
+   12px 与父卡 banner inset 同家族（#341 口径），上下 8px 与 .ibody padding 同值。 */
+.item:not(.parent-item) {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  grid-template-areas:
+    "thumb body"
+    "acts acts";
+}
+
+/* Task #346：批量选择态（入口隐藏、状态机保留）临时恢复左勾选列承载 pick 竖条；
+   Task #347：thumb 列同步 132（12 内缩 + 120 窗） */
+.item:not(.parent-item).selecting {
+  grid-template-columns: 24px 132px minmax(0, 1fr);
+  grid-template-areas:
+    "pick thumb body"
+    "pick acts acts";
+}
+
+.item:not(.parent-item) > .pick {
+  grid-area: pick;
+  width: auto;
+  flex: initial;
+}
+
+.item:not(.parent-item) > .thumb { grid-area: thumb; }
+.item:not(.parent-item) > .ibody { grid-area: body; }
+.item:not(.parent-item) > .card-actions { grid-area: acts; }
+
+/* ---------- Task #346：整卡拖拽面（PD 去把手列、保留拖拽） ----------
+   卡片表面即拖拽发起面（listeners 经 lib/dragSurface 守卫，排除交互元素）；
+   cursor 是仅存的视觉拖拽 affordance（浅灰 ≡ 已移除）；
+   文本选择/长按呼出让位给拖拽手势（同 Trello / Notion 整卡拖拽取舍） */
+.item,
+.hotelcard {
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* 卡内交互元素保留自身 pointer 语义（带 :disabled 等伪类的规则特异性更高，不受影响） */
+.item :is(button, a),
+.hotelcard :is(button, a) {
+  cursor: pointer;
+}
+
+/* 视觉隐藏但可聚焦的键盘拖拽把手：承载 dnd-kit attributes + KeyboardSensor；
+   1px clip 隐藏不影响聚焦与读屏，聚焦时整卡描边保证可见性 */
+.drag-kbd {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.row,
+.hotelcard-wrap {
+  position: relative;
+}
+
+.row:has(.drag-kbd:focus-visible) > .item,
+.hotelcard-wrap:has(.drag-kbd:focus-visible) > .hotelcard {
+  outline: 2px solid var(--clay);
+  outline-offset: 2px;
+}
+
+/* 拖拽中的卡片：抬升投影 + 高亮边框（透明度/层级由内联 style 控制）+ grabbing cursor */
+.row[data-dragging="true"] .item,
+.hotelcard-wrap[data-dragging="true"] .hotelcard {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-color: var(--clay);
+  cursor: grabbing;
+}
+
+/* 普通景点主图列：Task #347 列宽 132 = 左内缩 12 + 图片窗 120（border-box）；
+   内缩前照片/占位填满 120 列贴卡边（PD 视为溢出），现外缘与父卡 banner 同垂线；
+   flex + 顶对齐（Task #364：#347 列内居中废弃——长卡 120 方窗居中致标题悬空，
+   演进为图与标题同顶；短卡图列仍为最高列时观感不变）；
+   Task #341：米色左列背景去除→白底，图片窗口靠自身 10px 圆角成形（内嵌语言） */
+.thumb {
+  width: 132px;
+  flex: 0 0 132px;
+  padding: 8px 0 8px 12px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* 图片窗口：Task #364（PD 对 B 反馈：长卡标题悬空）落 **D 档 + 顶对齐**——
+   height:100% + min-height:120 + max-height:160，图高在 120-160 区间内跟随内容行数（零留白）；
+   短卡（内容列 <120）取 120 下限（PD 已可 B 观感）、长卡（内容列 >160）取 160 顶格；
+   窗口与标题同顶（.thumb flex-start，#347 居中废弃）；cover/round/overflow 不变，
+   photo-note 在 .thumb-frame 内绝对定位跟随窗口底部；Task #337：10px 圆角家族 */
+.thumb-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  max-height: 160px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.thumb-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumb .photo-note {
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  background: rgba(35, 31, 27, 0.68);
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 7.5px;
+}
+
+.ibody {
+  flex: 1 1 auto;
+  padding: 8px 30px 8px 9px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  /* Task #362（PD 反馈）：#361 固定 160 图窗后短内容卡文字列被垂直居中、标题悬空；
+     改顶排（业内惯例：媒体固定盒 + 文字顶排）。body 单元格本就被 .item 栅格 stretch，
+     内容自 padding-top 8px 起排；长内容卡图列为最高列，.thumb 内垂直居中保留（#347 口径）；
+     酒店卡 .hotelbody 无垂直居中声明（默认 flex-start），同族无同病不需改 */
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.ibody .nm {
+  font-size: 12.5px;
+  font-weight: 650;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.ibody .nm .t {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ibody .addr {
+  font-size: 9.5px;
+  color: var(--ink3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ibody .meta {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+  max-height: 19px;
+  overflow: hidden;
+}
+
+.tag {
+  font-size: 9px;
+  color: var(--ink2);
+  background: var(--card2);
+  border-radius: 5px;
+  padding: 2px 5px;
+  border: 0;
+  white-space: nowrap;
+}
+
+.tag.sage { background: var(--sage-soft); color: var(--sage-deep); }
+.tag.clay { background: var(--clay-soft); color: var(--clay-deep); }
+.tag.slate { background: var(--slate-soft); color: var(--slate-deep); }
+.tag.warn { background: var(--warn-soft); color: var(--warn); }
+
+.tag.click {
+  cursor: pointer;
+}
+
+.tag.click:active {
+  filter: brightness(0.96);
+}
+
+/* ============================================================
+   Task #283 / C4：AI 补充·飞猪核验标（主行程卡 .tag + 分享页 .share-badge 共用）
+   石板蓝灰＝「AI 补充但已飞猪核验为真实景点」，与自定义 / 分类 chip 区分；
+   chip 内含 .chip-verify 子段（「·飞猪核验」），≤360px 隐藏该段降级为「AI 补充」，
+   核验说明改由 .ai-supplement-note 详情行承载（宽屏隐藏、窄屏显示）。
+   ============================================================ */
+.tag.ai-supplement-chip,
+.share-badge.ai-supplement-chip {
+  background: var(--slate-soft);
+  color: var(--slate-deep);
+}
+
+.share-badge.ai-supplement-chip {
+  border-color: #c9d2de;
+}
+
+.ai-supplement-chip .chip-verify {
+  white-space: nowrap;
+}
+
+/* 核验说明详情行：宽屏 chip 全标已含「·飞猪核验」，本行隐藏；≤360px 降级后显示 */
+.ai-supplement-note {
+  display: none;
+  margin-top: 4px;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--slate-deep);
+}
+
+.prodrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.schedule {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.schedule .st {
+  font-size: 11.5px;
+  font-weight: 650;
+}
+
+.schedule .st.override {
+  color: var(--clay);
+}
+
+.schedule .est {
+  font-size: 8.5px;
+  color: var(--ink3);
+}
+
+.schedule .du {
+  font-size: 8.5px;
+  color: var(--ink3);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 1px 4px;
+}
+
+/* 主行动按钮（任务 220 定宽 128px）：
+   景点与酒店共用同一个类名；文案由 CardActions 字典查表，最长 4 字
+   （“去购票 / 去订房 / 查看详情”，Task #367 去「飞猪」二字），短文案居中留白，宽度不会被文字撑开。
+   右缘贴卡片右内缩线，保证三类卡片橙按钮完全重合。 */
+.booklink {
+  width: 128px;
+  min-width: 128px;
+  flex: 0 0 128px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  letter-spacing: 0.2px;
+  color: #fff;
+  border: 1px solid #e85f00;
+  background: var(--cta);
+  border-radius: 8px;
+  white-space: nowrap;
+  /* 文案加长时防止撑破定宽——水平方向裁剪 + 省略号兜底 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 2px 6px rgba(255, 106, 0, 0.22);
+  transition: background 0.14s ease, box-shadow 0.14s ease, transform 0.14s ease;
+}
+
+/* 降级主按钮（查票价 / 查看详情）：浅橙底 + 橙字，不是本次主转化动作 */
+.booklink.dim {
+  color: #e07a3e;
+  background: #fde8d8;
+  border-color: #fde8d8;
+  box-shadow: none;
+}
+
+.booklink.dim:hover {
+  background: #fcdcc5;
+  box-shadow: none;
+}
+
+.booklink:hover {
+  background: #ff7a1a;
+  box-shadow: 0 3px 9px rgba(255, 106, 0, 0.3);
+}
+
+.booklink:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 3px rgba(255, 106, 0, 0.2);
+}
+
+/* ---------- 任务 220 卡片底部动作区（景点普通卡/父卡与酒店卡共用） ----------
+   顺序：[分享 28px 圆钮（条件位，仅传入 onShare 时渲染）] [灰短按钮 60px] [橙主按钮 128px]，间距 8px；
+   整行右对齐到卡片右内缩线（9px），三类卡片橙按钮右缘完全重合。
+   （Task #373：锁定钮已从卡片动作区移除，其行首占位与专属样式一并清理。） */
+.card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 0 9px 9px;
+}
+
+/* Task #356（PD DEMO v0.6 转化行）：MOCK 退票话术「✓ 先囤票，改期全额退」——
+   经 CardActions leading 插槽落在按钮组左侧同一行（margin-right:auto 推开按钮），
+   CTA 同款橙色系；仅白名单景点（西岛/蜈支洲岛，lib/refundAssurance 单点）渲染。
+   390px 视口下按钮组定宽 ≈228px，剩余 ≈122px，10.5px 字号单行可容且 nowrap 不挤压按钮 */
+.card-actions > .buy-assure {
+  margin-right: auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10.5px;
+  font-weight: 650;
+  line-height: 1.4;
+  color: #e0662a;
+}
+
+/* 锁定钮：Task #373 已从卡片动作区移除，四条 .lock-badge 死规则清理。
+   --lock 变量保留（.oplog-kind.k-lock 操作日志标签仍在消费）。 */
+
+/* 分享图标钮：28px 圆钮（系统分享 / 复制链接），选中成功后短暂变对勾；
+   仅当传入 onShare 时渲染——Task #225 分享功能（#205）落地前恒不渲染，样式保留备用 */
+.card-actions .act-share {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1.5px solid #e0dad2;
+  border-radius: 50%;
+  background: #fff;
+  color: #b0a899;
+  font-size: 12px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 28px;
+}
+
+.card-actions .act-share:hover {
+  color: var(--ink2);
+  border-color: var(--line2);
+}
+
+.card-actions .act-share.done {
+  color: var(--sage-deep);
+  border-color: var(--sage);
+}
+
+/* 购票/预订状态入口：定宽 60px 灰底短按钮，高 32px；
+   未确定显示简写「购」/「订」，已选态显示当前状态文案（无需购票/现场买/已购…），
+   右侧 ▾ 提示可展开下拉；不再按状态分三色。 */
+.card-actions .act-status {
+  width: 60px;
+  min-width: 60px;
+  flex: 0 0 60px;
+  height: 32px;
+  padding: 0 2px;
+  border: 1px solid #e8e2d8;
+  border-radius: 8px;
+  background: #f7f3ec;
+  color: #6b6357;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.card-actions .act-status::after {
+  content: "▾";
+  font-size: 8px;
+  line-height: 1;
+  color: #b0a899;
+  flex: 0 0 auto;
+}
+
+.card-actions .act-status-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-actions .act-status:hover {
+  background: #f1ece3;
+}
+
+.iact {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.iact button {
+  width: 21px;
+  height: 21px;
+  border-radius: 7px;
+  border: 1px solid rgba(224, 217, 207, 0.9);
+  background: rgba(251, 249, 246, 0.9);
+  color: var(--ink3);
+  font-size: 10px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iact button:hover {
+  border-color: var(--line2);
+  color: var(--warn);
+}
+
+/* 混合列表 ↑↓：与 .iact 同处右侧控件列（锁/购/× 在其上方），
+   单列 21px 宽落在 .ibody 的 padding-right 内，不遮挡正文 */
+.imove {
+  position: absolute;
+  right: 5px;
+  top: 30px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.imove button {
+  width: 21px;
+  height: 21px;
+  border-radius: 7px;
+  border: 1px solid rgba(224, 217, 207, 0.9);
+  background: rgba(251, 249, 246, 0.9);
+  color: var(--ink3);
+  font-size: 11px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.imove button:hover {
+  border-color: var(--line2);
+  color: var(--clay);
+}
+
+.imove button:active {
+  background: #fff;
+  color: var(--clay-deep);
+}
+
+/* ---------- 住宿 ---------- */
+.lodging {
+  margin-top: 13px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 11px;
+  background: var(--card2);
+}
+
+.lodging .lt {
+  font-size: 10px;
+  color: var(--ink3);
+  margin-bottom: 5px;
+}
+
+.lodging .lv {
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.lodging .lv-status {
+  font-size: 10px;
+  color: var(--clay);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* 混合列表中的酒店行容器（useSortable 挂载点；内层保持 .hotelcard 视觉） */
+.hotelcard-wrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* 混合列表内由 .items 的 gap 统一控制间距，避免旧 .hotelcard margin-top 双倍留白 */
+.items .hotelcard {
+  margin-top: 0;
+}
+
+.hotelcard {
+  margin-top: 13px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: #fff;
+  overflow: hidden;
+  display: flex;
+  /* 任务 220：动作区整行换行到卡片底部（↑↓× 仍留在第一行右侧原位不动） */
+  flex-wrap: wrap;
+  align-items: stretch;
+  min-height: 96px;
+}
+
+/* 酒店卡动作区：占满整行（100%），右对齐到与其他卡片相同的右内缩线 */
+.hotelcard > .card-actions {
+  flex: 0 0 100%;
+  width: 100%;
+  margin-left: 0;
+}
+
+/* Task #355（PD「和景点对齐」）：酒店卡主图列并入景点卡 .thumb 家族——
+   列宽 132 = 左内缩 12 + 图片窗 120（border-box），内缩上下 8、右 0；
+   图片窗自身 10px 圆角（#337 家族）、Task #364 D 档区间高 + 顶对齐（与 .thumb 同族同步），
+   外缘与景点卡 .thumb 窗口同垂线；Task #341：米色左列背景去除→白底 */
+.hotelphoto {
+  width: 132px;
+  flex: 0 0 132px;
+  padding: 8px 0 8px 12px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* 图片即窗口盒（对应景点卡 .thumb-frame）：Task #364 D 档同步 height:100% +
+   min-height:120 + max-height:160（#355 同族）、10px 圆角、cover 不变形、顶对齐；
+   无图态 .hotelphoto 为空列，窗口槽位由同一内缩决定（有图/无图切换零跳动） */
+.hotelphoto img {
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  max-height: 160px;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+}
+
+.hotelbody {
+  padding: 9px 9px 8px;
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hotelbody .hn {
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hotelbody .ha {
+  font-size: 9px;
+  color: var(--ink3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hotelbody .hm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  color: var(--ink2);
+}
+
+.hotelbody .hm .tag {
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hotelbody .hp {
+  color: var(--warn);
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.hotelbody .hfoot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 7px;
+  row-gap: 4px;
+  margin-top: auto;
+}
+
+/* 底部操作区：锁定 / 状态 / 订房入口与景点卡共用 .card-actions（任务 213）；
+   窄屏下整组换行时仍靠右，不把价格说明挤成竖条 */
+.hotelbody .hnote {
+  font-size: 8px;
+  color: var(--ink3);
+  line-height: 1.3;
+}
+
+/* ---------- 住宿候选排序（rev2 多候选；按钮/手柄风格对齐 StopRow 与 VisitCard） ---------- */
+.lodging-cands {
+  margin-top: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lodging-cands .hotelcard {
+  margin-top: 0;
+}
+
+/* 多候选标题行（视觉对齐 .child-head） */
+.lodging-cands .cand-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.lodging-cands .cand-head b {
+  font-size: 12px;
+}
+
+.lodging-cands .cand-head span {
+  font-size: 9px;
+  color: var(--ink3);
+}
+
+/* meta 行标签组：保持「标签组 ↔ 价格」两端对齐的既有布局语义 */
+.hotelbody .hm-tags {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 0 1 auto;
+  gap: 4px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* 右侧排序按钮列：↑ ↓ ×，单体风格与 StopRow .child-buttons 一致 */
+.hcard-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  padding: 9px 7px 0 0;
+}
+
+.hcard-btns button {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  color: var(--ink2);
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.hcard-btns button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* Task #346：拖拽中候选卡的投影/边框/grabbing 已合并到上方
+   `.row[data-dragging] .item, .hotelcard-wrap[data-dragging] .hotelcard` 统一规则；
+   .grip span 的 clay 高亮随把手列一并移除 */
+
+/* ---------- F4 片区标签 ---------- */
+.area-wrap {
+  margin: 2px 0 12px;
+}
+
+.area-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: var(--sage);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.area-tag .area-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.area-tag .area-actions button {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+}
+
+.area-tag .area-actions button:hover {
+  color: #fff;
+}
+
+.area-hotels {
+  margin-left: 2px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--sage-deep);
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.area-hotels:hover {
+  background: #fff;
+}
+
+.area-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px dashed var(--clay);
+  color: var(--clay);
+  font-size: 13px;
+  cursor: pointer;
+  background: none;
+}
+
+.area-add:hover {
+  background: var(--clay-soft);
+}
+
+.area-selector {
+  padding: 12px 0 2px;
+  animation: rise 0.22s ease both;
+}
+
+.area-selector .area-options {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  /* 负边距扩展到屏幕边缘，横向滑动时选项可贴边滑出 */
+  margin: 0 -16px;
+  padding: 2px 16px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.area-selector .area-options::-webkit-scrollbar {
+  display: none;
+}
+
+.area-option {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: var(--card2);
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  min-width: 100px;
+}
+
+.area-option.selected {
+  border-color: var(--cta);
+  background: rgba(255, 106, 0, 0.08);
+}
+
+.area-option .area-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.area-option .area-desc {
+  display: block;
+  font-size: 11px;
+  color: var(--clay);
+  margin-top: 4px;
+}
+
+.area-custom {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.area-custom input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line2);
+  background: #fff;
+  border-radius: 999px;
+  padding: 7px 13px;
+  font-size: 12.5px;
+  outline: none;
+}
+
+.area-custom input:focus {
+  border-color: var(--clay);
+}
+
+.area-custom button {
+  flex: 0 0 auto;
+  background: var(--ink);
+  color: #F6F2EC;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 7px 15px;
+}
+
+.area-custom button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- F6 酒店候选比选 Sheet ---------- */
+.hotel-picker-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 60;
+  animation: fade-in 0.2s ease;
+}
+
+.hotel-picker-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border-radius: 22px 22px 0 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  z-index: 61;
+  padding: 20px 16px;
+  box-shadow: 0 -12px 30px -14px rgba(60, 48, 36, 0.4);
+  animation: sheet-up 0.3s ease-out;
+}
+
+.hotel-picker-head {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.hotel-picker-head .hotel-picker-x {
+  border: 1px solid var(--line);
+  background: var(--card2);
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  color: var(--ink2);
+  font-size: 12px;
+  flex: 0 0 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hotel-candidate {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.hotel-candidate:last-child {
+  border-bottom: none;
+}
+
+.hotel-candidate .hotel-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: var(--card2);
+  flex: 0 0 80px;
+}
+
+.hotel-candidate .hotel-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.hotel-candidate .hotel-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hotel-candidate .hotel-star {
+  color: var(--cta);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.hotel-candidate .hotel-price {
+  font-size: 14px;
+  color: var(--warn);
+  font-weight: 650;
+  margin-top: 4px;
+}
+
+.hotel-candidate .hotel-price span {
+  font-size: 11px;
+  color: var(--clay);
+  font-weight: 400;
+}
+
+.hotel-candidate .hotel-rate {
+  font-size: 12px;
+  color: var(--clay);
+  margin-top: 2px;
+}
+
+.hotel-candidate .hotel-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.hotel-candidate .hotel-actions button {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+}
+
+.hotel-candidate .hotel-actions .select-btn {
+  background: var(--cta);
+  color: #fff;
+  font-weight: 600;
+}
+
+.hotel-candidate .hotel-actions .detail-btn {
+  background: var(--card2);
+  color: var(--ink);
+}
+
+.hotel-picker-footer {
+  text-align: center;
+  font-size: 11px;
+  color: var(--clay);
+  padding: 12px 0 4px;
+}
+
+/* Task #69：「查看更多/搜索酒店」→ 飞猪搜索页，轻量文字链接（与「去看看」同色系但更轻） */
+.hotel-more-link {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--clay-deep);
+  text-decoration: none;
+}
+
+.hotel-more-link:hover {
+  text-decoration: underline;
+}
+
+.hotel-empty {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--clay);
+  font-size: 14px;
+}
+
+.hotel-empty .ghost {
+  display: inline-block;
+  margin: 16px auto 0;
+}
+
+/* 错误态操作区：重试 / 知道了并排居中 */
+.hotel-error-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.hotel-error-actions .ghost {
+  margin: 16px 0 0;
+}
+
+/* Task #354：HotelPicker 片区选择态（当天未设片区时）。chip 复用 .area-option 家族样式，
+   仅换为浮层内换行网格排布，与攻略暂存/候选池 chip 保持视觉一致。 */
+.hotel-area-select {
+  animation: rise 0.22s ease both;
+}
+
+.hotel-area-hint {
+  font-size: 12.5px;
+  color: var(--clay);
+  margin-bottom: 12px;
+}
+
+.hotel-area-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hotel-area-options .area-option {
+  flex: 1 1 calc(50% - 4px);
+  min-width: 120px;
+}
+
+.hotel-area-footer {
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* 骨架屏（HotelPicker loading 态） */
+.skeleton {
+  background: linear-gradient(90deg, var(--card2) 25%, #ECE6DC 50%, var(--card2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+.skeleton-line {
+  height: 13px;
+  margin-top: 9px;
+}
+
+.skeleton-line.w70 { width: 70%; }
+.skeleton-line.w50 { width: 50%; }
+.skeleton-line.w40 { width: 40%; }
+
+/* ---------- 空状态（Task #71：去掉副文案并压缩高度，只留标题 + 主行动按钮） ---------- */
+.blank {
+  border: 1px dashed var(--line2);
+  border-radius: 15px;
+  padding: 12px 14px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.5);
+  margin-top: 2px;
+}
+
+.blank .bt {
+  font-size: 12.5px;
+  color: var(--ink2);
+  line-height: 1.6;
+}
+
+.blank .ghost {
+  margin-top: 9px;
+  padding: 7px 16px;
+}
+
+.ghost {
+  margin-top: 12px;
+  border: 1px solid var(--line2);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 12px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 550;
+}
+
+.ghost:hover:not(:disabled) {
+  border-color: var(--clay);
+  color: var(--clay-deep);
+}
+
+.ghost:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- 底部意图栏 ---------- */
+.intentbar-wrap {
+  flex: 0 0 auto;
+  position: relative;
+  border-top: 1px solid var(--line);
+  background: var(--card);
+}
+
+/* clarify 反问气泡：浮在输入栏上方，发送新意图或关闭后消失 */
+.clarify-bubble {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: calc(100% + 8px);
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.6;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  z-index: 7;
+  box-shadow: 0 10px 24px -14px rgba(60, 48, 36, 0.45);
+  animation: rise 0.22s ease both;
+}
+
+.clarify-bubble span {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.clarify-bubble button {
+  flex: 0 0 auto;
+  color: var(--ink3);
+  font-size: 14px;
+  line-height: 1;
+  padding: 1px 3px;
+}
+
+.clarify-bubble button:hover {
+  color: var(--ink);
+}
+
+/* AI 等待分级提示气泡（Task #42）：随耗时递进提示，附取消等待按钮 */
+.wait-bubble {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: calc(100% + 8px);
+  background: var(--card2);
+  border: 1px solid var(--clay-line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--ink2);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  z-index: 7;
+  box-shadow: 0 10px 24px -14px rgba(60, 48, 36, 0.45);
+  animation: rise 0.22s ease both;
+}
+
+.wait-bubble > span:nth-of-type(2),
+.wait-bubble > .wait-stage {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* 呼吸圆点：提示后台仍在处理 */
+.wait-dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--clay);
+  animation: wait-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes wait-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.wait-bubble .wait-cancel {
+  flex: 0 0 auto;
+  color: var(--ink2);
+  font-size: 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 10px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.wait-bubble .wait-cancel:hover {
+  color: var(--warn);
+  border-color: var(--warn);
+}
+
+/* Task #224：意图栏顶边软进度轨——发送即开始走，气泡出现（15s）前的空窗也有推进反馈。
+   贴在 .intentbar-wrap 的 border-top 之下，宽度即分级软进度（渐近、封顶 94%）。 */
+.intent-wait-rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(185, 131, 106, 0.16), rgba(185, 131, 106, 0.08));
+  pointer-events: none;
+}
+
+.intent-wait-rail i {
+  display: block;
+  height: 100%;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(90deg, var(--clay), var(--cta));
+  box-shadow: 0 0 7px -1px rgba(255, 106, 0, 0.6);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
+}
+
+.intent-wait-rail[data-tier="slow"] i {
+  background: linear-gradient(90deg, #C0703A, #E0A05A);
+}
+
+.intent-wait-rail[data-tier="critical"] i {
+  background: linear-gradient(90deg, var(--warn), #FF6B5A);
+  animation: wait-rail-blink 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intent-wait-rail i {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* ============================================================
+   Task #224 · 长等待分级反馈：把等待画成一段行程路线
+   ------------------------------------------------------------
+   四个站点（读料 → 选点 → 排线 → 成稿）串在一条虚线「规划路线」上：
+   已走过的路段被实线陶土色填满并有微光扫过，当前站雷达脉冲，未到站空心；
+   软进度渐近且封顶 94%，最后一个站点永远差一点到不了头——完成前不谎报 100%。
+   三档分级（data-tier）只换强调色与剩余文案口径，不加结构，避免越等越吵。
+   ============================================================ */
+.wait-stage {
+  /* 分级强调色（steady 默认；slow / critical 由 data-tier 覆盖） */
+  --wait-accent: var(--clay);
+  --wait-accent-deep: var(--clay-deep);
+  --wait-base: #EFEAE2;
+  --wait-line: #D9CEBE;
+}
+
+.wait-stage[data-tier="slow"] {
+  --wait-accent: #C0703A;
+  --wait-accent-deep: var(--warn);
+}
+
+.wait-stage[data-tier="critical"] {
+  --wait-accent: var(--warn);
+  --wait-accent-deep: #7E3413;
+}
+
+/* ---------- panel 变体：统一添加面板内的完整路线 ---------- */
+.wait-stage[data-variant="panel"] {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--wait-base);
+  border: 1px solid #DED4C6;
+  border-radius: 14px;
+  padding: 13px 13px 11px;
+  margin-top: 10px;
+  animation: wait-stage-in 0.28s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+/* 暖光晕：给等待面一点空气感，避免死板纯色块（负 z-index 只盖在自身背景之上） */
+.wait-stage[data-variant="panel"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(92% 72% at 10% 0%, rgba(185, 131, 106, 0.17), transparent 62%),
+    radial-gradient(74% 62% at 100% 100%, rgba(124, 136, 153, 0.15), transparent 60%);
+}
+
+@keyframes wait-stage-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* critical：呼吸描边，给出「可以取消重试」的视觉出路（不改结构） */
+.wait-stage[data-variant="panel"][data-tier="critical"] {
+  border-color: rgba(168, 85, 47, 0.42);
+  animation: wait-critical-breath 2.6s ease-in-out infinite;
+}
+
+@keyframes wait-critical-breath {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(168, 85, 47, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(168, 85, 47, 0.1);
+  }
+}
+
+/* ---------- 路线与站点 ---------- */
+.wait-route {
+  position: relative;
+  display: grid;
+  align-items: start;
+}
+
+/* 未走过的路段：虚线，像地图上还没定的路线 */
+.wait-route-track,
+.wait-route-fill {
+  position: absolute;
+  top: 4px;
+  height: 2px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.wait-route-track {
+  left: var(--wait-track-start);
+  width: var(--wait-track-span);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--wait-line) 0 4px,
+    transparent 4px 9px
+  );
+}
+
+/* 已走过的路段：实线填充 + 微光扫过，宽度过渡跟随 500ms 时钟平滑推进 */
+.wait-route-fill {
+  left: var(--wait-track-start);
+  width: var(--wait-fill);
+  overflow: hidden;
+  background: linear-gradient(90deg, var(--wait-accent), var(--wait-accent-deep));
+  box-shadow: 0 0 7px -1px rgba(185, 131, 106, 0.6);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
+}
+
+.wait-route-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.62), transparent);
+  background-size: 55% 100%;
+  background-repeat: no-repeat;
+  animation: wait-fill-sweep 2.6s linear infinite;
+}
+
+@keyframes wait-fill-sweep {
+  from {
+    background-position: -60% 0;
+  }
+  to {
+    background-position: 165% 0;
+  }
+}
+
+.wait-stop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.wait-stop-dot {
+  position: relative;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--wait-base);
+  border: 1.5px solid var(--wait-line);
+  transition: background 0.32s ease, border-color 0.32s ease, transform 0.32s ease;
+}
+
+.wait-stop.done .wait-stop-dot {
+  background: var(--wait-accent);
+  border-color: var(--wait-accent);
+}
+
+.wait-stop.now .wait-stop-dot {
+  background: #FFFDF9;
+  border: 2px solid var(--wait-accent-deep);
+  transform: scale(1.14);
+}
+
+/* 当前站的雷达脉冲：唯一持续动的元素，其余保持安静 */
+.wait-stop.now .wait-stop-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid var(--wait-accent);
+  animation: wait-stop-ping 1.9s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+
+@keyframes wait-stop-ping {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.6);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+}
+
+.wait-stop-name {
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  color: #B4AA9C;
+  white-space: nowrap;
+  transition: color 0.32s ease;
+}
+
+.wait-stop.done .wait-stop-name {
+  color: var(--ink3);
+}
+
+.wait-stop.now .wait-stop-name {
+  color: var(--wait-accent-deep);
+  font-weight: 700;
+}
+
+/* ---------- panel 文案区 ---------- */
+.wait-panel-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 11px;
+}
+
+.wait-panel-sentence {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13.5px;
+  font-weight: 550;
+  line-height: 1.5;
+  color: var(--ink);
+  animation: wait-sentence-in 0.34s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@keyframes wait-sentence-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 已等待计时：等宽数字避免每秒抖动宽度 */
+.wait-panel-clock {
+  flex: 0 0 auto;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid #E2D9CB;
+  border-radius: 999px;
+  padding: 1px 7px;
+  white-space: nowrap;
+}
+
+.wait-panel-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 7px;
+}
+
+.wait-panel-remain {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--ink2);
+}
+
+.wait-stage[data-tier="critical"] .wait-panel-remain {
+  color: var(--warn);
+  font-weight: 600;
+}
+
+.wait-panel-cancel {
+  flex: 0 0 auto;
+  font-size: 11px;
+  border: 1px solid var(--line2);
+  background: var(--card);
+  border-radius: 8px;
+  padding: 5px 10px;
+  color: var(--ink2);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.wait-panel-cancel:hover {
+  color: var(--warn);
+  border-color: var(--warn);
+}
+
+/* 可离开等待提示（Task #135 既有能力的可见说明）：虚线分隔，最弱层级 */
+.wait-panel-hint {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #D9CEBE;
+  font-size: 10.5px;
+  line-height: 1.55;
+  color: var(--ink3);
+}
+
+/* ---------- line 变体：气泡 / 浮条内嵌的紧凑一行 ---------- */
+.wait-stage[data-variant="line"] {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-bottom: 2px;
+}
+
+/* 紧凑态只留节点、不显示站名：路线缩到 8px 节点，圆心 = 轨道中心 */
+.wait-stage[data-variant="line"] .wait-route {
+  margin-bottom: 8px;
+}
+
+.wait-stage[data-variant="line"] .wait-stop-name {
+  display: none;
+}
+
+.wait-stage[data-variant="line"] .wait-stop-dot {
+  width: 8px;
+  height: 8px;
+}
+
+.wait-stage[data-variant="line"] .wait-route-track,
+.wait-stage[data-variant="line"] .wait-route-fill {
+  top: 3px;
+}
+
+.wait-line-main {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.wait-line-sentence {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 550;
+  line-height: 1.45;
+  color: var(--ink);
+  animation: wait-sentence-in 0.3s ease both;
+}
+
+.wait-line-clock {
+  flex: 0 0 auto;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.wait-line-remain {
+  margin-top: 3px;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--ink2);
+}
+
+/* 动效偏好：减少动态效果时只保留静态路线与文案，去掉扫光 / 脉冲 / 呼吸 */
+@media (prefers-reduced-motion: reduce) {
+  .wait-route-fill,
+  .wait-route-fill::after,
+  .wait-stop.now .wait-stop-dot::after,
+  .wait-panel-sentence,
+  .wait-line-sentence,
+  .wait-stage[data-variant="panel"],
+  .wait-stage[data-variant="panel"][data-tier="critical"] {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* 窄屏（≤359px）：站点字与文案各降一档，路线仍四站不溢出 */
+@media (max-width: 359px) {
+  .wait-stage[data-variant="panel"] {
+    padding: 11px 10px 9px;
+    border-radius: 12px;
+  }
+
+  .wait-stop-name {
+    font-size: 9px;
+    letter-spacing: 0.04em;
+  }
+
+  .wait-panel-sentence {
+    font-size: 12.5px;
+  }
+
+  .wait-panel-clock {
+    font-size: 9.5px;
+    padding: 1px 5px;
+  }
+
+  .wait-panel-remain,
+  .wait-panel-hint {
+    font-size: 10px;
+  }
+
+  .wait-line-sentence {
+    font-size: 11.5px;
+  }
+}
+
+.intentbar {
+  padding: 9px 12px 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.field {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 9px 8px 9px 14px;
+}
+
+.field input {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font-size: 12.5px;
+  color: var(--ink);
+  min-width: 0;
+}
+
+.field input::placeholder {
+  color: var(--ink3);
+}
+
+.field input:disabled {
+  cursor: pointer;
+}
+
+.cta {
+  flex: 0 0 auto;
+  background: var(--cta);
+  color: #fff;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 17px;
+  font-size: 13px;
+  font-weight: 650;
+  box-shadow: 0 6px 14px -6px rgba(255, 106, 0, 0.7);
+}
+
+.cta:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ---------- AI 提案确认 Sheet ---------- */
+.proposal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(45, 38, 30, 0.42);
+  z-index: 60;
+  animation: fade-in 0.2s ease;
+}
+
+.proposal-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--card);
+  border-radius: 22px 22px 0 0;
+  max-height: 60vh;
+  overflow-y: auto;
+  z-index: 61;
+  /* Task #142：顶部留白移交 .proposal-head（sticky 吸顶时头部背景铺满顶部圆角内侧）；
+     底部 padding 保持不变，不影响底部主行动按钮 */
+  padding: 0 16px 14px;
+  box-shadow: 0 -12px 30px -14px rgba(60, 48, 36, 0.4);
+  animation: sheet-up 0.28s cubic-bezier(0.22, 0.8, 0.3, 1) both;
+  scrollbar-width: none;
+}
+
+.proposal-sheet::-webkit-scrollbar {
+  display: none;
+}
+
+/* Task #142：草案 / 提案面板头部 sticky 吸顶（GuideDraftReview 与 ProposalCard 共用）：
+   操作项与冲突勾选较多时面板内部滚动，标题与取消按钮始终可见。顶部留白（原 Sheet
+   padding-top 16px）并入 padding-top，吸顶时背景铺满圆角顶缘不留透缝；不透明
+   var(--card) 底 + hairline 分隔线遮住从下方穿过的滚动内容，原 margin-bottom
+   10px 并入 padding-bottom，遮挡延伸到分隔线，正文不会被「切」在半空。 */
+.proposal-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px 0 10px;
+  margin-bottom: 0;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+}
+
+.proposal-head .t1 {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.proposal-head .t2 {
+  font-size: 11px;
+  color: var(--ink3);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+.proposal-head .x {
+  border: 1px solid var(--line);
+  background: var(--card2);
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  color: var(--ink2);
+  font-size: 13px;
+  flex: 0 0 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.proposal-head .x:disabled {
+  opacity: 0.5;
+}
+
+.proposal-warn,
+.proposal-err {
+  background: var(--warn-soft);
+  color: var(--warn);
+  border-radius: 10px;
+  padding: 9px 11px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.proposal-warn {
+  animation: fade-in 0.2s ease;
+}
+
+.proposal-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.proposal-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.proposal-item:last-child {
+  border-bottom-color: transparent;
+}
+
+/* 已购/已锁定项：赭红底色提示护栏红线 */
+.proposal-item.danger {
+  background: rgba(168, 85, 47, 0.08);
+}
+
+.proposal-item input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: var(--clay);
+  cursor: pointer;
+}
+
+.proposal-item input[type="checkbox"]:disabled {
+  cursor: default;
+}
+
+.proposal-badge {
+  flex: 0 0 auto;
+  font-size: 9.5px;
+  font-weight: 650;
+  border-radius: 6px;
+  padding: 3px 6px;
+  margin-top: 1px;
+  white-space: nowrap;
+}
+
+.proposal-badge.warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.proposal-badge.slate {
+  background: var(--slate-soft);
+  color: var(--slate-deep);
+}
+
+.proposal-badge.clay {
+  background: var(--clay-soft);
+  color: var(--clay-deep);
+}
+
+.proposal-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.proposal-body .pn {
+  font-size: 12.5px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.proposal-body .pn em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--ink3);
+  font-size: 10.5px;
+}
+
+.proposal-body .pn em.danger-note {
+  color: var(--warn);
+}
+
+.proposal-body .pd {
+  font-size: 11px;
+  color: var(--ink2);
+}
+
+.proposal-body .pr {
+  font-size: 10.5px;
+  color: var(--ink3);
+  line-height: 1.5;
+}
+
+/* 任务 #211：行动区 sticky 吸底（与上方 sticky 头部对称）。草案/提案内容超过
+   Sheet max-height 60vh 时，「取消/应用草案」曾被裁进滚动区外，而滚动条被
+   scrollbar-width:none 隐藏，用户看不到任何按钮只能关闭，草案被静默丢弃；
+   吸底后按钮始终可见。不透明 var(--card) 底 + hairline 分隔线遮住从下方
+   穿过的滚动内容（与 .proposal-head 同手法）。负水平 margin 抵消 Sheet
+   左右 16px padding，让吸底背景铺满面板全宽。 */
+.proposal-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+  margin: 0 -16px;
+  padding: 14px 16px;
+  background: var(--card);
+  border-top: 1px solid var(--line);
+}
+
+.proposal-actions .ghost {
+  flex: 0 0 auto;
+  margin-top: 0;
+  padding: 9px 14px;
+}
+
+.proposal-actions .cta {
+  flex: 1 1 auto;
+  padding: 10px 14px;
+}
+
+/* ---------- 通用二次确认弹窗 ---------- */
+.confirm-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(45, 38, 30, 0.44);
+  z-index: 70;
+  animation: fade-in 0.2s ease;
+}
+
+.confirm-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--card);
+  border-radius: 16px;
+  padding: 24px 20px;
+  width: calc(100% - 64px);
+  max-width: 320px;
+  z-index: 71;
+  box-shadow: 0 24px 50px -20px rgba(60, 48, 36, 0.55);
+  animation: confirm-pop 0.2s ease-out both;
+}
+
+.confirm-title {
+  font-size: 17px;
+  font-weight: 650;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+
+.confirm-desc {
+  font-size: 14px;
+  color: var(--clay);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.confirm-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.confirm-btn.cancel {
+  background: var(--card2);
+  color: var(--clay);
+}
+
+.confirm-btn.ok {
+  background: var(--cta);
+  color: #fff;
+}
+
+.confirm-btn.ok.danger {
+  background: #ff3b30;
+}
+
+/* ---------- Task #282：稀疏攻略澄清对话框（C1/C2/C3） ---------- */
+.clarification-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(45, 38, 30, 0.44);
+  z-index: 70;
+  animation: fade-in 0.2s ease;
+}
+
+.clarification-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--card);
+  border-radius: 16px;
+  padding: 24px 20px;
+  width: calc(100% - 48px);
+  max-width: 340px;
+  z-index: 71;
+  box-shadow: 0 24px 50px -20px rgba(60, 48, 36, 0.55);
+  animation: confirm-pop 0.2s ease-out both;
+}
+
+.clarification-question {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 18px;
+  line-height: 1.5;
+}
+
+.clarification-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.clarification-option {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.4;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.clarification-option:active {
+  transform: scale(0.98);
+}
+
+/* A 选项：只排攻略涉及的天——主 CTA 橙色 */
+.clarification-option--guide_only {
+  background: var(--cta);
+  color: #fff;
+  box-shadow: 0 4px 14px -4px rgba(230, 120, 40, 0.5);
+}
+
+/* B 选项：允许 AI 补充——次级浅底 */
+.clarification-option--ai_fill {
+  background: var(--card2);
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+}
+
+.clarification-cancel {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  background: none;
+  color: var(--clay);
+  cursor: pointer;
+}
+
+.clarification-cancel:active {
+  color: var(--ink);
+}
+
+/* ---------- Task #199：独立景点归入大景点（入口 + 目标选择浮层） ---------- */
+/* 普通景点卡内的弱入口：与攻略原文弱入口同层级，不抢卡片主行动 */
+.classify-entry {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--slate-deep);
+  cursor: pointer;
+}
+
+.classify-entry::before {
+  content: "↳ ";
+  color: var(--ink3);
+}
+
+.classify-entry:active {
+  color: var(--clay-deep);
+}
+
+/* 目标选择浮层：与 ConfirmDialog 同层级（70/71），中心卡片内滚动列表 */
+.classify-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(45, 38, 30, 0.44);
+  z-index: 70;
+  animation: fade-in 0.2s ease;
+}
+
+.classify-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% - 48px);
+  max-width: 340px;
+  max-height: calc(100% - 120px);
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px 18px 16px;
+  z-index: 71;
+  box-shadow: 0 24px 50px -20px rgba(60, 48, 36, 0.55);
+  animation: confirm-pop 0.2s ease-out both;
+}
+
+.classify-title {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.classify-desc {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink2);
+}
+
+.classify-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 2px;
+}
+
+.classify-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  text-align: left;
+}
+
+.classify-option:hover:not(:disabled) {
+  border-color: var(--clay-line);
+  background: var(--card2);
+}
+
+.classify-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.classify-option-name {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.classify-option-meta {
+  font-size: 10.5px;
+  color: var(--ink3);
+}
+
+.classify-empty {
+  padding: 14px 4px;
+  font-size: 12px;
+  color: var(--ink3);
+  text-align: center;
+}
+
+.classify-cancel {
+  margin-top: 12px;
+  padding: 11px;
+  border-radius: 10px;
+  background: var(--card2);
+  color: var(--clay);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ---------- 撤销 Toast / AI 结果提示 ---------- */
+.undo-toast {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 84px;
+  background: #2C2823;
+  color: #F3EEE7;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  /* Bug 3：降到底部 Sheet（.backdrop 8 / .sheet 9）之下，面板打开时不再
+     悬浮在 × 按钮上方拦截点击；与 wait-bubble 同层，靠 DOM 顺序仍浮在其上 */
+  z-index: 7;
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.6);
+  animation: slide-up 0.26s ease-out both;
+}
+
+.undo-toast .undo-text {
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.undo-toast .undo-action {
+  color: var(--cta);
+  font-weight: 650;
+  cursor: pointer;
+  font-size: 12.5px;
+  flex: 0 0 auto;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 任务 135：草案状态浮条（非阻塞、可点击）——面板关闭期间展示生成进度 / 完成 /
+   失败重试；与 undo-toast 同层（z-index 7，在 Sheet 8/9 之下），不拦截面板内按钮 */
+.draft-toast {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 84px;
+  z-index: 7;
+  animation: slide-up 0.26s ease-out both;
+}
+
+.draft-toast .draft-toast-body {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: #2C2823;
+  color: #F3EEE7;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.6);
+  /* Task #224：底边软进度轨贴在 pill 内，靠 overflow 裁出圆角 */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Task #224：过程文案 + 分级读数两行（站点 · 已等 · 预计剩余） */
+.draft-toast .draft-toast-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.draft-toast .draft-toast-stage {
+  font-size: 10.5px;
+  line-height: 1.35;
+  color: rgba(243, 238, 231, 0.6);
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  animation: draft-toast-stage-in 0.3s ease both;
+}
+
+@keyframes draft-toast-stage-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 软进度轨：渐近推进、完成前不满格；分级只换颜色，不换结构 */
+.draft-toast .draft-toast-rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: rgba(243, 238, 231, 0.14);
+}
+
+.draft-toast .draft-toast-rail i {
+  display: block;
+  height: 100%;
+  border-radius: 0 2px 2px 0;
+  background: var(--cta);
+  box-shadow: 0 0 8px -1px rgba(255, 106, 0, 0.75);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
+}
+
+.draft-toast[data-tier="slow"] .draft-toast-rail i {
+  background: #E0A05A;
+  box-shadow: 0 0 8px -1px rgba(224, 160, 90, 0.7);
+}
+
+.draft-toast[data-tier="critical"] .draft-toast-rail i {
+  background: #FF6B5A;
+  box-shadow: 0 0 8px -1px rgba(255, 107, 90, 0.75);
+  animation: wait-rail-blink 1.6s ease-in-out infinite;
+}
+
+.draft-toast[data-tier="critical"] .draft-toast-stage {
+  color: rgba(255, 154, 138, 0.9);
+}
+
+@keyframes wait-rail-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .draft-toast .draft-toast-rail i,
+  .draft-toast .draft-toast-stage {
+    animation: none;
+    transition: none;
+  }
+}
+
+.draft-toast .draft-toast-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.draft-toast .draft-toast-go {
+  margin-left: auto;
+  flex: 0 0 auto;
+  color: var(--cta);
+  font-weight: 650;
+}
+
+.draft-toast .draft-toast-done-mark {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--cta);
+  color: #fff;
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+}
+
+/* 失败态：主体（看原因）与重试并排；重试用主色描边小钮 */
+.draft-toast .draft-toast-failed {
+  cursor: default;
+  gap: 10px;
+  padding-right: 10px;
+}
+
+.draft-toast .draft-toast-msg {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: inherit;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+}
+
+.draft-toast .draft-toast-retry {
+  flex: 0 0 auto;
+  border: 1px solid var(--cta);
+  color: var(--cta);
+  background: none;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 650;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+
+.ai-flash {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 150px;
+  background: #2C2823;
+  color: #F3EEE7;
+  border-radius: 11px;
+  padding: 9px 12px;
+  font-size: 11.5px;
+  line-height: 1.55;
+  text-align: center;
+  /* Bug 3：同 undo-toast，退到底部 Sheet（8/9）之下，不拦截面板内的关闭钮 */
+  z-index: 7;
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.6);
+  animation: fade-in 0.18s ease;
+}
+
+/* ai-flash 未执行原因展开（Task #35：部分拒绝可展开逐条查看原因） */
+.flash-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.flash-toggle {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  color: #DFC6B6;
+  font-size: 11.5px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.flash-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0 2px;
+  color: #F3EEE7;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.flash-reasons {
+  margin: 8px 0 0;
+  padding: 8px 2px 0;
+  border-top: 1px solid rgba(243, 238, 231, 0.18);
+  list-style: none;
+  text-align: left;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.flash-reasons li {
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+.flash-reasons li:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- 候选池 Sheet ---------- */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(45, 38, 30, 0.34);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 8;
+}
+
+.backdrop.on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--card);
+  border-radius: 22px 22px 0 0;
+  z-index: 9;
+  transform: translateY(103%);
+  transition: transform 0.26s cubic-bezier(0.22, 0.8, 0.3, 1);
+  max-height: 80%;
+  /* Bug 2/5：关闭态移出后不再参与命中测试，滑出动画期间也不拦截下层触摸滚动 */
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -12px 30px -14px rgba(60, 48, 36, 0.4);
+}
+
+.sheet.on {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.sheet .sh {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.sheet .st1 {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.sheet .st2 {
+  font-size: 11px;
+  color: var(--ink3);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+.sheet .x {
+  border: 1px solid var(--line);
+  background: var(--card2);
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  color: var(--ink2);
+  font-size: 13px;
+  flex: 0 0 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sf-search {
+  display: flex;
+  gap: 8px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sf-search input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line2);
+  background: #fff;
+  border-radius: 999px;
+  padding: 8px 13px;
+  font-size: 12.5px;
+  outline: none;
+}
+
+.sf-search input:focus {
+  border-color: var(--clay);
+}
+
+.sf-search button {
+  flex: 0 0 auto;
+  background: var(--ink);
+  color: #F6F2EC;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 8px 15px;
+}
+
+.sf-search button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sheet .sb {
+  padding: 2px 16px 18px;
+  overflow-y: auto;
+}
+
+.pool-section {
+  padding-top: 10px;
+}
+
+.pool-title {
+  font-size: 11px;
+  color: var(--ink3);
+  margin: 4px 0 2px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.pool-err {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--warn);
+  background: var(--warn-soft);
+  border-radius: 9px;
+  padding: 8px 10px;
+  margin: 10px 0 2px;
+  line-height: 1.6;
+}
+
+.pool-err .pool-err-msg {
+  flex: 1;
+  min-width: 0;
+}
+
+.pool-err .pool-retry {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.pool-empty {
+  font-size: 11.5px;
+  color: var(--ink3);
+  padding: 8px 0 4px;
+  line-height: 1.7;
+}
+
+.poolitem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.poolitem:last-child {
+  border-bottom: 0;
+}
+
+.poolitem .pn {
+  flex: 1;
+  min-width: 0;
+}
+
+.poolitem .pn .n {
+  font-size: 12.5px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.poolitem .pn .m {
+  font-size: 10.5px;
+  color: var(--ink3);
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mini {
+  font-size: 11px;
+  border: 1px solid var(--line2);
+  background: var(--card);
+  border-radius: 8px;
+  padding: 5px 9px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.mini:hover:not(:disabled) {
+  border-color: var(--clay);
+  color: var(--clay-deep);
+}
+
+.mini:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.pool-flash {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  background: #2C2823;
+  color: #F3EEE7;
+  border-radius: 11px;
+  padding: 9px 12px;
+  font-size: 11.5px;
+  z-index: 12;
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.6);
+  animation: fade-in 0.18s ease;
+  text-align: center;
+}
+
+/* ---------- 标题栏下方快捷工具行（F5 攻略粘贴入口） ---------- */
+.quick-tools {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 6px;
+  padding: 8px 16px 0;
+}
+
+/* ---------- F5 攻略粘贴抽取 Sheet ---------- */
+.note-input-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 60;
+  animation: fade-in 0.2s ease;
+}
+
+.note-input-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border-radius: 22px 22px 0 0;
+  /* Task #106：80% 相对 .app（键盘弹出时 .app 随视觉视口高度 --app-height 缩小），
+     替代 80vh——vh 不随键盘变化，手机打字时 Sheet 底部（含主行动按钮）会被键盘遮住；
+     不支持百分比解析的旧环境回退 80vh */
+  max-height: 80vh;
+  max-height: 80%;
+  /* Task #242：三段式布局（固定头部 / 单一滚动正文 / 固定行动区）。
+     此前 Sheet 自身是滚动容器，底部行动区只能 sticky 吸底——sticky 只能在父盒范围内
+     位移，父盒（.draft-panel）本身已落到滚动区之外时按钮无法被拉进首屏，实测需要
+     下滑几十像素才见。改为 Sheet 只做 flex 容器（自己不滚）、正文 .note-input-body
+     唯一滚动，行动区 .note-input-foot 作为 flex 尾部恒贴可视底边。 */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 61;
+  padding: 0;
+  box-shadow: 0 -12px 30px -14px rgba(60, 48, 36, 0.4);
+  animation: sheet-up 0.3s ease-out;
+}
+
+/* 头部：不再 sticky（已不在滚动容器内，天然常驻），左右留白随 Sheet 内边距回归自身。
+   top 安全区无需处理（bottom sheet 不贴屏幕顶） */
+.note-input-head {
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 16px 14px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+}
+
+/* 正文区（Task #242）：Sheet 内唯一的滚动容器。
+   - 来源列表不再自建滚动（见 .guide-compact-rows），长列表直接撑高由这里统一承载，
+     避免移动端「滑到列表底部后手势被内层吃掉、整个面板不再滚动」；
+   - overscroll-behavior: contain 阻断滚动链穿透到行程页，但不制造第二个滚动层；
+   - 底部 20px 与 .note-results-actions 的负 margin 对应（确认行仍可拉通全宽）。 */
+.note-input-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 16px 20px;
+}
+
+/* 固定行动区（Task #242）：不在滚动容器内，主 CTA 打开即见；
+   软键盘弹出时 Sheet 随 --app-height 收缩，行动区仍贴 Sheet 底边不被键盘遮住 */
+.note-input-foot {
+  flex: 0 0 auto;
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  padding: 10px 16px 14px;
+}
+
+.note-input-head h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+.note-input-head .close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--clay);
+  cursor: pointer;
+  /* Task #142：sticky 化不缩小触控区——最小 36px 命中尺寸（手机易点关闭），
+     ✕ 视觉大小不变（字号 20px、原 4px 内边距保留） */
+  padding: 4px 10px;
+  min-width: 36px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.note-input-head .close-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* 统一输入区容器（Task #223：上传截图图标钮已移至下方操作行，容器仅作分组） */
+.note-input-box {
+  min-width: 0;
+}
+
+.note-textarea {
+  width: 100%;
+  /* Task #242：默认高度缩短约一半（原 120px / rows=4）——首屏把竖向空间让给来源
+     列表与固定行动区；长文仍可随内容增长或 resize: vertical 拖高，内部溢出由
+     textarea 自己滚动，不会把首屏推光 */
+  min-height: 64px;
+  max-height: 40vh;
+  overflow-y: auto;
+  border: 1px solid #DCD5CA;
+  border-radius: 12px;
+  padding: 10px 12px 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  font-family: inherit;
+  background: #E9E4DC;
+  color: var(--ink);
+}
+
+.note-textarea:focus {
+  border-color: var(--cta);
+  outline: none;
+}
+
+.note-textarea::placeholder {
+  color: #A29A8E;
+}
+
+.note-textarea:disabled {
+  opacity: 0.6;
+}
+
+/* ---------- 输入区操作行（Task #223，DEMO ① 录入区对齐） ---------- */
+/* 确认按钮常驻固定在输入框下方：空输入灰禁（global「保存」/ day「提交」），有内容
+   按输入类型感知切换文案，与底部攻略排版主钮语义分离；「🖼」上传截图图标钮固定行尾 */
+/* Task #236（对齐 DEMO 功能层级）：录入区动作收在输入框右下角，右对齐、按内容宽度
+   收窄——「保存 / 搜索点位」是录入区自己的动作，不再整行占位；底部橙色主 CTA
+   只负责「选择素材后生成行程」，两者不再互相争抢视觉主位 */
+.note-input-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.note-input-actions .extract-btn {
+  flex: 0 0 auto;
+  min-width: 108px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--cta);
+  color: #fff;
+}
+
+.note-input-actions .extract-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 操作行「🖼」上传截图图标钮：描边方形图标，不抢主行动 */
+.note-upload-btn {
+  flex: 0 0 auto;
+  width: 48px;
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--clay);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.note-upload-btn:hover:not(:disabled) {
+  border-color: var(--clay);
+  color: var(--clay-deep);
+}
+
+.note-upload-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* 粘贴分享文案识别到链接：深色 toast，展示 3s 后自动淡出（JS 3.4s 卸载） */
+.note-link-toast {
+  background: #3E372E;
+  color: #fff;
+  font-size: 11.5px;
+  line-height: 1.5;
+  text-align: center;
+  border-radius: 20px;
+  padding: 7px 14px;
+  margin-bottom: 10px;
+  animation: note-link-toast-lifecycle 3.4s ease forwards;
+}
+
+@keyframes note-link-toast-lifecycle {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  8% {
+    opacity: 1;
+    transform: none;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------- 短文本快速搜索（NoteInput 文字通道）：直搜飞猪 + 勾选添加 ---------- */
+.quick-search-panel {
+  margin-top: 4px;
+}
+
+.quick-search-query {
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.quick-results {
+  display: flex;
+  flex-direction: column;
+}
+
+.quick-result {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 12px 4px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  font-family: inherit;
+  animation: rise 0.24s ease both;
+}
+
+.quick-result:last-child {
+  border-bottom: none;
+}
+
+.quick-check {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--line2);
+  border-radius: 6px;
+  background: var(--bg);
+  color: transparent;
+  font-size: 12px;
+  line-height: 1;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.quick-result.on .quick-check {
+  background: var(--cta);
+  border-color: var(--cta);
+  color: #fff;
+}
+
+.quick-result-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.quick-result-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.quick-result-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quick-result-cat {
+  flex: 0 0 auto;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(139, 92, 69, 0.1);
+  color: var(--clay-deep);
+}
+
+/* Task #219：搜索结果的大景区 / 「XX」子景点标注（「景点」标签后的强调变体） */
+.quick-result-cat.attraction-tag {
+  background: var(--clay-soft);
+  border: 1px solid var(--clay-line);
+  color: var(--clay-deep);
+  font-weight: 600;
+}
+
+/* 快速搜索部分失败提示：单侧通道失败，另一侧结果照常展示 */
+.quick-partial-notice {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(139, 92, 69, 0.08);
+  color: var(--clay-deep);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.quick-result-address {
+  font-size: 12px;
+  color: var(--ink3);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.quick-empty {
+  text-align: center;
+  padding: 26px 12px;
+}
+
+.quick-empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.quick-empty-hint {
+  font-size: 12.5px;
+  color: var(--ink3);
+  line-height: 1.5;
+}
+
+/* ---------- Task #221：搜索结果底部自定义点位兑底（「都不是」→ 内联表单） ---------- */
+/* 入口为次要文字按钮（虚线分隔 + 灰字，hover 变陶土色），不抢「添加选中的」主行动；
+   表单紧凑两字段，视觉延续 quick-results 的行距与字体层级 */
+.quick-custom-bar {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line2);
+  text-align: center;
+}
+
+.quick-custom-toggle {
+  border: none;
+  background: none;
+  padding: 4px 8px;
+  font-family: inherit;
+  font-size: 12.5px;
+  color: var(--ink3);
+  cursor: pointer;
+}
+
+.quick-custom-toggle:hover {
+  color: var(--clay-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.quick-custom-form {
+  margin-top: 10px;
+  padding: 12px 12px 10px;
+  border: 1px solid var(--clay-line);
+  border-radius: 12px;
+  background: var(--card2);
+  animation: rise 0.24s ease both;
+}
+
+.quick-custom-field {
+  margin-bottom: 10px;
+}
+
+.quick-custom-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink2);
+  margin-bottom: 5px;
+}
+
+.quick-custom-req {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--clay-deep);
+  border: 1px solid var(--clay-line);
+  border-radius: 6px;
+  padding: 1px 5px;
+}
+
+.quick-custom-input {
+  width: 100%;
+  height: 38px;
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 0 12px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.quick-custom-input:focus {
+  border-color: var(--clay);
+}
+
+.quick-custom-input::placeholder {
+  color: var(--ink3);
+  font-size: 12px;
+}
+
+.quick-custom-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.quick-custom-actions button {
+  font-family: inherit;
+  font-size: 13.5px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.quick-custom-cancel {
+  flex: 1;
+  padding: 10px 0;
+  border: 1px solid var(--line2);
+  background: var(--card);
+  color: var(--ink2);
+}
+
+.quick-custom-confirm {
+  flex: 2;
+  padding: 10px 0;
+  border: none;
+  background: var(--cta);
+  color: #fff;
+  font-weight: 500;
+}
+
+.quick-custom-confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quick-custom-hint {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--ink3);
+  line-height: 1.6;
+}
+
+/* 创建成功提示：内联浅融绿横幅（同 note-submit-notice 语义），3 秒后 JS 卸载 */
+.quick-custom-added {
+  margin-top: 10px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+  font-size: 12px;
+  line-height: 1.6;
+  animation: fade-in 0.18s ease;
+}
+
+.note-actions,
+.note-results-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.note-actions button,
+.note-results-actions button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
+
+.note-actions .extract-btn,
+.note-results-actions .extract-btn {
+  background: var(--cta);
+  color: #fff;
+}
+
+.note-actions .extract-btn:disabled,
+.note-results-actions .extract-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.note-actions .screenshot-btn,
+.note-results-actions .screenshot-btn {
+  background: var(--card2);
+  color: var(--clay);
+}
+
+.note-actions .screenshot-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------- 快速搜索确认行贴滚动区可视底部（Task #106） ---------- */
+/* 结果列表较长时正文区溢出内部滚动，sticky 让「添加选中的」确认行在溢出滚动时
+   始终吸附在可视底边；负 margin 拉通全宽并覆盖正文区底 padding，不透明背景
+   遮住下方穿过的滚动内容。（Task #223 起「保存攻略」已随输入区固定，sticky 仅此一处；
+   Task #242 后负 margin 对应的是 .note-input-body 的内边距） */
+.note-input-sheet .note-results-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  margin: 12px -16px -20px;
+  padding: 10px 16px 14px;
+  background: var(--card);
+}
+
+/* 「提交」分流说明：一行小灰字，交代短文本与长文各自的去向，避免用户猜按钮含义 */
+.note-submit-hint {
+  margin-top: 8px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink3);
+  text-align: center;
+}
+
+/* ---------- Extract results ---------- */
+.extract-results {
+  margin-top: 16px;
+}
+
+.extract-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  animation: rise 0.24s ease both;
+}
+
+.extract-item:last-child {
+  border-bottom: none;
+}
+
+.extract-item .item-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.extract-item .item-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.extract-item .match-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.extract-item .match-tag.matched {
+  background: rgba(52, 199, 89, 0.12);
+  color: #34c759;
+}
+
+.extract-item .match-tag.unmatched {
+  background: var(--card2);
+  color: var(--clay);
+}
+
+/* 待飞猪匹配：FlyAI 搜索失败（≠未收录），中性灰弱化展示 */
+.extract-item .match-tag.pending {
+  background: var(--card2);
+  color: var(--ink3);
+  border: 1px dashed var(--line2);
+}
+
+.extract-item .item-duration {
+  font-size: 12px;
+  color: var(--clay);
+}
+
+.extract-item .item-summary {
+  font-size: 13px;
+  color: var(--clay);
+  line-height: 1.4;
+}
+
+.extract-errors {
+  background: rgba(255, 59, 48, 0.08);
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #ff3b30;
+  line-height: 1.6;
+}
+
+/* 分类错误下的可操作提示：弱化显示，与主 message 区分层级 */
+.extract-error-hint {
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(255, 59, 48, 0.72);
+}
+
+.extract-count {
+  text-align: center;
+  font-size: 14px;
+  color: var(--sage);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+/* ---------- 截图通道（统一输入区右下角入口；多选预览在 B4 区块定义） ---------- */
+/* 原生 file input 隐藏，由 textarea 右下角「🖼 上传截图」小按钮触发选择 */
+.shot-file-input {
+  display: none;
+}
+
+/* 隐私说明：sage 软底弱化展示，不抢主内容 */
+.shot-privacy {
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--ink3);
+  background: var(--sage-soft);
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin-top: 10px;
+}
+
+/* note-actions 内的 ghost 按钮：抵消全局 .ghost 的 margin-top，与主按钮对齐 */
+.note-actions .ghost {
+  margin-top: 0;
+}
+
+/* ---------- F0 初始化两步 ---------- */
+.init {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  gap: 18px;
+}
+
+.init-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.init-mark {
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+  background: var(--ink);
+  color: #F6F2EC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.init-brand b {
+  display: block;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+}
+
+.init-brand span {
+  display: block;
+  font-size: 11.5px;
+  color: var(--ink2);
+  margin-top: 3px;
+}
+
+.init-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 20px 18px 18px;
+  box-shadow: 0 24px 50px -30px rgba(60, 48, 36, 0.45);
+  animation: rise 0.4s ease both;
+}
+
+.init-stepbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.init-stepbar span {
+  flex: 1;
+  text-align: center;
+  font-size: 11px;
+  color: var(--ink3);
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 4px;
+}
+
+.init-stepbar span.on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #F6F2ED;
+  font-weight: 600;
+}
+
+.init-field {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.init-field > span {
+  display: block;
+  font-size: 11px;
+  color: var(--ink2);
+  margin-bottom: 6px;
+}
+
+.init-field input,
+.init-field select {
+  width: 100%;
+  /* Task #378：允许在 grid/flex 轨道里收缩到比控件固有宽度更窄（320 视口日期并排不越屏） */
+  min-width: 0;
+  border: 1px solid var(--line2);
+  background: #fff;
+  border-radius: 10px;
+  padding: 9px 11px;
+  font-size: 13px;
+  outline: none;
+  color: var(--ink);
+  color-scheme: light;
+}
+
+.init-field input:focus,
+.init-field select:focus {
+  border-color: var(--clay);
+}
+
+.init-field input.ro {
+  background: var(--card2);
+  color: var(--ink2);
+}
+
+.init-dates {
+  display: grid;
+  /* Task #378：1fr 的隐含最小值是 auto（date 控件固有宽 ≈140px），320 视口两列
+     撑破卡片、结束日期越出屏幕右缘；minmax(0,1fr) 允许轨道收缩，输入框随列等分 */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+
+.init-error {
+  font-size: 11.5px;
+  color: var(--warn);
+  background: var(--warn-soft);
+  border-radius: 9px;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.init-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.init-actions .cta {
+  flex: 1.2;
+}
+
+.init-actions .ghost {
+  flex: 1;
+  margin-top: 0;
+}
+
+.init-hint {
+  font-size: 11.5px;
+  color: var(--ink2);
+  line-height: 1.7;
+  background: var(--card2);
+  border-radius: 10px;
+  padding: 9px 11px;
+  margin-bottom: 12px;
+}
+
+.init-drafts {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.init-draft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--clay-soft);
+  border: 1px solid var(--clay-line);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.init-draft-label {
+  flex: 1;
+  font-size: 12px;
+  color: var(--clay-deep);
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.init-draft-meta {
+  font-size: 10px;
+  color: var(--clay-deep);
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.init-draft button {
+  font-size: 10.5px;
+  color: var(--warn);
+  flex: 0 0 auto;
+}
+
+.init-cform {
+  border-top: 1px dashed var(--line2);
+  padding-top: 13px;
+}
+
+.init-crow {
+  display: flex;
+  gap: 10px;
+}
+
+.init-crow .small {
+  width: 86px;
+  flex: 0 0 86px;
+}
+
+.init-crow .grow {
+  flex: 1;
+  /* Task #378：flex 项默认 min-width:auto，备注输入内容长时不收缩会把行撑出屏幕 */
+  min-width: 0;
+}
+
+.ghost.wide {
+  width: 100%;
+  margin-top: 2px;
+}
+
+.init-foot {
+  font-size: 10.5px;
+  color: var(--ink3);
+  text-align: center;
+  line-height: 1.7;
+}
+
+/* ---------- Task #206：行程内约束编辑浮层 ----------
+   骨架复用 .proposal-sheet（底部抽屉 / 圆角 / 隐藏滚动条）与 .proposal-head /
+   .proposal-actions（吸顶吸底，避免隐藏滚动条容器把「保存」裁出可视区）；
+   编辑表单沿用 .init-* 系列，与初始化流程第二步保持同一套输入样式。
+   面板比草案面板略高：已有约束列表 + 新增表单同时存在时内容更长。 */
+.constraint-sheet {
+  max-height: 74vh;
+}
+
+/* 空态：还没录入约束时的占位说明（浮层与内嵌共用） */
+.constraint-empty {
+  font-size: 11.5px;
+  color: var(--ink3);
+  background: var(--card2);
+  border: 1px dashed var(--line2);
+  border-radius: 10px;
+  padding: 11px 12px;
+  margin-bottom: 12px;
+  line-height: 1.7;
+}
+
+/* ---------- F3 锁定徽标：颜色与尺寸统一在 .card-actions .lock-badge（任务 213） ---------- */
+
+/* ---------- F7 购买状态菜单（fixed 定位避免被卡片裁剪，位置由 JS 向视口收敛） ---------- */
+.purchase-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+
+.purchase-menu {
+  position: fixed;
+  min-width: 148px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 51;
+  padding: 4px 0;
+  animation: menu-in 0.14s ease-out both;
+}
+
+.purchase-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 13.5px;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.purchase-menu-item:active {
+  background: var(--card2);
+}
+
+.purchase-menu-item.active {
+  color: var(--cta);
+  font-weight: 600;
+}
+
+/* ---------- 任务 124：多来源「打开原文」极简列表（灰色原文入口多源态） ----------
+   固定定位与购票菜单同档（51，高于 .sheet 9）：父卡 overflow:hidden 会裁剪
+   absolute 浮层；位置由 JS 向视口收敛；打开时订阅 sheetBus，任一底部浮层
+   打开即让位关闭，不与 EvidenceSheet / OpLogSheet 叠层 */
+.source-menu {
+  position: fixed;
+  width: 248px;
+  max-width: calc(100vw - 16px);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 51;
+  padding: 4px 0;
+  animation: menu-in 0.14s ease-out both;
+}
+
+.source-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+}
+
+.source-menu-item + .source-menu-item {
+  border-top: 1px solid var(--line);
+}
+
+/* 只列标题与「打开原文」，不展示任何 AI 提炼内容 */
+.source-menu-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.source-menu-open {
+  flex-shrink: 0;
+  font-size: 11.5px;
+  color: var(--clay);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.source-menu-open:active {
+  color: var(--clay-deep);
+}
+
+/* 站外已购：卡面标注「用户确认，非订单同步」 */
+.external-note {
+  font-size: 10px;
+  color: var(--clay);
+  font-style: italic;
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 站外已购备注输入框（复用 confirm 弹窗骨架） */
+.confirm-input {
+  width: 100%;
+  border: 1px solid var(--line2);
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13.5px;
+  color: var(--ink);
+  outline: none;
+  margin: 0 0 18px;
+}
+
+.confirm-input:focus {
+  border-color: var(--clay);
+}
+
+.confirm-btn.ok:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- F12 候选池彻底删除按钮 ---------- */
+.mini.danger {
+  color: var(--warn);
+  border-color: var(--warn-soft);
+  padding: 6px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mini.danger:hover {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+.mini.danger svg {
+  display: block;
+}
+
+/* ---------- F0 四步初始化：步骤圆点 + 偏好标签 + 片区意向 ---------- */
+.step-dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 2px 0 10px;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink3);
+  opacity: 0.3;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.step-dot.active {
+  opacity: 1;
+  background: var(--cta);
+}
+
+.step-dot.done {
+  opacity: 0.6;
+  background: var(--sage);
+}
+
+.init-steptitle {
+  font-size: 14px;
+  font-weight: 650;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.pref-section {
+  margin-bottom: 16px;
+}
+
+.pref-section h4 {
+  font-size: 12px;
+  color: var(--ink2);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.pref-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pref-tag {
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--line2);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.pref-tag:hover {
+  border-color: var(--clay);
+}
+
+.pref-tag.selected {
+  border-color: var(--cta);
+  background: rgba(255, 106, 0, 0.08);
+  color: var(--cta);
+  font-weight: 500;
+}
+
+.area-intent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.area-intent-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.area-intent-row .day-label {
+  font-weight: 650;
+  font-size: 12.5px;
+  min-width: 46px;
+  flex: 0 0 46px;
+}
+
+.area-intent-row .day-date {
+  font-size: 11px;
+  color: var(--ink3);
+  flex: 0 0 auto;
+}
+
+.area-intent-row select {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line2);
+  background: #fff;
+  border-radius: 9px;
+  padding: 7px 9px;
+  font-size: 12px;
+  color: var(--ink);
+  outline: none;
+  color-scheme: light;
+}
+
+.area-intent-row select:focus {
+  border-color: var(--clay);
+}
+
+/* ---------- 动画 ---------- */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes chip-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes item-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes sheet-up {
+  from { transform: translateY(103%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@keyframes confirm-pop {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes menu-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================================
+   M2 F12 批量移除与近期操作记录
+   ============================================================ */
+
+/* ---------- Day 卡「添加」入口（dayhead 右侧小 pill，B4 统一添加入口） ---------- */
+.day-add {
+  flex: 0 0 auto;
+  margin-left: 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--line2);
+  color: var(--clay-deep);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.day-add:hover {
+  border-color: var(--clay);
+  background: var(--card2);
+}
+
+/* ---------- 批量管理入口（dayhead 右侧小 pill） ---------- */
+.batch-entry {
+  flex: 0 0 auto;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  color: var(--ink2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.batch-entry:hover {
+  border-color: var(--clay);
+  color: var(--clay-deep);
+}
+
+/* ---------- 批量选择态：选择框竖条取代拖拽把手；选中卡片描边高亮 ---------- */
+.row .pick {
+  width: 24px;
+  flex: 0 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card2);
+  border-right: 1px solid var(--line);
+}
+
+.row .pick-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1.5px solid var(--line2);
+  background: #fff;
+  color: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 15px;
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.row .pick.on {
+  background: var(--sage-soft);
+}
+
+.row .pick.on .pick-dot {
+  background: var(--sage-deep);
+  border-color: var(--sage-deep);
+  color: #f6f2ec;
+}
+
+.row[data-selected="true"] {
+  cursor: pointer;
+}
+
+.row[data-selected="true"] .item {
+  border-color: var(--sage);
+  box-shadow: 0 0 0 1px var(--sage);
+}
+
+/* ---------- 批量模式底部操作栏：与 undo-toast 同位避开 IntentBar（bottom 84px） ---------- */
+.batch-bar {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 84px;
+  z-index: 50;
+  background: var(--card);
+  border: 1px solid var(--line2);
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.35);
+  animation: slide-up 0.26s ease-out both;
+}
+
+.batch-count {
+  flex: 1 1 auto;
+  font-size: 11.5px;
+  color: var(--ink2);
+  min-width: 0;
+}
+
+.batch-cancel {
+  flex: 0 0 auto;
+  font-size: 12.5px;
+  color: var(--ink2);
+  padding: 7px 11px;
+  border-radius: 10px;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.batch-confirm {
+  flex: 0 0 auto;
+  font-size: 12.5px;
+  font-weight: 650;
+  color: #f6f2ec;
+  background: var(--sage-deep);
+  border: 0;
+  padding: 8px 13px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.batch-confirm:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- M2 F12 近期操作记录 Sheet ---------- */
+.oplog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.oplog-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 11px;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.oplog-kind {
+  flex: 0 0 auto;
+  font-size: 10.5px;
+  font-weight: 650;
+  padding: 3px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.oplog-kind.k-warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.oplog-kind.k-sage {
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+}
+
+.oplog-kind.k-slate {
+  background: var(--slate-soft);
+  color: var(--slate-deep);
+}
+
+.oplog-kind.k-lock {
+  background: var(--slate-soft);
+  color: var(--lock);
+}
+
+.oplog-kind.k-clay {
+  background: var(--clay-soft);
+  color: var(--clay-deep);
+}
+
+.oplog-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.oplog-label {
+  font-size: 12.5px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oplog-detail {
+  font-size: 10.5px;
+  color: var(--ink3);
+  margin-top: 2px;
+}
+
+.oplog-time {
+  flex: 0 0 auto;
+  font-size: 10.5px;
+  color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+}
+
+.oplog-foot {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--line);
+}
+
+/* ============================================================
+   v1.1 大景区父子 POI（PRD §7.5-7.6 · Module C 卡片改造）
+   父卡（76×76 缩略图横向头部 + 岛内路线条 + 攻略引用块）/
+   内部玩法 StopRow（序号圆点 + 时间行，不配图）/ 备选玩法 /
+   待定加入 / 攻略原文 EvidenceSheet
+   ============================================================ */
+
+/* ---------- 大景区父卡：Task #341 白底口径——卡片视觉（白底/1px 边框/15px 圆角）
+   由外层 .parent-item 继承 .item 统一承担，把手列进入卡内白底，
+   彻底消除米色把手条、左缘缝隙与双边框感（mockup 形态） ---------- */
+.parent-item {
+  min-height: 0;
+}
+
+.parent-card {
+  /* Task #341：退为纯内容容器——边框/圆角/白底/裁切全部上交 .parent-item；
+     banner 改内嵌后自带圆角，不再依赖本层 overflow 裁切 */
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---------- 老版视觉恢复：父卡顶部横版大照片（高 154px） ----------
+   Task #341：由贴边全幅改为内嵌留边 + 自身圆角（mockup 口径）：
+   上/左/右 12px 内嵌、圆角 12px 自带裁切；宽度由 margin 自适应（不再 width:100%）；
+   高度固定（不用 aspect-ratio）：无图时占位同尺寸，内容加载不跳动 */
+.parent-banner {
+  margin: 12px 12px 0;
+  height: 154px;
+  /* 无图回退：米色渐变占位 */
+  background: linear-gradient(135deg, #e8d9c4, #d3b99a);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.parent-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------- 新版父卡头部：标题/标签/副文本横向布局（图片已上移为 banner） ---------- */
+.parent-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px;
+}
+
+.parent-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.parent-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.parent-name {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 城市级 ✕：标题行右侧唯一操作钮（锁定/购票状态降为标签，无独立按钮） */
+.parent-close {
+  flex: 0 0 auto;
+  border: none;
+  background: none;
+  padding: 2px 4px;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--ink3);
+}
+
+.parent-close:hover {
+  color: var(--warn);
+}
+
+.parent-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.parent-sub {
+  margin-top: 5px;
+  font-size: 10.5px;
+  color: var(--ink3);
+}
+
+/* 父卡底部信息行（任务 220）：时长摘要居左 + 整行动作区居右；
+   右侧用 -2px 抵消 .parent-top 的 11px 内边距，使橙按钮右缘与景点卡/酒店卡重合。 */
+.parent-foot {
+  display: flex;
+  /* Task #356（PD DEMO v0.6 转化行）：column→row——时长摘要与动作区（含 MOCK
+     退票话术）同一行两端分布（space-between，SHOW_ESTIMATED_TIMES 打开时生效）；
+     Task #368：#356 有话术时行上方浅分隔线（:has 门控）已除——无话术卡片无线观感不一致 */
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  margin-top: 7px;
+  margin-right: -2px;
+}
+
+/* Task #365（PD 反馈：亚龙湾无话术父卡按钮组左缩）：#356 row 化后本规则覆盖了
+   基类 margin-left:auto，而基类 flex:0 0 auto 使动作区缩成内容宽——无时长段
+   （SHOW_ESTIMATED_TIMES 关，常态）时 space-between 单子落 flex-start，按钮组
+   整体左靠与普通卡形态分叉。修复：flex:1 1 auto + min-width:0 占满剩余行宽，
+   内部沿用基类 justify-content:flex-end 右排——无话术父卡与普通卡转化行视觉一致；
+   有话术父卡（西岛/蜈支洲岛）仍由 .buy-assure margin-right:auto 话术左+按钮右（#356 形态不变） */
+.parent-foot .card-actions {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-left: 0;
+  padding: 0;
+}
+
+.parent-foot .parent-sub {
+  margin-top: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- Module C 攻略亮点引用块：多 snippet 合并 + 原文弱入口 ---------- */
+.guide-quote {
+  margin: 10px 11px 0;
+  padding: 12px;
+  background: #faf7f2;
+  border-left: 3px solid #e5c9a8;
+  border-radius: 0 8px 8px 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--ink2);
+}
+
+.guide-quote-text {
+  overflow-wrap: anywhere;
+}
+
+.guide-quote-link {
+  margin-left: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 10.5px;
+  color: #c46a3a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.guide-quote-link:hover {
+  color: var(--warn);
+}
+
+/* ---------- 父卡「推荐玩法待确认」（验收修复：大景区升级后待定子玩法的一键采纳入口） ---------- */
+.adopt-hint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 10px 11px 0;
+  padding: 8px 10px;
+  background: var(--clay-soft);
+  border: 1px solid var(--clay-line);
+  border-radius: 8px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--clay-deep);
+}
+
+.adopt-hint-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-wrap: anywhere;
+}
+
+.adopt-hint-names {
+  font-size: 10px;
+  color: var(--ink2);
+}
+
+.adopt-hint-btn {
+  flex: none;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 999px;
+  background: var(--clay);
+  color: #fff;
+  font-size: 10.5px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.adopt-hint-btn:active {
+  background: var(--clay-deep);
+}
+
+/* ---------- 岛内小行程（StopRow，始终展开；56×56 小方图 + 时间行；编号圆点已按用户要求去除） ---------- */
+.child-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 12px 7px;
+}
+
+.child-head b {
+  font-size: 12px;
+}
+
+.child-head span {
+  font-size: 9px;
+  color: var(--ink3);
+}
+
+.child-list {
+  padding: 0 11px 9px;
+}
+
+.child {
+  display: grid;
+  /* 任务 113：编号列已删，图列 56px；1fr 文本列带 min-width:0 保长地址换行，
+     auto 按钮列固定不被挤出（.app 最大宽 420px 下文本区仍余约 190px） */
+  grid-template-columns: 56px 1fr auto;
+  gap: 8px;
+  position: relative;
+  padding: 9px 0;
+}
+
+.child:not(:last-child) {
+  border-bottom: 1px dashed var(--line);
+}
+
+/* 老版视觉恢复 + 任务 113：内部玩法 56×56 小方图（cover 不变形；圆角与父卡缩略图一致；
+   尺寸固定，无图/加载失败时任务 128 统一占位填满同窗，不跳动） */
+.child-pic {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  /* 背景交给占位组件自身渐变（.ph-*），有图时图片覆盖，不重复上色 */
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.child-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* generic 类别的地图钉（仅 StopRow 56×56 场景命中容器规则） */
+.child-pic svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* ---------- 任务 128：统一无图占位（低饱和渐变 + 类别图标 + 精简短名） ----------
+   三场景共用：普通卡 .thumb / StopRow .child-pic / 大景区 .parent-banner；
+   .ph-tile 铺满外层容器（100%×100%），尺寸由容器决定，切换零跳动；
+   配色自 clay/sage/sand 体系低饱和衍生，图形色比底色深 4 档以上保证可读；
+   任务 130：类别大单字改为克制线条 SVG 图标（.ph-icon，generic 仍用 .ph-pin），
+   短名字号与权重降低，画面更安静 */
+.ph-tile {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  user-select: none;
+}
+
+.ph-icon {
+  display: block;
+}
+
+.ph-pin {
+  width: 20px;
+  height: 20px;
+}
+
+.ph-name {
+  max-width: 88%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+  line-height: 1.2;
+  opacity: 0.85;
+}
+
+/* 类别渐变与字色（底浅字深，对比可读） */
+.ph-dining {
+  background: linear-gradient(150deg, #efdfc9, #dbbe9e);
+  color: #6b4e33;
+}
+
+.ph-coffee {
+  background: linear-gradient(150deg, #e6d2bc, #cdb091);
+  color: #58412d;
+}
+
+.ph-beach {
+  background: linear-gradient(150deg, #dde6df, #b8c9be);
+  color: #42554a;
+}
+
+.ph-sight {
+  background: linear-gradient(150deg, #ecdfc3, #d8c199);
+  color: #5e4e2d;
+}
+
+.ph-shopping {
+  background: linear-gradient(150deg, #efd9ce, #dbbaaa);
+  color: #74432e;
+}
+
+.ph-stay {
+  background: linear-gradient(150deg, #e1dcd3, #c6beb0);
+  color: #514b43;
+}
+
+.ph-generic {
+  background: linear-gradient(150deg, #e8d9c4, #d3b99a);
+  color: #8a6b4f;
+}
+
+/* 三场景图标/短名尺寸（任务 130：图标统一 24 viewBox 描边，按场景收敛大小；
+   图钉 .ph-pin 维持原尺寸不回归）：普通卡主图窗 / StopRow 56px / 大景区横幅 */
+/* Task #337：无图占位与有图窗口同槽同圆角（10px），避免无图态回退方角；
+   Task #347：占位与 .thumb-frame 共用同一窗口盒（左内缩 12、上下≥8）；
+   Task #364：D 档区间高同步（height:100% + min 120 + max 160），占位基类 flex 居中渲染，
+   无图/有图切换零跳动不变 */
+.thumb > .ph-tile {
+  border-radius: 10px;
+  height: 100%;
+  min-height: 120px;
+  max-height: 160px;
+}
+
+.thumb .ph-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.thumb .ph-name {
+  font-size: 10.5px;
+  margin-top: 3px;
+}
+
+.thumb .ph-pin {
+  width: 34px;
+  height: 34px;
+}
+
+.child-pic .ph-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.child-pic .ph-name {
+  font-size: 8.5px;
+}
+
+.parent-banner .ph-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.parent-banner .ph-name {
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.parent-banner .ph-pin {
+  width: 38px;
+  height: 38px;
+}
+
+/* Module C 时间行：推算区间（或「建议 X」）+ 票务/自定义小标签 */
+.child-time {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.child-time-text {
+  font-size: 10.5px;
+  color: var(--ink3);
+}
+
+.child-main {
+  min-width: 0;
+}
+
+.child-name {
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* Stop 名称的飞猪详情链接：沿用购票链接的暖陶色主题 */
+.child-link {
+  color: var(--clay-deep);
+  text-decoration: underline;
+  text-decoration-color: var(--clay-line);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.child-link:hover {
+  text-decoration-color: var(--clay-deep);
+}
+
+.child-link:active {
+  color: var(--clay);
+}
+
+.child-hint {
+  font-size: 10px;
+  color: var(--ink3);
+  margin-top: 5px;
+  overflow-wrap: anywhere;
+}
+
+/* 「查看攻略原文」弱入口：无边框文字链接样式 */
+.child-evidence {
+  margin-top: 5px;
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 10px;
+  color: var(--clay);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.child-evidence:active {
+  color: var(--clay-deep);
+}
+
+.child-buttons {
+  display: flex;
+  gap: 3px;
+  align-items: flex-start;
+}
+
+.child-buttons button {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  color: var(--ink2);
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.child-buttons button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* Task #176：原 .child-empty（岛内行程为空引导）已随空态移除——
+   大景点没有实际内部 child stop 时整块不渲染，不再展示空行动点 */
+
+/* 自定义添加点位标识（飞猪未收录，用户手工添加） */
+.tag.custom-stop {
+  border-style: dashed;
+  color: var(--ink2);
+}
+
+/* ---------- 备选玩法（父卡内 alternateStopRefs 展开区） ---------- */
+.reserve-block {
+  border-top: 1px solid var(--line);
+  padding: 8px 11px 10px;
+}
+
+.reserve-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: none;
+  padding: 2px 0;
+  font-size: 11px;
+  color: var(--ink2);
+  cursor: pointer;
+}
+
+.reserve-arrow {
+  font-size: 10.5px;
+  color: var(--clay);
+}
+
+.reserve-list {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reserve-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+.reserve-info {
+  min-width: 0;
+}
+
+.reserve-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reserve-meta {
+  font-size: 10px;
+  color: var(--ink3);
+  margin-top: 2px;
+}
+
+/* ---------- 候选池：大景区壳标识 / 待定加入归类展开 ---------- */
+.pool-kind {
+  margin-left: 5px;
+}
+
+.poolitem.pending-stop,
+.poolitem.reserve-group {
+  flex-wrap: wrap;
+}
+
+.attach-options {
+  flex: 1 0 100%;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.attach-options .mini {
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- 攻略原文 Sheet（EvidenceSheet 弱入口内容） ---------- */
+.evidence-group {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.evidence-group:last-of-type {
+  border-bottom: 0;
+}
+
+.evidence-src {
+  font-size: 10px;
+  color: var(--ink3);
+  margin-bottom: 8px;
+}
+
+.evidence-quote {
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--card2);
+  margin-bottom: 6px;
+}
+
+.evidence-quote p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* sourceMentionRefs 精确指向的提及：sage 高亮置顶语义 */
+.evidence-quote.hit {
+  border-color: var(--sage);
+  background: var(--sage-soft);
+}
+
+.evidence-sum {
+  margin-top: 6px;
+  font-size: 10.5px;
+  color: var(--ink3);
+}
+
+.evidence-note {
+  padding: 10px 16px;
+  font-size: 10.5px;
+  line-height: 1.55;
+  color: var(--ink3);
+  border-top: 1px solid var(--line);
+}
+
+.evidence-empty {
+  padding: 28px 16px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+/* ---------- 截图证据块（Task #51，EvidenceSheet） ---------- */
+/* Task #65：非阻塞提示（如单行程截图配额超限），warn 软底、不阻断结果阅读 */
+.shot-warn {
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--warn);
+  background: var(--warn-soft);
+  border-radius: 8px;
+}
+
+.evidence-shot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+  background: var(--card2);
+  margin-bottom: 8px;
+}
+
+.evidence-asset {
+  font-size: 10.5px;
+  color: var(--ink3);
+  overflow-wrap: anywhere;
+}
+
+/* OCR 全文：长文限高滚动，保留换行 */
+.evidence-ocr {
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 180px;
+  overflow-y: auto;
+  background: var(--card);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.evidence-privacy {
+  font-size: 10px;
+  color: var(--ink3);
+}
+
+/* ---------- 截图原图回看（Task #65，EvidenceSheet） ---------- */
+/* 缩略图：约 120px 宽，点击打开全屏原图 */
+.evidence-thumb {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: zoom-in;
+  text-align: left;
+}
+
+.evidence-thumb img {
+  display: block;
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+.evidence-thumb-hint {
+  font-size: 10px;
+  color: var(--ink3);
+}
+
+/* 原图全屏 overlay：点击任意处关闭，层级高于攻略原文 Sheet（.backdrop 8 / .sheet 9） */
+.evidence-zoom {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(31, 27, 23, 0.86);
+  cursor: zoom-out;
+  animation: evidence-zoom-fade 0.18s ease;
+}
+
+.evidence-zoom img {
+  max-width: 92vw;
+  max-height: 84vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+}
+
+.evidence-zoom-close {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@keyframes evidence-zoom-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ---------- 来源原文查看层（任务 186：截图原图 / 粘贴文字原文回看） ----------
+   复用 .backdrop/.sheet 既有观感，仅抬高 z-index 盖过统一添加面板（60/61）；
+   文本 pre-wrap 保留换行；图片纵向按上传顺序，点击进 .evidence-zoom 全屏回看 */
+.source-original-backdrop {
+  z-index: 62;
+}
+
+.source-original-sheet {
+  z-index: 63;
+}
+
+.source-original-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: var(--ink2);
+  background: var(--card2);
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.source-original-images {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.source-original-image {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.source-original-thumb {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.source-original-thumb img {
+  display: block;
+  width: 100%;
+  max-height: 340px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--line2);
+}
+
+.source-original-caption {
+  font-size: 10.5px;
+  color: var(--ink3);
+}
+
+.source-original-ext {
+  font-size: 10.5px;
+  color: var(--ink3);
+  overflow-wrap: anywhere;
+}
+
+.source-original-ext a {
+  color: var(--clay-deep);
+  text-decoration: underline;
+}
+
+/* ---------- 添加点位 Sheet（AddStopSheet，PRD §7.6） ---------- */
+.addstop-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.addstop-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.addstop-form label span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.addstop-form label em {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 9.5px;
+  color: var(--ink3);
+  margin-left: 4px;
+}
+
+.addstop-form input,
+.addstop-form textarea {
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.addstop-form input:focus,
+.addstop-form textarea:focus {
+  outline: none;
+  border-color: var(--clay);
+}
+
+.addstop-form textarea {
+  resize: vertical;
+  min-height: 64px;
+  line-height: 1.55;
+}
+
+.addstop-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Task #334：添加点位降级 custom 的内联提示条（复用 candidate-toast 深色样式，
+   文案较长时允许换行完整展示，不省略） */
+.addstop-fallback-toast .candidate-toast-text {
+  white-space: normal;
+}
+
+/* ---------- B4 攻略来源列表（统一添加 Sheet 顶部常驻） ---------- */
+.guide-source-list {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card2);
+  padding: 10px 12px;
+  /* Task #236：列表已下移到录入区之后，上下都留一档间距（不再贴 Sheet 顶部） */
+  margin: 14px 0;
+}
+
+.guide-source-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+/* 右侧计数（Task #223，DEMO ②）：「已添加 N 篇」小字弱化 */
+.guide-source-count {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--ink3);
+}
+
+/* 空态引导（Task #223，DEMO ②）：虚线框提示，颜色沿用既有 token */
+.guide-source-empty {
+  border: 1px dashed var(--line2);
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--ink3);
+}
+
+.guide-source-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  /* Task #224：底边进度轨的定位上下文（只加 position，不加 overflow——
+     行内按钮的 focus ring 不能被裁掉） */
+  position: relative;
+}
+
+.guide-source-item:last-child {
+  border-bottom: none;
+  padding-bottom: 2px;
+}
+
+.guide-source-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.guide-source-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.guide-source-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 10.5px;
+  color: var(--ink3);
+}
+
+.guide-source-status {
+  border-radius: 999px;
+  padding: 1px 6px;
+  font-size: 9.5px;
+  font-weight: 650;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+
+.guide-source-status.processing {
+  background: var(--slate-soft);
+  color: var(--slate-deep);
+  /* Task #224：处理中的胶囊加一道缓慢掠过的高光——静态标签变「活」的最小改动，
+     不新增任何 markup，也不改变胶囊尺寸（避免行内布局抖动） */
+  position: relative;
+  overflow: hidden;
+}
+
+.guide-source-status.processing::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 18%,
+    rgba(255, 255, 255, 0.78) 50%,
+    transparent 82%
+  );
+  transform: translateX(-100%);
+  animation: source-pill-sheen 2.4s ease-in-out infinite;
+}
+
+@keyframes source-pill-sheen {
+  0% {
+    transform: translateX(-100%);
+  }
+  55%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.guide-source-status.ready {
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+}
+
+.guide-source-status.partial {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.guide-source-status.failed {
+  background: rgba(168, 85, 47, 0.12);
+  color: var(--warn);
+}
+
+.guide-source-progress {
+  white-space: nowrap;
+}
+
+/* Task #224：处理中来源的阶段说明（大卡片密度；紧凑行走 title + 短名） */
+.guide-source-stage {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--slate-deep);
+}
+
+/* 慢档：措辞升级同时换暖色，与草案 / 意图等待的 slow 档同一套色彩语言 */
+.guide-source-stage[data-stalled="true"] {
+  color: var(--warn);
+}
+
+.guide-source-failure {
+  margin-top: 4px;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--warn);
+}
+
+.guide-source-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 「原文」轻量链接（保持原有样式） */
+.guide-source-link {
+  font-size: 10.5px;
+  border: 1px solid var(--line2);
+  background: var(--card);
+  border-radius: 8px;
+  padding: 4px 9px;
+  color: var(--ink2);
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.guide-source-link:hover {
+  border-color: var(--clay);
+  color: var(--clay-deep);
+}
+
+/* 重试：meta 行内联下划线文字链接（非按钮样式），仅 failed / partial 显示 */
+.guide-source-retry {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 10.5px;
+  color: var(--clay);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.guide-source-retry:hover:not(:disabled) {
+  color: var(--clay-deep);
+}
+
+.guide-source-retry:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* 灰色 ✕ 软移除：默认 var(--ink3)，hover 变深 */
+.guide-source-remove {
+  background: none;
+  border: none;
+  padding: 3px 5px;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--ink3);
+  cursor: pointer;
+}
+
+.guide-source-remove:hover:not(:disabled) {
+  color: var(--ink2);
+}
+
+.guide-source-remove:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ---------- Task #236：来源勾选 / 批量栏 / 4 篇起紧凑长列表 ---------- */
+
+/* 勾选框（两种密度共用）：原生 checkbox + accent-color，沿用项目色板；
+   label 是唯一的命中块，避免点勾选框时再触发整行点击造成来回切换 */
+.guide-source-pick {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1px;
+  cursor: pointer;
+}
+
+.guide-source-pick input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--cta);
+  cursor: inherit;
+}
+
+.guide-source-pick input:disabled {
+  cursor: default;
+}
+
+/* 行可点区域视觉提示（不可选来源保持默认指针） */
+.guide-source-item.selectable,
+.guide-compact-item.selectable {
+  cursor: pointer;
+}
+
+/* 「新」标签：staged=true（保存后仅暂存、尚未参与过生成） */
+.guide-source-tag {
+  border-radius: 999px;
+  padding: 1px 6px;
+  font-size: 9.5px;
+  font-weight: 650;
+  line-height: 1.7;
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+  white-space: nowrap;
+}
+
+/* 大卡片行容器（< 4 篇）：无额外装饰，保持既有卡片间距 */
+.guide-source-rows {
+  min-width: 0;
+}
+
+/* 紧凑密度：列表内边距略收，给批量栏让出高度 */
+.guide-source-list.compact {
+  padding: 8px 12px 6px;
+}
+
+/* 批量栏：已选 N / M 篇 + 全选 / 全不选 / 只选新的（长列表专属） */
+.guide-source-batch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 0 7px;
+  border-bottom: 1px solid var(--line);
+}
+
+.guide-source-selcount {
+  font-size: 10.5px;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+
+.guide-source-selcount b {
+  font-weight: 650;
+  color: var(--clay-deep);
+}
+
+.guide-source-batch-actions {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.guide-source-batch-actions button {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 10.5px;
+  color: var(--clay);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.guide-source-batch-actions button:hover:not(:disabled) {
+  color: var(--clay-deep);
+}
+
+/* 「只选新的」是辅助路径，弱化一级 */
+.guide-source-batch-actions button.dim {
+  color: var(--ink3);
+}
+
+.guide-source-batch-actions button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* 紧凑单行列表容器（Task #242）：不再设 max-height / overflow-y / overscroll-behavior。
+   原 .guide-source-scroll 是一层与外层 Sheet 并联的内部滚动容器：手机上滑到列表底部后
+   手势仍被内层吃掉（overscroll-behavior: contain 把链式滚动阻断），用户必须先把手指
+   移出列表才能继续滚面板，体验上就是「卡在攻略区域里」。现在列表直接在文档流里铺开，
+   由 Sheet 的唯一滚动容器 .note-input-body 承载；6~10 篇规模不需要虚拟列表。 */
+.guide-compact-rows {
+  min-width: 0;
+}
+
+/* 紧凑单行：勾选 + 标题（省略）+ 状态（重试 / 解析图片）+ 原文 / 移除 */
+.guide-compact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  /* Task #224：底边进度轨的定位上下文（同 .guide-source-item，不裁 focus ring） */
+  position: relative;
+}
+
+.guide-compact-item:last-child {
+  border-bottom: none;
+}
+
+/* ===== Task #224：来源「处理中」底边进度轨 =====
+   determinate = 图片队列已结算比例（真实信号，随 3s 轮询推进）；
+   indeterminate = 无可靠信号，一段窄光带来回扫——明确表达「在动，但无法预估比例」，
+   而不是画一条会长时间停在 90% 的假进度条。轨道压住 1px 分隔线（bottom:-1px），
+   处理中的行因此不再显示灰色 hairline，一眼可辨；最后一行无分隔线时回到 bottom:0。 */
+.source-wait-meter {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--slate-soft);
+  pointer-events: none;
+}
+
+.guide-source-item:last-child > .source-wait-meter,
+.guide-compact-item:last-child > .source-wait-meter {
+  bottom: 0;
+}
+
+.source-wait-meter > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--slate), var(--clay));
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.source-wait-meter[data-mode="indeterminate"] > i {
+  width: 34%;
+  animation: source-wait-sweep 1.7s ease-in-out infinite;
+}
+
+@keyframes source-wait-sweep {
+  0% {
+    transform: translateX(-105%);
+  }
+  100% {
+    transform: translateX(295%);
+  }
+}
+
+/* 慢档：轨道与光带换暖色并放慢，和阶段文案的 stalled 措辞同步变脸 */
+.source-wait-meter[data-stalled="true"] {
+  background: var(--warn-soft);
+}
+
+.source-wait-meter[data-stalled="true"] > i {
+  background: linear-gradient(90deg, var(--warn), #c0703a);
+}
+
+.source-wait-meter[data-mode="indeterminate"][data-stalled="true"] > i {
+  animation-duration: 2.6s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .source-wait-meter[data-mode="indeterminate"] > i,
+  .guide-source-status.processing::after {
+    animation: none;
+  }
+
+  .source-wait-meter[data-mode="indeterminate"] > i {
+    width: 100%;
+    opacity: 0.55;
+  }
+
+  .guide-source-status.processing::after {
+    display: none;
+  }
+
+  .source-wait-meter > i {
+    transition: none;
+  }
+}
+
+/* 360px 窄屏：阶段说明降到 10px，避免与张数读数一起把 meta 行挤到三行 */
+@media (max-width: 359px) {
+  .guide-source-stage {
+    font-size: 10px;
+  }
+
+  .source-wait-meter {
+    height: 2px;
+  }
+}
+
+.guide-compact-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 未勾选的行弱化一级，选中集合一眼可见 */
+.guide-compact-item:not(.on) .guide-compact-title {
+  font-weight: 550;
+  color: var(--ink2);
+}
+
+.guide-compact-status {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 46%;
+  min-width: 0;
+}
+
+.guide-compact-progress {
+  font-size: 10px;
+  color: var(--ink3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.guide-compact-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.guide-compact-actions .guide-source-remove {
+  padding: 2px 4px;
+  font-size: 13px;
+}
+
+/* 紧凑行「原文」：更轻的下划线文字链接（行内按钮与外链同款） */
+.guide-source-inline-link {
+  background: none;
+  border: none;
+  padding: 0 2px;
+  font-family: inherit;
+  font-size: 10.5px;
+  color: var(--ink3);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.guide-source-inline-link:hover {
+  color: var(--clay-deep);
+}
+
+/* 来源提交成功提示（含去重复用说明） */
+.note-submit-notice {
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+  border-radius: 10px;
+  padding: 9px 11px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+/* ---------- B4 截图多选（作为图片组来源提交） ---------- */
+.shot-file-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 10px;
+}
+
+.shot-file-thumb {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.shot-file-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.shot-file-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(44, 40, 35, 0.72);
+  color: #f3eee7;
+  font-size: 10px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.shot-file-remove:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.shot-file-add {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  border: 1.5px dashed var(--line2);
+  background: none;
+  color: var(--ink3);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.shot-file-add:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ---------- B4 攻略草案行动区（补充句 + 主行动；区块标题与范围说明已移除，任务 142） ---------- */
+.draft-panel {
+  border-top: 1px solid var(--line);
+  margin-top: 16px;
+  padding-top: 14px;
+}
+
+/* 退让态（输入有待保存内容 / 还没有攻略）：灰底引导文案替代排版控件，不放按钮 */
+.draft-hint-line {
+  font-size: 12px;
+  color: var(--ink3);
+  text-align: center;
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 11px;
+}
+
+/* 补充要求输入框（DEMO req）：灰底圆角，不抢输入区主 textarea 的层级。
+   Task #242：默认高度随主输入框一起收紧（2 行），长文内部滚动不撑高首屏 */
+.draft-note-input {
+  width: 100%;
+  min-height: 44px;
+  max-height: 30vh;
+  overflow-y: auto;
+  border: 1px solid #DCD5CA;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.55;
+  resize: vertical;
+  font-family: inherit;
+  background: #E9E4DC;
+  color: var(--ink);
+}
+
+.draft-note-input:focus {
+  border-color: var(--cta);
+  outline: none;
+}
+
+.draft-note-input::placeholder {
+  color: #A29A8E;
+}
+
+.draft-error {
+  background: var(--warn-soft);
+  color: var(--warn);
+  border-radius: 10px;
+  padding: 9px 11px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+.draft-generating {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--slate-soft);
+  border-radius: 10px;
+  padding: 10px 12px;
+  line-height: 1.55;
+  margin-top: 10px;
+}
+
+/* 生成等待思考链：呼吸圆点 + 逐步淡入的进度文案（后端一次性返回，仅前端模拟） */
+.draft-thinking-dot {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--clay);
+  animation: wait-pulse 1.4s ease-in-out infinite;
+}
+
+.draft-thinking-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--ink3);
+  animation: draft-think-in 0.3s ease both;
+}
+
+@keyframes draft-think-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.draft-generating button {
+  flex: 0 0 auto;
+  font-size: 11px;
+  border: 1px solid var(--line2);
+  background: var(--card);
+  border-radius: 8px;
+  padding: 5px 10px;
+  color: var(--ink2);
+  cursor: pointer;
+}
+
+/* Task #236：底部行动区（现由 .note-input-foot 固定承载，Task #242）。
+   原实现用 position: sticky; bottom: 0 吸底，但 sticky 只能在父盒（.draft-panel）
+   范围内位移：父盒本身已落在滚动区之外时按钮拉不进首屏，打开面板要先下滑几十像素
+   才见。现在行动区在滚动容器之外，不再需要 sticky / 负 margin / 自带分隔线。 */
+.draft-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.draft-primary {
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: var(--cta);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+  box-shadow: 0 6px 14px -6px rgba(255, 106, 0, 0.7);
+}
+
+.draft-primary:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* 橙钮下方灰字（DEMO cta-note）：另有 M 篇处理中，完成后可重新优化 */
+.draft-cta-note {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--ink3);
+  text-align: center;
+}
+
+/* ---------- Task #236：暂存提示 / 底部行动区 / 次要出口（原任务 189 选择态样式已清理） ---------- */
+
+/* 聚焦态：本轮新增暂存提示行（sage 安全色）。Task #236：勾选在来源列表完成、
+   出口在底部 CTA 下方，这一行只保留状态说明，不再挂「更换攻略」入口 */
+.draft-staged-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--sage-soft);
+  border-radius: 10px;
+  padding: 9px 12px;
+  margin-bottom: 10px;
+}
+
+.draft-staged-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--sage-deep);
+}
+
+/* 影响范围一句文案（任务 189）：主按钮上方单行小字，自动预判不手选 */
+.draft-scope-note {
+  font-size: 11px;
+  color: var(--ink3);
+  text-align: center;
+}
+
+/* ---------- Task #236：主 CTA 下方的两个弱化出口 ---------- */
+.draft-foot-exits {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+/* 「仅暂存，稍后处理」：本轮明确出口——关面板，不改后端状态 */
+.draft-save-link {
+  background: none;
+  border: none;
+  padding: 2px 0;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 550;
+  color: var(--ink2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.draft-save-link:hover:not(:disabled) {
+  color: var(--clay-deep);
+}
+
+/* 「使用全部攻略整体重排」：更弱的次级能力，二次确认后才发起 */
+.draft-replan-link {
+  background: none;
+  border: none;
+  padding: 2px 0;
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--ink3);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.draft-replan-link:hover:not(:disabled) {
+  color: var(--clay-deep);
+  text-decoration: underline;
+}
+
+.draft-save-link:disabled,
+.draft-replan-link:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ---------- B4 草案 ProposalCard 变体（原子应用 / 编排徽章 / 补充说明） ---------- */
+.proposal-item.readonly {
+  cursor: default;
+}
+
+.proposal-item.readonly:hover {
+  background: transparent;
+}
+
+.proposal-badge.sage {
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+}
+
+.proposal-notes {
+  background: var(--card2);
+  border-radius: 10px;
+  padding: 9px 11px;
+  margin-top: 10px;
+  font-size: 10.5px;
+  line-height: 1.7;
+  color: var(--ink3);
+}
+
+/* ---------- B4 攻略提示 chips（VisitCard / StopRow） ---------- */
+.guide-snippets {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.guide-snippet-chip {
+  border: none;
+  border-radius: 8px;
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+  font-size: 10.5px;
+  line-height: 1.5;
+  padding: 4px 9px;
+  cursor: pointer;
+  text-align: left;
+  max-width: 100%;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  gap: 2px 4px;
+  overflow: hidden;
+}
+
+.guide-snippet-chip::before {
+  content: "💡";
+  flex: 0 0 auto;
+}
+
+/* 正文在独立 span 内单行截断，保证 #342 合并标注（.guide-snippet-note）始终完整可见不被省略号吃掉 */
+.guide-snippet-text {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Task #342 相似亮点合并后的诚实标注（次级灰字，沿用 chip 语言不新增弹框）：
+   Task #352 处/篇规则「N篇攻略提及」/「N处攻略提及」；flex 不收缩，始终整段可见 */
+.guide-snippet-note {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-size: 9.5px;
+  color: var(--ink3);
+}
+
+.guide-snippet-chip:hover .guide-snippet-note {
+  color: #fff;
+  opacity: 0.85;
+}
+
+.guide-snippet-chip:hover {
+  background: var(--sage);
+  color: #fff;
+}
+
+/* 点位卡攻略原文弱入口（VisitCard；StopRow 继续用 .child-evidence）。
+   任务 124：入口由 button 改为语义 <a>（单源直开外链），补 text-decoration:none
+   保持原按钮观感；多源时仍渲染 button（样式同一类） */
+.evidence-link {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--clay);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.evidence-link:active {
+  color: var(--clay-deep);
+}
+
+/* 大景区父卡内的弱入口（无引用块时的兜底）：贴住卡片左右留白 */
+.parent-card .evidence-link {
+  margin: 10px 12px 0;
+  align-self: auto;
+}
+
+/* ---------- B4 证据面板：攻略来源切换 + 提示定位 ---------- */
+.evidence-snippets {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 10px 0 4px;
+}
+
+.evidence-snippet {
+  border: 1px solid var(--sage-soft);
+  border-radius: 9px;
+  background: var(--card2);
+  color: var(--sage-deep);
+  font-size: 11px;
+  line-height: 1.55;
+  padding: 6px 10px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.evidence-snippet.hit {
+  background: var(--sage-soft);
+  border-color: var(--sage);
+  font-weight: 600;
+}
+
+.evidence-source-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 10px 0 6px;
+  scrollbar-width: none;
+}
+
+.evidence-source-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.evidence-source-tab {
+  flex: 0 0 auto;
+  border: 1px solid var(--line2);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink2);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.evidence-source-tab.active {
+  background: var(--clay-deep);
+  border-color: var(--clay-deep);
+  color: #fff;
+}
+
+/* 攻略提示定位提及：比普通 hit 更强的描边 + 背景强调（box-shadow 不占布局空间） */
+.evidence-quote.focused {
+  border-color: var(--sage-deep);
+  background: var(--sage-soft);
+  box-shadow: 0 0 0 2px rgba(138, 154, 139, 0.35);
+  animation: fade-in 0.2s ease;
+}
+
+/* ---------- B4 收尾：补齐引用类名的样式 ---------- */
+/* Task #346：.hotel-grip 把手列移除（与景点卡同口径，拖拽面移到整卡行容器） */
+
+/* 酒店候选骨架屏容器：内部 .hotel-candidate / .skeleton 已各自带样式，这里只补留白 */
+.hotel-loading {
+  padding: 4px 0 0;
+}
+
+/* 提案「全选 / 全不选」：弱按钮靠左，主行动按钮仍占满剩余宽度 */
+.proposal-actions .select-all {
+  margin-right: auto;
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+/* ============================================================
+   行程页交互优化（Module A/B/D/E）
+   头部收敛（状态行 + ⋯ 菜单）· 通栏添加入口 · 当日锚点容器 · 紧凑空态卡
+   配色沿用线上 tokens；入口/空态钮用方案定稿浅橙系（#FDEBDD/#F3D3B8/#C46A3A）
+   ============================================================ */
+
+/* ---------- Module A：头部右侧（日期 + ⋯ 菜单）与单行灰字状态 ---------- */
+.apphead .head-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.apphead .more-wrap {
+  position: relative;
+}
+
+.apphead .head-more {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink3);
+  letter-spacing: 1.5px;
+  padding: 2px 7px;
+  line-height: 1;
+}
+
+.apphead .head-more:hover {
+  color: var(--ink);
+}
+
+/* ⋯ 菜单浮层：白底圆角阴影，比内容高、比 Sheet（z-index 60+）低 */
+.head-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 176px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 10px 26px -14px rgba(60, 48, 36, 0.5);
+  padding: 4px 0;
+  z-index: 20;
+  animation: rise 0.18s ease both;
+}
+
+.head-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 9px 14px;
+  font-size: 12.5px;
+  color: var(--ink2);
+}
+
+.head-menu-item + .head-menu-item {
+  border-top: 1px solid var(--card2);
+}
+
+.head-menu-item small {
+  display: block;
+  margin-top: 2px;
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--ink3);
+}
+
+.head-menu-item:hover {
+  background: var(--card2);
+  color: var(--ink);
+}
+
+/* 单行灰字状态：已排 X/Y 天 · 航班已确定 · 攻略素材 N 篇 */
+.app-meta {
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: var(--ink3);
+}
+
+/* 通栏添加入口：页面唯一强调入口（门，不执行排版动作） */
+.add-entry {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  margin: 8px 16px 0;
+  background: #fdebdd;
+  border: 1px solid #f3d3b8;
+  border-radius: 12px;
+  color: #c46a3a;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.add-entry:active {
+  filter: brightness(0.97);
+}
+
+.add-entry-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--clay-deep);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* ---------- Module B：当日锚点容器（出发 + 住宿两行） ---------- */
+.day-anchor {
+  background: var(--card2);
+  border: 1px dashed var(--line2);
+  border-radius: 12px;
+  padding: 9px 12px;
+  margin-bottom: 11px;
+}
+
+.anchor-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 22px;
+  font-size: 12px;
+  color: var(--ink2);
+}
+
+.anchor-line + .anchor-line {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+}
+
+.anchor-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.anchor-side {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* 时间列：时间在上、来源灰字在下 */
+.anchor-time-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.25;
+}
+
+.anchor-time {
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.anchor-time.overridden {
+  color: var(--clay);
+}
+
+.anchor-src {
+  max-width: 150px;
+  overflow: hidden;
+  font-size: 10px;
+  color: var(--ink3);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Task #281 S5：编辑态来源灰字（input 下方） */
+.anchor-side.editing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.anchor-src.editing-hint {
+  max-width: 120px;
+  font-size: 9.5px;
+}
+
+/* 窄屏适配（≤359px）：缩短灰字最大宽度，避免溢出 */
+@media (max-width: 359px) {
+  .anchor-src {
+    max-width: 90px;
+    font-size: 9px;
+  }
+  .anchor-src.editing-hint {
+    max-width: 80px;
+  }
+}
+
+.anchor-edit-btn {
+  padding: 1px 5px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+  font-size: 10px;
+  color: var(--ink3);
+}
+
+.anchor-edit-btn:hover {
+  border-color: var(--clay-line);
+  color: var(--clay-deep);
+}
+
+.anchor-hotels-btn {
+  flex: 0 0 auto;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #c46a3a;
+  white-space: nowrap;
+}
+
+.anchor-hotels-btn:hover {
+  color: var(--warn);
+}
+
+.anchor-lodging-status {
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--ink3);
+}
+
+.anchor-lodging-status.locked {
+  color: var(--clay);
+}
+
+/* ---------- Module D：空 Day 紧凑虚线空态卡 ---------- */
+.empty-card {
+  margin: 2px 0 11px;
+  padding: 22px 16px;
+  border: 1.5px dashed #dcd5ca;
+  border-radius: 14px;
+  background: #faf7f2;
+  text-align: center;
+}
+
+.empty-card .et {
+  font-size: 13px;
+  color: var(--ink2);
+}
+
+.empty-card .ebtn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 22px;
+  background: #fdebdd;
+  border: 1px solid #f3d3b8;
+  border-radius: 8px;
+  color: #c46a3a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.empty-card .ebtn:hover {
+  filter: brightness(0.97);
+}
+
+.empty-card .ehint {
+  margin-top: 8px;
+  font-size: 10.5px;
+  color: var(--ink3);
+}
+
+/* ---------- 交互优化 Module F：统一面板 day 上下文候选池区块 ---------- */
+/* 与 .guide-source-list 同族容器：置面板第一区块，攻略来源列表退居其下 */
+.candidate-section {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card2);
+  padding: 10px 12px;
+  /* 任务 185：候选池移到 sticky 主按钮之后——主按钮 margin-bottom 为 -20px，
+     相邻折叠后两盒相接不重叠；无按钮时与上方内容留 20px 间距 */
+  margin-top: 20px;
+  margin-bottom: 14px;
+  animation: fade-in 0.18s ease;
+}
+
+.candidate-head {
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+/* 候选行：flex 布局，景点名 + 推荐数灰字 + 右侧浅橙「添加」按钮 */
+.candidate-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  animation: rise 0.24s ease both;
+}
+
+.candidate-item:last-of-type {
+  border-bottom: none;
+}
+
+.candidate-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.candidate-name {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.candidate-meta {
+  font-size: 11.5px;
+  color: var(--ink3);
+  line-height: 1.4;
+}
+
+/* 「添加」：add-entry / ebtn 同款浅橙，不抢主行动 */
+.candidate-add {
+  flex: 0 0 auto;
+  padding: 6px 14px;
+  background: #fdebdd;
+  border: 1px solid #f3d3b8;
+  border-radius: 8px;
+  color: #c46a3a;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.candidate-add:hover {
+  filter: brightness(0.97);
+}
+
+/* 添加成功 toast：区块内联深色横幅（面板 overlay 60 / sheet 61 居页面级 toast 之上，
+   故不新增 fixed 层，随候选区块滚动）；3s 后 JS 卸载 */
+.candidate-toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: #3E372E;
+  animation: fade-in 0.18s ease;
+}
+
+.candidate-toast-text {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.candidate-toast-undo {
+  flex: 0 0 auto;
+  color: var(--cta);
+  font-weight: 650;
+  font-size: 12.5px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ============================================================
+   任务 125：草案预览一次性确认（GuideDraftReview，独立类不触碰既有区块）
+   复用 .proposal-sheet/.proposal-list 容器；本区块灰调低噪音，
+   全屏唯一橙色主按钮仍是应用 .cta，总开关/徽章均不用主行动色块。
+   ============================================================ */
+
+/* 明确要求区：浅底轻描边，一句话要求加重、满足详情弱化（✓/○/✕ 符号+服务端文案） */
+.draft-review-directives {
+  margin: 10px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card2);
+}
+
+.draft-review-directives-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.draft-review-directive {
+  margin-top: 4px;
+  font-size: 13.5px;
+  font-weight: 650;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.draft-review-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink2);
+}
+
+.draft-review-check-mark {
+  flex: 0 0 auto;
+  font-weight: 700;
+}
+
+.draft-review-check.met .draft-review-check-mark {
+  color: #3f8f5f;
+}
+
+.draft-review-check.partial .draft-review-check-mark,
+.draft-review-check.unmet .draft-review-check-mark,
+.draft-review-check.pending .draft-review-check-mark {
+  color: #b06a2c;
+}
+
+.draft-review-check-detail {
+  min-width: 0;
+  word-break: break-word;
+}
+
+/* Task #250：草案可解释性分区——先给「这轮会怎么调整」的结论（replace 摘要 + 分类分组），
+   再往下才是明确要求 / 操作明细 / 冲突确认；旧草案无 explanation 时整块不渲染。 */
+.draft-review-plan {
+  margin: 10px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card2);
+}
+
+.draft-review-plan-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* replace 摘要：浅底强调条 + 「整日替换」小标签（不抢唯一橙色主按钮） */
+.draft-review-replace {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 8px 9px;
+  border: 1px solid var(--clay-line);
+  border-radius: 9px;
+  background: var(--card);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink2);
+}
+
+.draft-review-replace-tag {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--clay-soft);
+  color: var(--clay-deep);
+  font-size: 10px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.draft-review-replace-text {
+  min-width: 0;
+  word-break: break-word;
+}
+
+/* Task #253：整日替换明确确认——绑定当前草案的独立勾选块；未勾选时不影响按钮可点，
+   只是本次不发送 replaceConfirm（服务端不执行任何整日移回）。 */
+.draft-review-replace-confirm {
+  margin: 10px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--clay-line);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.draft-review-replace-confirm-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.draft-review-replace-confirm-row input {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  width: 15px;
+  height: 15px;
+  accent-color: var(--clay);
+}
+
+.draft-review-replace-confirm-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.draft-review-replace-confirm-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.draft-review-replace-confirm-detail {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink3);
+  word-break: break-word;
+}
+
+.draft-review-plan-group {
+  margin-top: 9px;
+}
+
+.draft-review-plan-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.draft-review-plan-count {
+  font-size: 10.5px;
+  color: var(--ink3);
+}
+
+.draft-review-plan-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 5px;
+}
+
+.draft-review-plan-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 5px;
+  padding: 5px 7px;
+  border-left: 2px solid var(--line);
+  border-radius: 7px;
+  background: var(--card);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink2);
+}
+
+.draft-review-plan-item.remove {
+  border-left-color: var(--warn);
+}
+
+.draft-review-plan-item.rearrange {
+  border-left-color: var(--sage);
+}
+
+.draft-review-plan-item.new {
+  border-left-color: var(--clay);
+}
+
+.draft-review-plan-item.adjust {
+  border-left-color: var(--clay-deep);
+}
+
+.draft-review-plan-item.retain {
+  border-left-color: var(--slate);
+}
+
+.draft-review-plan-name {
+  font-weight: 600;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.draft-review-plan-day {
+  flex: 0 0 auto;
+  padding: 0 4px;
+  border-radius: 4px;
+  background: var(--slate-soft);
+  color: var(--slate-deep);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.draft-review-plan-detail {
+  flex-basis: 100%;
+  min-width: 0;
+  color: var(--ink3);
+  word-break: break-word;
+}
+
+/* 「需要你确认」唯一紧凑区块：灰底卡片；列表内部滚动（移动端不撑破 Sheet） */
+.draft-review-conflicts {
+  margin: 10px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card2);
+}
+
+.draft-review-conflicts-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.draft-review-conflicts-sub {
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--ink3);
+}
+
+/* 总开关行：实线与逐项分隔，样式轻不加底色 */
+.draft-review-conflict-all {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 7px 0 9px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.draft-review-conflict-list {
+  max-height: 248px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.draft-review-conflict {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink2);
+  cursor: pointer;
+}
+
+.draft-review-conflict:last-child {
+  border-bottom: none;
+}
+
+.draft-review-conflict input[type="checkbox"] {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.draft-review-conflict-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.draft-review-conflict-name {
+  font-weight: 600;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+/* 敏感可执行项的短原因徽章：浅橙小标签（非主行动色块，不抢唯一橙钮） */
+.draft-review-conflict-tag {
+  margin-left: 6px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: #fdebdd;
+  color: #b06a2c;
+  font-size: 10.5px;
+  font-style: normal;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.draft-review-conflict-detail {
+  word-break: break-word;
+}
+
+/* 纯告知行：无勾选框，信息符号弱化、不可点 */
+.draft-review-conflict.readonly {
+  cursor: default;
+  color: var(--ink2);
+}
+
+.draft-review-conflict-info {
+  flex: 0 0 auto;
+  color: var(--ink3);
+}
+
+/* ---------- Task #190 实用参考选项组（VisitCard 可折叠主题卡） ---------- */
+.option-groups {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.option-group {
+  border: 1px solid var(--line);
+  /* Task #274：极轻的 clay 左强调线——标记「参考信息」，弱于主 CTA 的实心按钮 */
+  border-left: 3px solid var(--clay-line);
+  border-radius: 10px;
+  background: var(--card);
+  overflow: hidden;
+}
+
+/* Task #274：标题头加一层 42% 的 sage 薄底，让收起态从卡片正文里"浮"出来；
+   加 28px 圆底分类图标后整行高度约 40px（原 ≈31px，增量 +9px 在预算内） */
+.og-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  background: rgba(227, 233, 226, 0.42);
+  cursor: pointer;
+  text-align: left;
+}
+
+.og-head:hover {
+  background: rgba(227, 233, 226, 0.62);
+}
+
+.og-head:active {
+  background: var(--sage-soft);
+}
+
+/* 分类图标圆底：28px 浅 sage 圆 + sage-deep 描边图标；展开后转 clay 色做状态提示 */
+.og-icon {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+}
+
+.og-icon svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+.og-head[aria-expanded="true"] .og-icon {
+  background: var(--clay-soft);
+  color: var(--clay-deep);
+}
+
+/* 主题 + 分类小字两行；主题单行省略，分类小字不再抢行高 */
+.og-titles {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  /* 320px 时主题正好占满可用宽度，留 2px 防止文字与右侧摘要贴死 */
+  padding-right: 2px;
+}
+
+.og-topic {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.og-hint {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 9.5px;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  color: var(--sage-deep);
+}
+
+/* Task #274：摘要拆「数量 + 最低价」两段——横向时用「·」伪元素连接，
+   320px 窄屏改为上下两行（高度仍低于 26px 图标，不撑高标题头） */
+.og-sum {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0 4px;
+  font-size: 10.5px;
+  color: var(--sage-deep);
+  white-space: nowrap;
+}
+
+.og-min::before {
+  content: "·";
+  margin-right: 4px;
+  color: var(--ink3);
+}
+
+.og-arrow {
+  flex: 0 0 auto;
+  font-size: 10px;
+  color: var(--ink2);
+  white-space: nowrap;
+}
+
+.og-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px 10px 8px;
+  border-top: 1px dashed var(--line);
+}
+
+/* Task #270：每选项两段式——首行「名称 + 价格 + 可议价」，其后按字段分行
+   「路线 / 适合 / 说明」（字段为空时整行不渲染；移动端保持 10.5px 紧凑行高） */
+.og-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 4px 0;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.og-row + .og-row {
+  border-top: 1px dashed var(--line);
+}
+
+.og-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+}
+
+.og-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--ink2);
+}
+
+.og-key {
+  flex: 0 0 auto;
+  min-width: 22px;
+  color: var(--ink3);
+}
+
+.og-val {
+  flex: 1;
+  min-width: 0;
+}
+
+.og-label {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.og-price {
+  font-size: 10.5px;
+  color: var(--clay);
+}
+
+.og-bargain {
+  flex: 0 0 auto;
+  font-size: 9.5px;
+  color: var(--sage-deep);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0 5px;
+}
+
+.og-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--line);
+}
+
+.og-cat {
+  flex: 0 0 auto;
+  font-size: 9.5px;
+  color: var(--ink2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+
+.og-evidence {
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 10.5px;
+  color: var(--clay);
+  cursor: pointer;
+}
+
+.og-evidence:active {
+  color: var(--clay-deep);
+}
+
+.og-disclaimer {
+  margin-left: auto;
+  font-size: 9.5px;
+  color: var(--ink3);
+}
+
+/* Task #274：320px 窄屏收紧图标与间距，保证「主题 + 摘要 + 展开」不换行不溢出
+   （320 - 卡片左右留白 2×12 - 内边距 2×8 ≈ 280px 可用） */
+@media (max-width: 360px) {
+  .og-head {
+    gap: 6px;
+    padding: 6px 8px;
+  }
+
+  .og-icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .og-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .og-sum {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+    font-size: 9px;
+    line-height: 1.2;
+  }
+
+  .og-min::before {
+    content: none;
+  }
+
+  .og-arrow {
+    font-size: 9px;
+  }
+
+  /* Task #283 / C4：≤360px 空间不足，AI 补充 chip 降级为「AI 补充」，
+     隐藏「·飞猪核验」子段，核验说明改由详情行 .ai-supplement-note 承载 */
+  .ai-supplement-chip .chip-verify {
+    display: none;
+  }
+
+  .ai-supplement-note {
+    display: block;
+  }
+}
+
+/* 大景区父卡内：主题卡贴住卡片左右留白（与 .parent-card .evidence-link 同口径） */
+.parent-card .option-groups {
+  margin: 10px 12px 0;
+}
+
+/* ============================================================
+   Task #205 只读分享页（/share/:tripId）
+   与主应用共用纸感配色、卡片圆角与 Day chip；标题换成宋体，
+   把分享页做出「旅行手账」的阅读感。本区块只描述只读展示，
+   不含拖拽柄 / 编辑 / 锁定 / 购票等交互元素。
+   ============================================================ */
+
+.share-app {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(120% 70% at 100% 0%, rgba(185, 131, 106, 0.12), transparent 58%),
+    var(--card);
+}
+
+@media (min-width: 560px) {
+  .share-app {
+    max-width: 440px;
+    min-height: calc(100dvh - 56px);
+    margin: 28px auto;
+    border-radius: 34px;
+    box-shadow: 0 0 0 10px #201E1B, 0 30px 70px -24px rgba(60, 48, 36, 0.5);
+    overflow: hidden;
+  }
+}
+
+.share-head {
+  position: relative;
+  padding: 24px 22px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* 页头下缘一段陶土色细线：只做一处强调，其余保持安静 */
+.share-head::after {
+  content: "";
+  position: absolute;
+  left: 22px;
+  bottom: -1px;
+  width: 54px;
+  height: 2px;
+  background: var(--clay);
+  opacity: 0.7;
+}
+
+.share-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.share-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--clay-deep);
+}
+
+.share-kicker::before {
+  content: "";
+  width: 18px;
+  height: 1px;
+  background: currentColor;
+}
+
+.share-stamp {
+  font-size: 10.5px;
+  color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+}
+
+.share-title {
+  margin: 12px 0 8px;
+  font-family: "Songti SC", "Noto Serif SC", "STSong", "SimSun", serif;
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+}
+
+.share-sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--ink2);
+}
+
+.share-sep {
+  color: var(--line2);
+}
+
+.share-hint {
+  margin-top: 10px;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  color: var(--ink3);
+}
+
+/* ⋯ 菜单内的分享结果提示（复制成功 / 失败），与错误提示同位置不同语气 */
+.share-toast {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--sage-deep);
+  animation: fade-in 0.2s ease both;
+}
+
+/* Task #261：复制链接 / 系统分享失败时改用陶土色，与成功提示区分（同一位置，不新增浮层） */
+.share-toast.is-error {
+  color: var(--clay-deep);
+}
+
+.share-daystrip {
+  padding: 11px 16px;
+  background: transparent;
+}
+
+.share-screen {
+  flex: 1 1 auto;
+  padding: 16px 16px 22px;
+}
+
+.share-day {
+  animation: share-day-in 0.28s ease both;
+}
+
+.share-day-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 2px 2px 12px;
+}
+
+.share-day-no {
+  font-family: "Songti SC", "Noto Serif SC", "STSong", "SimSun", serif;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+}
+
+.share-day-date {
+  margin-left: 8px;
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+.share-depart {
+  flex: 0 0 auto;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--clay-soft);
+  font-size: 10.5px;
+  color: var(--clay-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 只读景点卡 ---------- */
+.share-card {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 12px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 14px 30px -28px rgba(60, 48, 36, 0.6);
+  animation: share-rise 0.32s ease both;
+}
+
+.share-card + .share-card {
+  margin-top: 10px;
+}
+
+.share-day .share-card:nth-of-type(2) { animation-delay: 0.05s; }
+.share-day .share-card:nth-of-type(3) { animation-delay: 0.1s; }
+.share-day .share-card:nth-of-type(4) { animation-delay: 0.15s; }
+
+.share-thumb {
+  width: 92px;
+  height: 92px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--card2);
+}
+
+.share-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 大景区：整幅横幅图 + 下方正文（与主应用父卡的信息层级一致） */
+.share-card.is-large {
+  grid-template-columns: minmax(0, 1fr);
+  padding: 0;
+  overflow: hidden;
+}
+
+.share-card.is-large .share-thumb {
+  width: 100%;
+  height: 152px;
+  border-radius: 0;
+}
+
+.share-card.is-large .share-card-body {
+  padding: 13px 14px 15px;
+}
+
+.share-card-body {
+  min-width: 0;
+  padding: 2px 2px 4px 0;
+}
+
+.share-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.share-card-name {
+  font-family: "Songti SC", "Noto Serif SC", "STSong", "SimSun", serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.share-card-badges {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+}
+
+.share-badge {
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card2);
+  font-size: 9.5px;
+  color: var(--ink2);
+  white-space: nowrap;
+}
+
+.share-badge.done {
+  border-color: #CBD8CA;
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+}
+
+.share-addr {
+  margin-top: 5px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink3);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.share-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.share-meta span {
+  padding: 3px 8px;
+  border-radius: 7px;
+  background: var(--card2);
+  font-size: 10.5px;
+  color: var(--ink2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 内部玩法：编号 + 名称 + 位置提示 + 时长 */
+.share-stops {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 9px 0 0;
+  border-top: 1px dashed var(--line);
+}
+
+.share-stops li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 3px 0;
+}
+
+.share-stop-no {
+  flex: 0 0 auto;
+  padding-top: 1px;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: var(--clay);
+  font-variant-numeric: tabular-nums;
+}
+
+.share-stop-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.share-stop-name {
+  display: block;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.share-stop-hint {
+  display: block;
+  margin-top: 1px;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--ink3);
+}
+
+.share-stop-dur {
+  flex: 0 0 auto;
+  padding-top: 1px;
+  font-size: 10px;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+
+/* 攻略亮点：左侧陶土色竖线，与「原文」保持距离，只展示短句 */
+.share-highlights {
+  margin-top: 10px;
+  padding: 8px 10px 9px 11px;
+  border-left: 2px solid var(--clay);
+  border-radius: 0 8px 8px 0;
+  background: linear-gradient(90deg, var(--clay-soft), rgba(234, 220, 210, 0));
+}
+
+.share-highlights-label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--clay-deep);
+}
+
+.share-highlights ul {
+  list-style: none;
+  margin: 5px 0 0;
+}
+
+.share-highlights li {
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--ink2);
+}
+
+.share-highlights li + li {
+  margin-top: 3px;
+}
+
+/* ---------- 当晚住宿（虚线框：表示「计划」，不是订单） ---------- */
+.share-stay {
+  margin-top: 12px;
+  padding: 11px 13px 12px;
+  border: 1px dashed var(--line2);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fff, var(--card2));
+  animation: share-rise 0.32s ease both;
+}
+
+.share-stay-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.share-label {
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  color: var(--ink3);
+}
+
+.share-stay-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 7px;
+}
+
+.share-stay-pic {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.share-stay-text {
+  min-width: 0;
+}
+
+.share-stay h4 {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.share-stay p {
+  margin-top: 3px;
+  font-size: 10.5px;
+  color: var(--ink2);
+}
+
+/* ---------- 分享页状态打标（Task #260）：pill 展开式选项，无需弹框 ---------- */
+.share-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.share-status-label {
+  flex: 0 0 auto;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  color: var(--ink3);
+}
+
+/* 收起态：当前状态胶囊（点击区域 ≥ 34px 高，移动端可直点） */
+.share-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 11.5px;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.share-status-pill:active {
+  transform: scale(0.98);
+}
+
+/* 四态各自的语气：已办妥用苔绿，待办用陶土，免票中性，未定虚线 */
+.share-status-pill.tone-bought {
+  border-color: #CBD8CA;
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+}
+
+.share-status-pill.tone-toBuy {
+  border-color: var(--clay-line);
+  background: var(--clay-soft);
+  color: var(--clay-deep);
+}
+
+.share-status-pill.tone-noTicket {
+  border-color: var(--line2);
+  background: var(--card2);
+  color: var(--ink2);
+}
+
+.share-status-pill.tone-unknown {
+  border-style: dashed;
+  color: var(--ink3);
+}
+
+.share-status-pill[aria-expanded="true"] {
+  box-shadow: 0 0 0 3px rgba(60, 48, 36, 0.08);
+}
+
+.share-status-caret {
+  font-size: 8.5px;
+  line-height: 1;
+  opacity: 0.55;
+}
+
+/* 展开态：同一行下方铺开选项，当前项高亮（clay 底 + 对勾） */
+.share-status-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+  margin-top: 2px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+  animation: fade-in 0.16s ease both;
+}
+
+.share-status-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 38px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 12px;
+  color: var(--ink2);
+  cursor: pointer;
+}
+
+.share-status-option[aria-selected="true"],
+.share-status-option.active {
+  border-color: var(--clay);
+  background: var(--clay-soft);
+  color: var(--clay-deep);
+  font-weight: 600;
+}
+
+.share-status-tick {
+  font-size: 10px;
+  line-height: 1;
+}
+
+/* 保存失败提示：固定底部短条，不拦截操作 */
+.share-status-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 32px);
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #2C2823;
+  color: #F3EEE7;
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.6);
+  z-index: 30;
+  animation: fade-in 0.2s ease both;
+}
+
+.share-empty {
+  margin: 6px 2px 12px;
+  font-size: 12px;
+  color: var(--ink3);
+}
+
+.share-no-stay {
+  margin: 10px 2px 0;
+  font-size: 10.5px;
+  color: var(--ink3);
+}
+
+.share-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 18px 26px;
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--ink3);
+}
+
+@keyframes share-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes share-day-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   Task #258 行程封面：紧凑入口 + 浮层
+   入口（.cover-bar）：AppHead 之后一行（约 46px）——缩略图 + 名称 +
+     城市·N天N晚 + 箭头，不再占用行程首屏高度；
+   浮层（.trip-cover-sheet）：复用 .proposal-sheet 骨架（与约束编辑一致），
+     通栏 16:9 封面 + 名称编辑 + 备忘 textarea。
+   视觉语言：陶土渐变兜底 + 宋体标题，沿用 M1 纸感 tokens，
+   不引入任何外部图片资源。
+   ============================================================ */
+
+/* ---------- 紧凑入口：固定一行，不参与行程内容的高度竞争 ---------- */
+.cover-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 46px;
+  padding: 0 16px;
+  text-align: left;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  transition: background 0.16s ease;
+}
+
+.cover-bar:active {
+  background: var(--card2);
+}
+
+.cover-bar-thumb {
+  position: relative;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--clay-soft);
+  box-shadow: inset 0 0 0 1px rgba(60, 48, 36, 0.08);
+}
+
+.cover-bar-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 无封面时的小色块：与浮层内渐变大图同源配色，暗示「这里可以放封面」 */
+.cover-bar-wash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 12% 8%, rgba(255, 255, 255, 0.5), transparent 52%),
+    linear-gradient(142deg, #c9a48e 0%, #ab7a60 52%, #8b7c6f 100%);
+}
+
+.cover-bar-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cover-bar-title {
+  font-family: "Songti SC", "Noto Serif SC", "STSong", "SimSun", serif;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cover-bar-meta {
+  font-size: 10.5px;
+  line-height: 1.3;
+  color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 有备忘记号：提示浮层里还写了东西，不额外占高度 */
+.cover-bar-memo {
+  flex: 0 0 auto;
+  padding: 2px 7px;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--clay-deep);
+  background: var(--clay-soft);
+  border-radius: 999px;
+}
+
+.cover-bar-arrow {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink3);
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+
+.cover-bar.is-readonly .cover-bar-arrow {
+  color: var(--clay-deep);
+}
+
+/* ---------- 浮层骨架：比约束面板高（16:9 封面是固定大头） ---------- */
+.trip-cover-sheet {
+  max-height: 88vh;
+  max-height: 88%;
+  padding-bottom: 0;
+}
+
+/* 封面通栏（抵消 Sheet 左右 16px 内边距）：16:9 + 屏高限高 */
+.trip-cover-media {
+  position: relative;
+  width: calc(100% + 32px);
+  margin: 12px -16px 0;
+  aspect-ratio: 16 / 9;
+  min-height: 148px;
+  max-height: clamp(148px, 30vh, 228px);
+  overflow: hidden;
+  background: var(--clay-soft);
+  isolation: isolate;
+}
+
+.trip-cover-media.is-editable {
+  cursor: pointer;
+}
+
+.trip-cover-media.is-editable:active .trip-cover-img {
+  transform: scale(1.015);
+}
+
+.trip-cover-img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Task #377：cover 会把非 16:9 源图裁掉（竖图最多裁 68%）→ 改 contain 保证封面完整可见；
+     留白由底层 .trip-cover-blur 同图模糊填充，不再是平板色块 */
+  object-fit: contain;
+  object-position: center;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* Task #377：contain 完整显示时，非 16:9 源图会在盒内留白；底层铺一张同图
+   模糊放大版填满留白（Apple Photos 式「完整显示 + 模糊延展」）。overflow:hidden
+   裁掉 scale 溢出的模糊白边，opacity 压低避免抢主图。 */
+.trip-cover-blur {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: blur(22px) saturate(1.1) brightness(0.9);
+  transform: scale(1.14);
+  opacity: 0.55;
+}
+
+/* 渐变兜底：陶土主调 + 苔绿侧光 + 一点主行动色余温，模拟手账封面留白 */
+.trip-cover-wash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 10% 6%, rgba(255, 255, 255, 0.5), transparent 46%),
+    radial-gradient(92% 78% at 92% 8%, rgba(138, 154, 139, 0.6), transparent 56%),
+    radial-gradient(140% 120% at 68% 112%, rgba(255, 106, 0, 0.16), transparent 62%),
+    linear-gradient(142deg, #c9a48e 0%, #ab7a60 46%, #7d6e63 100%);
+}
+
+/* 底部渐深遮罩：右下角角标在任何封面图上都可读 */
+.trip-cover-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(28, 24, 20, 0) 42%,
+    rgba(28, 24, 20, 0.16) 68%,
+    rgba(28, 24, 20, 0.52) 100%
+  );
+}
+
+/* ---------- 封面图文字层：仅保留左下角角标（名称 / 信息行在图片下方） ---------- */
+.trip-cover-kicker {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(24, 20, 17, 0.34);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+}
+
+/* 名称：宋体大字，位于封面下方（不压在图上，编辑时不遮图） */
+.trip-cover-title {
+  display: block;
+  width: 100%;
+  font-family: "Songti SC", "Noto Serif SC", "STSong", "SimSun", serif;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.28;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  text-align: left;
+  word-break: break-word;
+}
+
+.trip-cover-title.as-button {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: text;
+}
+
+.trip-cover-pen {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+.trip-cover-name-input {
+  width: 100%;
+  padding: 5px 9px;
+  font-family: "Songti SC", "Noto Serif SC", "STSong", "SimSun", serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  background: var(--card2);
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.trip-cover-name-input:focus {
+  border-color: var(--clay);
+  box-shadow: 0 0 0 3px rgba(185, 131, 106, 0.14);
+}
+
+.trip-cover-name-input::placeholder {
+  color: var(--ink3);
+}
+
+/* 信息行：城市 · N天N晚 · 日期区间 */
+.trip-cover-meta {
+  margin-top: 5px;
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+  color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 编辑工具（添加 / 更换 / 移除封面） ---------- */
+.trip-cover-tools {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.trip-cover-tool {
+  padding: 4px 10px;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: rgba(24, 20, 17, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.18s ease;
+}
+
+.trip-cover-tool:hover {
+  background: rgba(24, 20, 17, 0.5);
+}
+
+.trip-cover-tool.is-busy {
+  cursor: default;
+  opacity: 0.82;
+}
+
+.trip-cover-file {
+  display: none;
+}
+
+.trip-cover-error {
+  margin: 0;
+  padding: 8px 0 0;
+  font-size: 11.5px;
+  color: var(--warn);
+}
+
+/* ---------- 浮层正文：名称 / 信息行 / 备忘（浮层空间足够，备忘默认展开） ---------- */
+.trip-cover-body {
+  padding: 14px 0 16px;
+}
+
+.trip-cover-memo {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line2);
+}
+
+.trip-cover-memo-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.trip-cover-memo-label {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: var(--clay-deep);
+}
+
+.trip-cover-memo-count {
+  font-size: 10.5px;
+  color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+}
+
+.trip-cover-memo-input {
+  display: block;
+  width: 100%;
+  min-height: 92px;
+  max-height: 32vh;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink);
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.trip-cover-memo-input:focus {
+  border-color: var(--clay);
+  box-shadow: 0 0 0 3px rgba(185, 131, 106, 0.14);
+}
+
+/* 只读：直接展示全文（浮层内不需要再叠一层「两行截断 + 展开」） */
+.trip-cover-memo-body {
+  max-height: 40vh;
+  margin: 0;
+  padding: 10px 12px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink2);
+  background: var(--card2);
+  border-radius: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.trip-cover-hint {
+  margin-top: 9px;
+  font-size: 10.5px;
+  color: var(--ink3);
+  line-height: 1.6;
+}
+
+/* ---------- Task #265：待办清单盘点浮层 ----------
+   只读盘点：分「待办 / 已完成」两组，组内按天分组，每天固定 住宿 → 景点 → 交通。
+   视觉上把「天」当作一张窄卡片（左侧坚细 rail + 大号日号），分类行用图标方块
+   区分，状态胶囊三档语气：待处理（clay）/ 尚未安排（warn，虚线）/ 已闭环（sage）。 */
+.checklist-sheet {
+  max-height: 82vh;
+  max-height: 82%;
+  display: flex;
+  flex-direction: column;
+  overscroll-behavior: contain;
+}
+
+/* 分段式 tab（与主页面 .dchip 区分开：这里是浮层内部的视图切换，不做成卡片） */
+.checklist-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin: 12px 0 0;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  flex: 0 0 auto;
+}
+
+.checklist-tab {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 550;
+  color: var(--ink2);
+  background: transparent;
+  transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.checklist-tab .n {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink3);
+  transition: color 0.18s ease;
+}
+
+.checklist-tab.on {
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 650;
+  box-shadow: 0 1px 2px rgba(75, 61, 47, 0.1);
+}
+
+.checklist-tab.on .n {
+  color: var(--clay-deep);
+}
+
+.checklist-tab:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 1px;
+}
+
+.checklist-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px 0 2px;
+  scrollbar-width: none;
+}
+
+.checklist-body::-webkit-scrollbar {
+  width: 0;
+}
+
+/* 一天一张窄卡片：左侧细 rail 把「天」串起来，天之间不留硬分割线 */
+.checklist-day {
+  position: relative;
+  margin-top: 12px;
+  padding: 10px 12px 11px 13px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  animation: fade-in 0.24s ease both;
+}
+
+.checklist-day:nth-child(2) { animation-delay: 0.03s; }
+.checklist-day:nth-child(3) { animation-delay: 0.06s; }
+.checklist-day:nth-child(4) { animation-delay: 0.09s; }
+.checklist-day:nth-child(5) { animation-delay: 0.12s; }
+.checklist-day:nth-child(6) { animation-delay: 0.15s; }
+
+.checklist-day::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--clay) 0%, var(--clay-line) 100%);
+  opacity: 0.55;
+}
+
+.checklist-day-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.checklist-day-num {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--clay-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+.checklist-day-date {
+  font-size: 10.5px;
+  color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+}
+
+.checklist-day-count {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 分类：图标方块 + 标题 + 条数（同一行），条目在下方缩进对齐 */
+.checklist-group {
+  margin-top: 9px;
+}
+
+.checklist-group + .checklist-group {
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line2);
+}
+
+.checklist-group-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.checklist-icon {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  line-height: 1;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.checklist-group-label {
+  font-size: 11.5px;
+  font-weight: 650;
+  color: var(--ink2);
+  letter-spacing: 0.02em;
+}
+
+.checklist-group-count {
+  font-size: 10px;
+  color: var(--ink3);
+  font-variant-numeric: tabular-nums;
+}
+
+.checklist-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0 5px 25px;
+  border-bottom: 1px solid rgba(224, 217, 207, 0.6);
+}
+
+.checklist-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 2px;
+}
+
+.checklist-item-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 状态胶囊三档语气：待处理 / 尚未安排（等宽虚线，提示「还没有内容」）/ 已闭环 */
+.checklist-pill {
+  flex: 0 0 auto;
+  max-width: 52%;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 10.5px;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+
+.checklist-pill.is-open {
+  background: var(--clay-soft);
+  border-color: var(--clay-line);
+  color: var(--clay-deep);
+}
+
+.checklist-pill.is-missing {
+  background: transparent;
+  border-color: var(--line2);
+  border-style: dashed;
+  color: var(--warn);
+}
+
+.checklist-pill.is-done {
+  background: var(--sage-soft);
+  color: var(--sage-deep);
+}
+
+/* 空态：待办为空是好事，用暖色语气压一下版面（不撒花、不弹窗） */
+.checklist-empty {
+  margin: 26px 0 20px;
+  padding: 26px 18px;
+  text-align: center;
+  background: var(--card2);
+  border: 1px dashed var(--line2);
+  border-radius: 16px;
+}
+
+.checklist-empty.is-done {
+  background: transparent;
+}
+
+.checklist-empty-icon {
+  display: block;
+  font-size: 22px;
+  line-height: 1;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.checklist-empty-text {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.checklist-empty-hint {
+  margin-top: 5px;
+  font-size: 10.5px;
+  line-height: 1.65;
+  color: var(--ink3);
+}
+
+/* 窄屏（320px）：日号与日期、条目与胶囊各让一档，避免名称被挤成省略号 */
+@media (max-width: 359px) {
+  .checklist-item {
+    padding-left: 19px;
+  }
+  .checklist-item-name {
+    font-size: 12px;
+  }
+  .checklist-pill {
+    font-size: 10px;
+    padding: 2px 7px;
+  }
+}
+
+/* ---------- 只读分享页：入口贴顶，浮层用 fixed 层做包含块 ---------- */
+/* 分享页没有 AppHead，入口就是首屏第一条：左右对齐页头的 22px 内边距，
+   并把状态栏安全区吃进内边距（高度仍约 46px，不挤压 Day 标签） */
+.share-app .cover-bar {
+  height: auto;
+  min-height: 46px;
+  padding: calc(7px + env(safe-area-inset-top, 0px)) 22px 7px;
+  background: transparent;
+}
+
+.share-app .cover-bar:active {
+  background: rgba(185, 131, 106, 0.08);
+}
+
+/* .share-app 没有固定高度，.proposal-sheet 的 absolute 会落到整个文档底部
+   （长行程时 Sheet 跑到屏外）；这层 fixed 盒子在分享页里充当 .app 的角色。
+   Task #264：不用 inset: 0——它的高度取的是「大视口」（iOS Safari 地址栏收起后的大小），
+   地址栏展开时浮层底部落到可视区之外，封面图与备忘被浏览器底栏裁掉。
+   改绑视觉视口高度（App.tsx 写入的 --app-height，回退 100dvh），与 .app 同一口径。 */
+.share-sheet-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100dvh;
+  height: var(--app-height, 100dvh);
+  z-index: 60;
+  max-width: 480px;
+  margin: 0 auto;
+  pointer-events: none;
+}
+
+.share-sheet-layer .proposal-overlay,
+.share-sheet-layer .proposal-sheet {
+  pointer-events: auto;
+}
+
+/* 只读封面浮层（Task #264 / #377）：
+   ① 高度落在可视区内后，仍要给底部安全区留白，备忘正文不被 Home 指示条压住；
+   ② overscroll-behavior 阻止浮层滚动「接力」到背后的行程页；
+   ③ 封面图完整展示：#264 只取消了 max-height 限高（让盒子维持完整 16:9），
+      但 .trip-cover-img 仍是 object-fit:cover —— 非 16:9 源图上下照旧被裁（竖图最多裁 68%），
+      该缺陷未经真实浏览器复验即交付。#377 真正把主图改 object-fit:contain（完整可见）
+      + 底层同图模糊填充留白，编辑态 / 只读态共用同一组件与类，一并生效。 */
+.share-sheet-layer .trip-cover-sheet {
+  max-height: 88%;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  overscroll-behavior: contain;
+}
+
+.share-sheet-layer .trip-cover-media {
+  max-height: none;
+}
+
+/* 宽屏是「手机框」布局（.share-app 440 宽 / 上下各 28px）：浮层跟着框对齐，
+   否则抽屉（480）比手机框还宽、底部还漏到框外，底部直角也接不上框的圆角。 */
+@media (min-width: 560px) {
+  .share-sheet-layer {
+    top: 28px;
+    height: calc(var(--app-height, 100dvh) - 56px);
+    max-width: 440px;
+    border-radius: 34px;
+    overflow: hidden;
+  }
+}
+
+/* 页头收敛为一条「提示 + 更新时间」窄条：城市 / 天数已由封面入口承载 */
+.share-head-slim {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 22px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.share-head-slim .share-hint {
+  margin-top: 0;
+}
+
+/* 窄屏：名称与角标降一档，避免 320px 机型溢出 */
+@media (max-width: 359px) {
+  .cover-bar-title {
+    font-size: 13.5px;
+  }
+  .trip-cover-title {
+    font-size: 19px;
+  }
+  .trip-cover-media {
+    min-height: 132px;
+  }
+}
+
+/* ===== Task #231：逐图解析进度网格（独立前缀 img-progress-，不改既有规则） ===== */
+
+.img-progress-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 0;
+}
+
+.img-progress-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  border: 1.5px solid transparent;
+  cursor: default;
+  user-select: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+/* 状态色彩 */
+.img-progress-cell.pending {
+  background: var(--bg);
+  border-color: var(--ink3);
+  color: var(--ink3);
+}
+
+.img-progress-cell.processing {
+  background: color-mix(in srgb, var(--clay) 12%, white);
+  border-color: var(--clay);
+  color: var(--clay-deep);
+  animation: img-cell-pulse 1.4s ease-in-out infinite;
+}
+
+.img-progress-cell.ready {
+  background: color-mix(in srgb, #3a9e6e 12%, white);
+  border-color: #3a9e6e;
+  color: #2d7a55;
+}
+
+.img-progress-cell.failed {
+  background: color-mix(in srgb, #d94040 10%, white);
+  border-color: #d94040;
+  color: #b32d2d;
+  cursor: pointer;
+}
+
+.img-progress-cell.failed:hover:not(:disabled) {
+  transform: scale(1.15);
+  background: color-mix(in srgb, #d94040 20%, white);
+}
+
+.img-progress-cell.failed:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.img-progress-cell.failed:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.img-progress-cell.skipped {
+  background: color-mix(in srgb, var(--warn) 10%, white);
+  border-color: var(--warn);
+  color: #8a6020;
+  cursor: pointer;
+}
+
+.img-progress-cell.skipped:hover:not(:disabled) {
+  transform: scale(1.15);
+  background: color-mix(in srgb, var(--warn) 20%, white);
+}
+
+.img-progress-cell.skipped:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Task #308：确定性失败（内容审核 / 格式不支持）——重试无效，禁用态区别于可重试红格 */
+.img-progress-cell.failed.futile {
+  cursor: not-allowed;
+  border-style: dashed;
+  opacity: 0.7;
+}
+
+.img-progress-cell.failed.futile:hover {
+  transform: none;
+  background: color-mix(in srgb, #d94040 10%, white);
+}
+
+/* Task #308：图片网格下方的失败/跳过原因短文案（用户语言，逐图一行） */
+.img-failure-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.img-failure-note {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #b32d2d;
+}
+
+.img-failure-note.futile {
+  color: #8a6020;
+}
+
+@keyframes img-cell-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img-progress-cell.processing {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+/* 360px 窄屏：方块缩小，gap 收窄 */
+@media (max-width: 359px) {
+  .img-progress-grid {
+    gap: 3px;
+  }
+  .img-progress-cell {
+    width: 19px;
+    height: 19px;
+    font-size: 9px;
+    border-radius: 3px;
+  }
+}
+
+/* ---------- Task #225：图片解析模式提示（ocr-mode-hint） ---------- */
+.ocr-mode-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 8px 10px;
+  background: var(--sage-soft);
+  border-radius: 8px;
+  border: 1px solid rgba(138, 154, 139, 0.25);
+}
+
+.ocr-mode-hint-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.ocr-mode-current {
+  font-size: 10.5px;
+  color: var(--ink2);
+  line-height: 1.4;
+}
+
+.ocr-mode-optional {
+  font-size: 10.5px;
+  color: var(--sage-deep);
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.ocr-mode-hint-btn {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--sage);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.ocr-mode-hint-btn:hover:not(:disabled) {
+  background: var(--sage-deep);
+}
+
+.ocr-mode-hint-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Task #303：预告态（processing 中图片已落盘、正文未完成）——中性灰调，
+   区别于可操作态的绿调；按钮恒禁用（服务端拒绝 processing 来源触发 OCR） */
+.ocr-mode-hint.preview {
+  background: rgba(224, 217, 207, 0.35);
+  border-color: var(--line);
+}
+
+.ocr-mode-hint.preview .ocr-mode-optional {
+  color: var(--ink2);
+  font-weight: 400;
+}
+
+.ocr-mode-hint.preview .ocr-mode-hint-btn {
+  background: var(--ink3);
+}
+
+@media (max-width: 359px) {
+  .ocr-mode-hint {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .ocr-mode-hint-btn {
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   Task #330：飞猪 POI 元信息展示
+   poiLevel 徽标 / listRank 榜单 chip / description 折叠区
+   四处卡片共用（VisitCard 普通卡 + 大景区父卡、StopRow、CandidatePool、NoteInput）
+   ============================================================ */
+
+/* poiLevel → 4A/5A 暖金徽标：复用 .tag / .quick-result-cat 尺寸（同排同尺寸、不新增行高），
+   仅改配色为暖金 + 加粗，与「自定义 / 免票 / 大景区」tag 视觉同级 */
+.tag.poi-level {
+  background: #f3e7c9;
+  color: #8a6516;
+  font-weight: 700;
+}
+
+.quick-result-cat.poi-level {
+  background: #f3e7c9;
+  color: #8a6516;
+  font-weight: 700;
+}
+
+/* listRank → 名称下方独立一行暖色 chip（🏆 榜单文案）：有则显示、无则组件返回 null 完全不占位。
+   align-self:flex-start 防止在 flex-column 容器（.ibody / .quick-result-body）里被拉满整行；
+   文本单行省略（title 保留全文），移动端不破版 */
+.poi-rank {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 3px;
+  max-width: 100%;
+  margin-top: 2px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(168, 85, 47, 0.09);
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--warn);
+}
+
+.poi-rank-icon {
+  flex: 0 0 auto;
+  font-size: 10.5px;
+}
+
+.poi-rank-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Task #356（PD DEMO v0.6 Z2 徽章行）：4A/5A 徽标 + 榜单 chip 同行左对齐（gap 6px），
+   单行不换行、榜单过长由 .poi-rank-text 省略号兜底；双信号均缺失时两组件都返回
+   null，:empty 整行收起不占位（仅 VisitCard 普通卡/父卡使用；StopRow、候选池维持原状） */
+.badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 5px;
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+.badge-row:empty {
+  display: none;
+}
+
+.badge-row .poi-rank {
+  margin-top: 0;
+  min-width: 0;
+}
+
+/* description → 「介绍 ▾」折叠区样式：Task #356（PD DEMO v0.5）起 VisitCard 不再渲染
+   介绍区块，组件与样式保留备用（PoiMeta 组件级测试仍覆盖） */
+.poi-desc {
+  margin-top: 2px;
+}
+
+.poi-desc-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  border: none;
+  background: none;
+  padding: 2px 0;
+  font-size: 11px;
+  color: var(--ink2);
+  cursor: pointer;
+}
+
+.poi-desc-arrow {
+  font-size: 10.5px;
+  color: var(--clay);
+}
+
+.poi-desc-body {
+  margin-top: 4px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card2);
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--ink2);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 移动端 390px 兜底：名称行允许换行，避免 4A/5A 徽标把长名称挤断（.nm .t / .quick-result-name
+   仍各自单行省略）。仅收窄屏触发，宽屏维持「同排不新增行高」 */
+@media (max-width: 390px) {
+  .ibody .nm {
+    flex-wrap: wrap;
+  }
+  .quick-result-top {
+    flex-wrap: wrap;
+  }
+}

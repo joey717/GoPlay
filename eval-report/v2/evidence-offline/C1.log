@@ -1,0 +1,21 @@
+# 用例 C1（L4/机+人）：稀疏素材恰好一次澄清
+# 断言（用例文档 v1.4 原文）：稀疏 1 篇只够 1 天＋5 天行程 → 恰好一次澄清；两选项绑定 planScope：A＝草案只覆盖攻略可支撑的天（其余天保持现安排）、B＝允许 AI 补充排满剩余天；不改行程长度、不碰锁定项；文案定稿「A 只排攻略涉及的天（其余天保持现安排）／B 允许 AI 补充排满剩余天」
+# 实现状态：已实现｜backlog：参赛必须｜复用：内联 runC1（真实 generateGuideDraft 澄清短路，离线确定性）＋ shared/src/verify-coverage.ts（estimateGuideCoverage 缺口矩阵）；澄清结构 GuideDraftResult.clarification（question + 两选项），前端两选项交互后带 clarificationAnswer 重发
+# 时间：2026-11-03T16:01:26.073Z
+
+[EVAL-FIXTURE] extractEntries 已替换为 fixture：来源=S1，条目=2（西岛、椰梦长廊）
+[AI] 抽取点位「西岛」对齐飞猪 POI「西岛」（id=2611）
+[AI] 抽取点位「椰梦长廊」对齐飞猪 POI「椰梦长廊」（id=163575）
+[AI] GUIDES 装配搜索（Task #313）：对齐请求 2 次 → 唯一查询 2 条（去重命中 0；scheduler=pool，concurrency=6）
+[GUIDES] 正文证据写盘：ev_note_2（mentions 2）
+[GUIDES] 文字来源分段耗时（Task #313）：抽取 0ms ＋ 装配写盘 1ms（entries=2，committed=true）
+[GUIDES] 来源结算：src_0d364cd6 → ready（正文）
+setup: S1 稀疏源「第一次去三亚旅游，直接复制这条精华路线」→ ready（claims=2）
+[GUIDES] 稀疏攻略澄清：素材可支撑 1/5 天（已排 0 天＋未排素材点位 2 个），触发澄清（C1）
+C1 assert①: 恰好一次澄清（clarification 非空、draftId=null、attempts=0，AI 未调用）
+C1 assert②: 两选项文案逐字——A「只排攻略涉及的天（其余天保持现安排）」(guide_only) / B「允许 AI 补充排满剩余天」(ai_fill)
+C1 assert②: 问句「攻略素材只够排 1 天，你的行程有 5 天。要怎么处理剩余天？」
+C1 assert③: 行程长度不变（5 天）、锁定项不变（2 条）、澄清阶段未写答案
+C1 pass: 稀疏素材恰好一次澄清 + 两选项文案逐字 + 不改行程长度/不碰锁定项
+
+result: pass（106ms）

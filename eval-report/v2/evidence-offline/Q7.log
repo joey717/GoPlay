@@ -1,0 +1,37 @@
+# 用例 Q7（L5/报）：点位配图（西岛篇截图）
+# 断言（用例文档 v1.4 原文）：攻略中标注了图片的点位（如西岛各点位 PX 图片张数），其自定义景点小图来自该攻略对应图片；不得错配到其他点位；无对应图时回退默认占位且不报错
+# 实现状态：已实现｜backlog：-｜复用：新建内联（Task #293 真值表锚定断言：逐点位 pageRefs＝笔记真值、firstAssetPath＝期望文件名（内容级锚点）、quoteText 逐字存在于抽取缓存原文（夹具保真）、真实无标注点位「小吃街」空绑定回退占位；真值表 eval/harness/q7Truth.ts 与 eval-ui sceneQ7 共用）＋ eval:ui scene=q7 playwright 截图 evidence/Q7.png ＋ web vitest StopRow 配图分支
+# 时间：2026-11-03T16:01:32.501Z
+
+Q7 场景: 西岛篇（source=S4）拍照线 8 点位（码头出岛内口后左转的彩色西岛字母、西岛墙、木门与歪脖子椰子树、珊瑚墙前椰林沙滩、小吃街、珊瑚墙、临海公路、孤独的树），walkPhotoMinutes=120
+Q7 assert(e2): 父卡「西岛」origin=fliggy、providerId=2611、mainPic=https://img.alicdn.com/tfscom/TB1lyRxfZbI8KJjy1zdSuve1VXa → resolvePointImage=fliggy ✓（对齐真实落盘 48275e19；飞猪优先于 PX）
+Q7 assert(a/b): 点位「码头出岛内口后左转的彩色西岛字母」pageRefs=[4,5]＝真值[4,5] → assetPaths=[uploads/xhs_6ace31c6000000001b0202f7/4.jpg, uploads/xhs_6ace31c6000000001b0202f7/5.jpg]（期望文件名逐一相符）
+Q7 assert(e1): 点位「码头出岛内口后左转的彩色西岛字母」命中飞猪无图 → 回退攻略 PX 图 uploads/xhs_6ace31c6000000001b0202f7/4.jpg ✓（端到端覆盖 #296 中段路径）
+Q7 assert(a/b): 点位「西岛墙」pageRefs=[6]＝真值[6] → assetPaths=[uploads/xhs_6ace31c6000000001b0202f7/6.jpg]（期望文件名逐一相符）
+Q7 assert(e1): 点位「西岛墙」命中飞猪无图 → 回退攻略 PX 图 uploads/xhs_6ace31c6000000001b0202f7/6.jpg ✓（端到端覆盖 #296 中段路径）
+Q7 assert(a/b): 点位「木门与歪脖子椰子树」pageRefs=[2,8,9]＝真值[2,8,9] → assetPaths=[uploads/xhs_6ace31c6000000001b0202f7/2.jpg, uploads/xhs_6ace31c6000000001b0202f7/8.jpg, uploads/xhs_6ace31c6000000001b0202f7/9.jpg]（期望文件名逐一相符）
+Q7 assert(e1): 点位「木门与歪脖子椰子树」命中飞猪无图 → 回退攻略 PX 图 uploads/xhs_6ace31c6000000001b0202f7/2.jpg ✓（端到端覆盖 #296 中段路径）
+Q7 assert(a/b): 点位「珊瑚墙前椰林沙滩」pageRefs=[1,3]＝真值[1,3] → assetPaths=[uploads/xhs_6ace31c6000000001b0202f7/1.jpg, uploads/xhs_6ace31c6000000001b0202f7/3.jpg]（期望文件名逐一相符）
+Q7 assert(e1): 点位「珊瑚墙前椰林沙滩」命中飞猪无图 → 回退攻略 PX 图 uploads/xhs_6ace31c6000000001b0202f7/1.jpg ✓（端到端覆盖 #296 中段路径）
+Q7 assert(a/b): 点位「小吃街」pageRefs=[]＝真值[] → assetPaths=[]（期望文件名逐一相符）
+Q7 assert(e1): 点位「小吃街」命中飞猪无图＋PX 无标注 → placeholder ✓
+Q7 assert(a/b): 点位「珊瑚墙」pageRefs=[11,12,13]＝真值[11,12,13] → assetPaths=[uploads/xhs_6ace31c6000000001b0202f7/11.jpg, uploads/xhs_6ace31c6000000001b0202f7/12.jpg, uploads/xhs_6ace31c6000000001b0202f7/13.jpg]（期望文件名逐一相符）
+Q7 assert(e1): 点位「珊瑚墙」命中飞猪无图 → 回退攻略 PX 图 uploads/xhs_6ace31c6000000001b0202f7/11.jpg ✓（端到端覆盖 #296 中段路径）
+Q7 assert(a/b): 点位「临海公路」pageRefs=[16,17]＝真值[16,17] → assetPaths=[uploads/xhs_6ace31c6000000001b0202f7/16.jpg, uploads/xhs_6ace31c6000000001b0202f7/17.jpg]（期望文件名逐一相符）
+Q7 assert(e1): 点位「临海公路」命中飞猪无图 → 回退攻略 PX 图 uploads/xhs_6ace31c6000000001b0202f7/16.jpg ✓（端到端覆盖 #296 中段路径）
+Q7 assert(a/b): 点位「孤独的树」pageRefs=[14]＝真值[14] → assetPaths=[uploads/xhs_6ace31c6000000001b0202f7/14.jpg]（期望文件名逐一相符）
+Q7 assert(e1): 点位「孤独的树」命中飞猪无图 → 回退攻略 PX 图 uploads/xhs_6ace31c6000000001b0202f7/14.jpg ✓（端到端覆盖 #296 中段路径）
+Q7 assert: 有图点位 7 个首图互异=7（期望 7；共享首图即疑似错配）
+Q7 assert(d): 真实无标注点位「小吃街」assetPaths=[]（期望空——回退默认占位且不报错；web 侧 .ph-tile 由 StopRow ImagePlaceholder 兜底，截图见 evidence/Q7.png）
+Q7 assert(c): 点位「码头出岛内口后左转的彩色西岛字母」quoteText 逐字命中笔记原文 ✓，extractPageRefs 实算=[4,5]＝真值 ✓
+Q7 assert(c): 点位「西岛墙」quoteText 逐字命中笔记原文 ✓，extractPageRefs 实算=[6]＝真值 ✓
+Q7 assert(c): 点位「木门与歪脖子椰子树」quoteText 逐字命中笔记原文 ✓，extractPageRefs 实算=[2,8,9]＝真值 ✓
+Q7 assert(c): 点位「珊瑚墙前椰林沙滩」quoteText 逐字命中笔记原文 ✓，extractPageRefs 实算=[1,3]＝真值 ✓
+Q7 assert(c): 点位「小吃街」笔记无专属页码标注行 ✓（真实回退占位点位）
+Q7 assert(c): 点位「珊瑚墙」quoteText 逐字命中笔记原文 ✓，extractPageRefs 实算=[11,12,13]＝真值 ✓
+Q7 assert(c): 点位「临海公路」quoteText 逐字命中笔记原文 ✓，extractPageRefs 实算=[16,17]＝真值 ✓
+Q7 assert(c): 点位「孤独的树」quoteText 逐字命中笔记原文 ✓，extractPageRefs 实算=[14]＝真值 ✓
+Q7 note: 判定「报」——机器部分为本解析链断言（真值表锚定）＋web vitest StopRow 配图分支；evidence/Q7.png 由 npm run eval:ui（scene=q7）产出，PD 目视核对「点位名＋对应小图」有无错配
+
+result: pass（3ms）
+screenshot: evidence/Q7.png（eval:ui playwright 产出）

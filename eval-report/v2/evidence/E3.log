@@ -1,0 +1,78 @@
+# 用例 E3（L1/机）：仅链接来源抓取
+# 断言（用例文档 v1.4 原文）：抓取标题/正文；失败时 status=failed 带 failureCode，可重试
+# 实现状态：已实现｜backlog：-｜复用：server/src/guides/verify-b2.ts（链接源状态机 + classifyLinkFailure failureCode + retryGuideSource）
+# 时间：2026-11-03T15:53:35.808Z
+
+$ (cwd=server) npx tsx src/guides/verify-b2.ts  env={"VERIFY_SKIP_LIVE":"1"}
+[env] 已加载仓库根目录 .env，百炼变量 4/4 项已配置，FlyAI 变量 1/1 项已配置
+✓ 错误码矩阵：LINK_INVALID / INVALID_REQUEST / TRIP_NOT_FOUND / SOURCE_NOT_FOUND / IMAGE_COUNT_EXCEEDED(413) + 空形状 + 拒绝不落盘
+✓ 图片并发队列：并发 4 上限 / 9 图与 12 图在 180s（虚拟时钟）内全部结算、旧 90s 对照成立 / 预算到期不再启动新图 / 迟到写入被令牌阻断 / 无未处理 rejection
+✓ suppressAttach 单元：high 后台装配 → pending + 建议归属，不改已生成行程
+[GUIDES] 正文证据写盘：ev_note_2（mentions 2）
+[GUIDES] 文字来源分段耗时（Task #313）：抽取 0ms ＋ 装配写盘 3ms（entries=2，committed=true）
+[GUIDES] 来源结算：src_e4244f10 → ready（正文）
+✓ 文字来源：两秒提交 → ready；正文证据 / mentionRefs / 候选池兼容；日程零改动；去重命中；ready 不可重试(400)
+✓ 攻略补充句：保存 / 空串清除 / 超长 400 / 非法 JSON 400 / 非法类型 400
+[GUIDES] 链接抓取元信息已保存（src_970eaa13，图片 12 张，沿用已完成 0 张，下载失败 0 张页码占位）
+[GUIDES] 正文证据写盘：ev_note_2（mentions 1）
+[GUIDES] 来源结算：src_970eaa13 → ready（正文 + 12张图片待解析）
+[GUIDES] 手动触发图片解析：src_970eaa13（12 张待解析）
+[GUIDES] 图片 3 写盘（ready，mentions 0）
+[GUIDES] 图片 7 写盘（ready，mentions 0）
+[GUIDES] 图片 8 写盘（ready，mentions 0）
+[GUIDES] 图片 9 写盘（ready，mentions 0）
+[GUIDES] 图片 10 写盘（ready，mentions 0）
+[GUIDES] 图片 11 写盘（ready，mentions 0）
+[GUIDES] 图片 12 写盘（ready，mentions 0）
+[GUIDES] 图片 2 写盘（ready，mentions 0）
+[GUIDES] 图片 1 写盘（ready，mentions 0）
+[GUIDES] 图片 5 写盘（ready，mentions 0）
+[GUIDES] 图片 4 写盘（ready，mentions 0）
+[GUIDES] 图片 6 写盘（failed：rejected）
+[GUIDES] 来源结算：src_970eaa13 → partial（正文 + 11/12张图）
+✓ 链接来源全流程：两秒提交 → 正文先落 → 延迟结算（Task #215）→ 手动触发 → 12 图并发队列 → 图 6 被拒 partial、11 图证据保留；coverageText=正文 + 11/12张图
+✓ 链接去重：xsec_token / share_id / utm 变体命中缓存，不重抓不重计数
+[GUIDES] 图片 6 写盘（ready，mentions 0）
+[GUIDES] 来源结算：src_970eaa13 → ready（正文 + 12/12张图）
+✓ 重启恢复：processing → partial（证据保留、未完成图标 timeout 可重试）；重试只跑图 6 → ready 原位升级；pendingGuideDraft 保留且 source_version_changed 过期
+✓ 软移除 / 恢复：active=false + removedAt；evidence 原样保留；isGuideSourceUsable=false；恢复幂等
+[GUIDES] 来源结算：src_014f4e89 → failed（链接）
+[GUIDES] 链接抓取元信息已保存（src_014f4e89，图片 2 张，沿用已完成 0 张，下载失败 0 张页码占位）
+[GUIDES] 正文证据写盘：ev_note_2（mentions 1）
+[GUIDES] 来源结算：src_014f4e89 → ready（正文 + 2张图片待解析）
+✓ 抓取失败：登录墙 → failed(blocked)；同链接重新提交视为重跑 → ready
+[GUIDES] 来源结算：src_7f03674c → ready（3张图片待解析）
+[GUIDES] 手动触发图片解析：src_7f03674c（3 张待解析）
+[GUIDES] 图片 1 写盘（ready，mentions 0）
+[GUIDES] 图片 2 写盘（ready，mentions 0）
+[GUIDES] 图片 3 写盘（ready，mentions 0）
+[GUIDES] 来源结算：src_7f03674c → ready（3/3张图）
+✓ 处理中 retry 409 SOURCE_BUSY；multipart 提交即落盘（明细 assetPath）；触发解析并发挂起；释放后 ready
+
+[verify] 离线段（桩注入状态机 + 契约）全部通过 ✓
+
+[verify] 离线段全部通过 ✓（VERIFY_SKIP_LIVE=1，跳过真实百炼段）
+[verify] 已清理 5/5 个临时行程（server/data + server/uploads）
+[GUIDES] 提交来源被拒绝：[LINK_INVALID] 仅支持小红书笔记链接（xiaohongshu.com / xhslink.com）
+[GUIDES] 提交来源被拒绝：[INVALID_REQUEST] inputKind 必须是 link / text / images 之一
+[GUIDES] 提交来源被拒绝：[INVALID_REQUEST] 文字来源的正文不能为空
+[GUIDES] 提交来源被拒绝：[INVALID_REQUEST] 图片来源请使用 multipart/form-data 提交（images 文件字段）
+[GUIDES] 提交来源被拒绝：[INVALID_REQUEST] 请求必须是 JSON 对象（link / text 来源），如 { "inputKind": "link", "url": "..." }
+[GUIDES] 来源列表被拒绝：[TRIP_NOT_FOUND] 行程不存在或已被删除，请刷新页面后重试
+[GUIDES] 来源详情被拒绝：[SOURCE_NOT_FOUND] 攻略来源不存在或已被删除
+[GUIDES] 来源重试被拒绝：[SOURCE_NOT_FOUND] 攻略来源不存在或已被删除
+[GUIDES] 提交来源被拒绝：[INVALID_REQUEST] 图片来源必须包含至少一张图片文件（images 字段）
+[GUIDES] 提交来源被拒绝：[IMAGE_COUNT_EXCEEDED] 单次最多提交 24 张图片（当前 31 张）
+[GUIDES] 图片队列预算耗尽（30s）：8/9 张未完成，迟到结果将被丢弃（2,3,4,5,6,7,8,9）
+[GUIDES] 图片队列预算耗尽（0s）：12/12 张未完成，迟到结果将被丢弃（1,2,3,4,5,6,7,8,9,10,11,12）
+[GUIDES] 图片队列预算耗尽（0s）：1/8 张未完成，迟到结果将被丢弃（1）
+[GUIDES] 图片队列预算耗尽（0s）：1/1 张未完成，迟到结果将被丢弃（1）
+[GUIDES] 来源重试被拒绝：[SOURCE_NOT_RETRYABLE] 该来源已处理完成，无需重试
+[GUIDES] 保存攻略补充句被拒绝：[INVALID_REQUEST] 攻略补充句超过 500 字上限
+[GUIDES] 保存攻略补充句被拒绝：[INVALID_REQUEST] 请求必须是 JSON 对象，如 { "note": "带老人出游，节奏放慢" }
+[GUIDES] 保存攻略补充句被拒绝：[INVALID_REQUEST] note 必须是字符串（空串或 null 表示清除）
+[GUIDES] 重启恢复：过期 processing 来源 src_970eaa13 → partial
+[GUIDES] 来源重试被拒绝：[SOURCE_BUSY] 该来源正在处理中，请稍后再试
+exit=0
+
+result: pass（3395ms）

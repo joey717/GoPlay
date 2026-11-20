@@ -1,0 +1,38 @@
+# 用例 O8（L6/机）：护栏拒绝带原因
+# 断言（用例文档 v1.4 原文）：违反 guard 的操作拒绝＋用户语言原因，不静默
+# 实现状态：已实现｜backlog：-｜复用：shared/src/verify.ts §7（G1/G3 单条校验 reason 用户语言 + 30% 批量阈值 + 执行器兜底双通道）
+# 时间：2026-11-03T16:01:34.546Z
+
+$ (cwd=shared) npx tsx src/verify.ts  [memoized：复用首次执行结果]
+  ✓ fixture：schemaVersion 为数字 2 且一致性校验通过
+  ✓ 普通 Visit 排序：move visit 至 Day1 首位并重算时间轴
+  ✓ 大景区时长汇总：child 三项求和，alternate 不参与，schedule 只出现一次
+  ✓ timeline：交通待定不当作 0，沿链传播直到新锚点（窗口）
+  ✓ Stop 父内排序：move stop_c 至大景区内部首位
+  ✓ Stop 移入备选玩法：记录原位置，transfer 撤销后完整恢复
+  ✓ Visit 跨天：transfer 大景区 Day1→Day2，child/alternate 整组随行
+  ✓ Stop 越权操作全部被拒：setTime / setPurchase / lock / 跨天 transfer
+  ✓ Stop 归类纠正：child → pendingPool（用户移出）→ 回 child
+  ✓ pending 归类：AI transfer 被护栏与执行器双层拒绝，用户明确归类才写 userAdjusted/decidedBy
+  ✓ plan 保序：显式提及项按 order 放置，未提及项原序追加
+  ✓ locked/bought 保护：AI 不可动，用户可改但 remove 一律拒绝
+  ✓ remove Visit：进入 globalCandidateRefs，子项保持挂载
+  ✓ 30% 阈值：恰好 30% 不触发，严格大于整批拒绝
+  ✓ 引用一致性：悬空 / 双容器 / 状态错位均被检出
+  ✓ needsProposal：remove 默认分流，confirmed 二次下发执行
+  ✓ G4 重排保护：plan 省略 userAdjusted 项产生 warning 而非拒绝
+  ✓ plan 引入候选 point：创建普通 Visit 并从 globalPool 解除引用
+  ✓ classify 成功转换：Visit 转 Stop、证据 snippets 迁移、旧引用清理、时间轴汇总
+  ✓ classify 幂等重放：单条重放与同批双发都不重复创建，仅合并证据
+  ✓ classify 弱证据拒绝：无引用/不可解析/无关联/单侧证据一律拒绝
+  ✓ classify 锁定/已购：来源双通道拒绝（用户确认也不豁免），目标按通道分流
+  ✓ classify 目标/来源不合法：非大景区/非普通景点/缺失实体/越界一律 G1
+  ✓ classify 上线后 pending 护栏无回归：plan 拒挂入、AI transfer 拒归类
+  ✓ classify AI 通道：强证据齐备时直接归类（不进 needsProposal），不写 userAdjusted
+  ✓ classify 候选区 Visit：globalPool 引用清理、toOrder 指定插入位置并重排
+  ✓ classify 用户通道：证据可空；AI 通道仍须强证据，锁定/已购红线不豁免
+
+全部 27 组场景通过（PRD v1.1 父子 POI 模型 shared 替换验证）
+exit=0
+
+result: pass（0ms）

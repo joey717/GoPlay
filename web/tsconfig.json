@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "outDir": "./dist",
+    "rootDir": null,
+    "noEmit": true
+  },
+  "include": ["src", "../eval/harness/q7Truth.ts"],
+  "references": [{ "path": "../shared" }]
+}

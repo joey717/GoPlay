@@ -1,0 +1,29 @@
+{
+  "name": "@goplay/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "verify:guides": "tsx src/guides/verify-b2.ts",
+    "verify:filter": "tsx src/ai/verify-task107.ts",
+    "verify:checkpoint": "tsx src/ai/verify-task321.ts",
+    "verify:cover": "tsx src/persistence/verify-cover.ts",
+    "verify:og": "tsx src/share/verify-og.ts",
+    "verify:share": "tsx src/share/verify-share.ts && tsx src/share/verify-status.ts"
+  },
+  "dependencies": {
+    "@goplay/shared": "*",
+    "@fly-ai/flyai-cli": "1.0.16",
+    "hono": "^4.6.0",
+    "@hono/node-server": "^1.13.0",
+    "dotenv": "^16.4.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "@types/node": "^22.0.0"
+  }
+}

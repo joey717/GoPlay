@@ -1,0 +1,20 @@
+# 用例 Q1（L5/报）：snippet 抽屉回看链路
+# 断言（用例文档 v1.4 原文）：点 snippet → 抽屉先原句/图区域＋来源标题 →「查看这篇攻略」→「打开原链接」
+# 实现状态：已实现｜backlog：-｜复用：web vitest：VisitCard.test.tsx（snippet chip → EvidenceSheet focusMentionRef 定位高亮 + 外链 <a>）；证据＝截图
+# 时间：2026-11-03T15:54:45.217Z
+
+$ (cwd=web) npx vitest run src/components/VisitCard.test.tsx src/components/EvidenceSheet.test.tsx
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/Users/zhengying/goplay/web[39m
+
+ [32m✓[39m src/components/EvidenceSheet.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[32m 114[2mms[22m[39m
+ [32m✓[39m src/components/VisitCard.test.tsx [2m([22m[2m78 tests[22m[2m)[22m[33m 449[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m91 passed[39m[22m[90m (91)[39m
+[2m   Start at [22m 23:54:46
+[2m   Duration [22m 1.52s[2m (environment 46%, tests 36%, import 7%, setup 6%, transform 4%)[22m
+exit=0
+
+result: pass（3045ms）
+screenshot: evidence/Q1.png、evidence/Q1-drawer.png（eval:ui playwright 产出）

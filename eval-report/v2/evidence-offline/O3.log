@@ -1,0 +1,6 @@
+# 用例 O3（L6/机）：NL 局部松排
+# 断言（用例文档 v1.4 原文）：NL「Day2 松一点」→ 仅 Day2 低优先项被移/换；锁定尊重
+# 实现状态：依赖planner输出｜backlog：-｜复用：新建（executeIntent + planner 回放 → operations scope 断言仅 day2；锁定尊重由 guards 代码层兜底）
+# 时间：2026-11-03T16:01:34.545Z
+
+blocked: liveOnly 用例（executeIntent 直连百炼不经 plannerCache），非 live 轮不执行以避免无缓存真调。需 npm run eval:live 录制轮执行。F11 局部重算 scope 机制已实现；executeIntent 直连百炼不经 plannerCache（live-only 不可回放）；打标复用共享草案的 [live]

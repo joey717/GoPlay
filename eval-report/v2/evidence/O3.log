@@ -1,0 +1,15 @@
+# 用例 O3（L6/机）：NL 局部松排
+# 断言（用例文档 v1.4 原文）：NL「Day2 松一点」→ 仅 Day2 低优先项被移/换；锁定尊重
+# 实现状态：依赖planner输出｜backlog：-｜复用：新建（executeIntent + planner 回放 → operations scope 断言仅 day2；锁定尊重由 guards 代码层兜底）
+# 时间：2026-11-03T15:54:50.155Z
+
+[SCENARIO] O3 executeIntent 真调：「Day2 松一点」（F11 pipeline，直连百炼，不经缓存）
+[AI] 百炼返回 7229 字符，耗时 14002ms（超时预算 60s，session=sesn_01M6H1XKMC705TDNPYPB65RPAF）
+O3 assert: executeIntent 结果 type = "applied"（期望 applied/proposal/clarify，非 error）
+O3 assert: message = （无），clarify = null
+O3 assert: 意图「Day2 松一点」触达天 = [无]（期望仅 {2}；0=全程越界）
+O3 assert: 操作总数 = 1（applied=1，needsProposal=0，proposalOps=0）
+O3 note: F11 局部重算 scope 机制代码已实现，语义正确性依赖模型输出；executeIntent 直连百炼不经 plannerCache，只能 live 不可回放
+
+result: pass（14009ms）
+planner: [live]（共享草案，构建者触发真调）

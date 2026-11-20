@@ -1,0 +1,5 @@
+```json
+{"baseVersion":"1","operations":[
+{"op":"plan","scopeRef":"全部","assignments":[{"subjectRef":{"kind":"visit","id":"visit_wzz"},"containerRef":{"kind":"day","dayIndex":"2"},"order":"0"},{"subjectRef":{"kind":"visit","id":"visit_market"},"containerRef":{"kind":"day","dayIndex":"3"},"order":"0"}],"reason":"中文全量 scope 与字符串数值变体，跨天安排"}],
+"unplaced":[],"proposedNew":[],"clarify":null}
+```

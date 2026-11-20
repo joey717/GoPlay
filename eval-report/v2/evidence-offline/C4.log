@@ -1,0 +1,25 @@
+# 用例 C4（L4/机）：飞猪补充标
+# 断言（用例文档 v1.4 原文）：允许 AI 补充 → 补充项带「飞猪补充」标＋FlyAI 核验过
+# 实现状态：已实现｜backlog：-｜复用：内联 runC4（离线确定性四维度）＋ web vitest：shared provenance 落盘/读时默认、planner markAiSupplementProvenance 应用时打标、guards validateAiSupplementProvenance 护栏拒绝无真实飞猪 POI、chip 文案「AI 补充·飞猪核验」与展示范围（主卡/分享显示、清单不显示、≤360px 降级）
+# 时间：2026-11-03T16:01:26.181Z
+
+C4 assert①: provenance 落盘字段 + 读时默认（缺失→guide / ai_supplement 保留 / 幂等）验证通过
+C4 assert②a: planner 对本轮新建、补排的真实飞猪 POI 打 provenance=ai_supplement 验证通过
+C4 assert②b: 攻略证据支撑点位（sourceEvidenceRefs 非空）不打 AI 补充标验证通过
+C4 assert②c: 护栏降级——无真实飞猪 POI 的补充项不打标验证通过
+C4 assert②d: 本轮之前已排期的既有安排不追溯打标验证通过
+C4 assert②e: 用户池飞猪 POI（本轮前已存在）被 plan 排入不误标 AI 补充验证通过
+C4 assert③: 护栏 validateAiSupplementProvenance 拒绝无真实飞猪 POI 的 ai_supplement / 放行真实 POI 验证通过
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/Users/zhengying/goplay/web[39m
+
+ [32m✓[39m src/components/TripChecklist.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 154[2mms[22m[39m
+ [32m✓[39m src/components/ShareView.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 356[2mms[22m[39m
+ [32m✓[39m src/components/VisitCard.test.tsx [2m([22m[2m78 tests[22m[2m)[22m[33m 420[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m102 passed[39m[22m[90m (102)[39m
+[2m   Start at [22m 00:01:27
+[2m   Duration [22m 1.69s[2m (environment 51%, tests 32%, setup 7%, import 6%, transform 4%)[22m
+C4 assert④: chip 文案「AI 补充·飞猪核验」+ 展示范围（主卡/分享显示、清单不显示、≤360px 降级）web vitest 通过
+
+result: pass（3241ms）

@@ -1,0 +1,64 @@
+{
+  "assetVersion": "v1.1",
+  "caseId": "E9",
+  "purpose": "亮点抽取召回 golden：抽取器对本篇的 recall = 命中的 expectedClaims 数 / expectedClaims 总数；阈值 0.8；边界命中由 PD 裁定。",
+  "guide": {
+    "title": "亚龙湾热带天堂森林公园",
+    "sourceUrl": "https://www.xiaohongshu.com/explore/6a93bde9000000002600105b?xsec_token=REDACTED_NOTE_A=&xsec_source=pc_search&source=web_explore_feed",
+    "platform": "xiaohongshu",
+    "labeledBy": "PD",
+    "labeledAt": "2026-10-28",
+    "corpusNote": "小Q 需将此 sourceUrl 加入 L1 抽取语料（8 源），否则 E9 无输入无法真跑。"
+  },
+  "claimKindEnum": ["duration", "highlight", "poi", "pitfall", "tip"],
+  "claimKindMapFromPD": {
+    "时间": "duration",
+    "亮点": "highlight",
+    "小景点": "poi",
+    "避雷": "pitfall",
+    "TIPS": "tip"
+  },
+  "expectedClaims": [
+    { "id": "YLW-01", "claimKind": "duration", "loc": "景点介绍/时间", "text": "游玩时长3-4小时" },
+    { "id": "YLW-02", "claimKind": "highlight", "loc": "亮点#1", "tags": ["拍照位", "体验"], "text": "《非诚勿扰2》拍摄原址，试婚房免费，木屋栈道氛围感很出片，雨林树木茂密。" },
+    { "id": "YLW-03", "claimKind": "highlight", "loc": "亮点#2", "tags": ["拍照位"], "text": "山顶草坪很适合拍照，大雾天云雾缭绕，晴天山海同框。" },
+    { "id": "YLW-04", "claimKind": "highlight", "loc": "亮点#3", "tags": ["玩法"], "text": "观光车一站一站停靠，节奏可以自己把控。" },
+    { "id": "YLW-05", "claimKind": "pitfall", "loc": "避雷#1", "text": "物价贵，建议水、零食自备。" },
+    { "id": "YLW-06", "claimKind": "pitfall", "loc": "避雷#2", "text": "过江龙索桥排队人巨多，节假日排1小时以上，不想排可走旁边栈道绕过去不用花钱。" },
+    { "id": "YLW-07", "claimKind": "pitfall", "loc": "避雷#3", "text": "有偿拍照漫天要价，先问清楚价格再拍。" },
+    { "id": "YLW-08", "claimKind": "pitfall", "loc": "避雷#4", "text": "玻璃栈道谨慎买，如果遇到大雾，上去白茫茫什么都拍不到。" },
+    { "id": "YLW-09", "claimKind": "tip", "loc": "TIPS#1", "text": "网上提前买票比现场窗口便宜。" },
+    { "id": "YLW-10", "claimKind": "tip", "loc": "TIPS#2", "text": "观光车一定要买全是盘山陡坡，备好雨具，山上天气变幻莫测。", "pdNote": "疑似两条 tip 合并（观光车必买／备雨具），保留 PD 原样，命中判定时按语义拆分容忍。" },
+    { "id": "YLW-11", "claimKind": "tip", "loc": "TIPS#3", "text": "建议上午上山，下午容易起大雾看不到海；下午晚一点来，阳光柔和拍照好看。" }
+  ],
+  "expectedPois": {
+    "note": "PD 原始标注为两行，含重复与近似名，刻意保留原样，作为 A13 实体归一化 / S12 点位齐全的活样本。归一化验收口径见 canonicalGroups（PD 2026-10-28 裁定）。",
+    "rawList": [
+      "兰花谷", "过江龙索桥", "非诚勿扰2【试婚房】", "山顶公园", "婚礼礼堂大草坪", "沧海观景台", "天街商业街",
+      "沧海观景台", "鸟巢雨林栈道", "山顶婚礼草坪", "玻璃观景台"
+    ],
+    "canonicalGroups": [
+      {
+        "group": "沧海观景台",
+        "surfaces": ["沧海观景台"],
+        "rule": "同名出现 2 次，去重为 1 个实体；A13 若散成 2 票判 FAIL。"
+      },
+      {
+        "group": "山顶公园/山顶婚礼草坪",
+        "surfaces": ["山顶公园", "山顶婚礼草坪", "婚礼礼堂大草坪"],
+        "pdRuling": "山顶婚礼草坪 == 婚礼礼堂大草坪（同一具体打卡点），且该打卡点属于山顶公园范围内。",
+        "rule": "归一为 {山顶公园} 或 {山顶婚礼草坪/婚礼礼堂大草坪} 任意一个 canonical 均算命中（PASS）；困难时全归 山顶公园 也可接受；但把『山顶婚礼草坪』与『婚礼礼堂大草坪』拆成两个不同实体判 FAIL。"
+      }
+    ]
+  },
+  "recall": {
+    "threshold": 0.8,
+    "measure": "命中的 expectedClaims 数 / expectedClaims 总数(11)",
+    "matchRule": "实体 + claimKind 语义命中即算；字面不要求逐字相等；边界命中由 PD 裁定",
+    "borderlineAdjudicator": "PD"
+  },
+  "openQuestions": [
+    "[已解决 2026-10-28] 近似名归并：PD 裁定 山顶婚礼草坪==婚礼礼堂大草坪（同一打卡点，属山顶公园范围）；口径固化于 expectedPois.canonicalGroups。",
+    "[待补] 西岛篇仅标了小景点，未按五类补全，暂不进 E9；补全后另建 highlight-recall-westIsland.json。"
+  ]
+}

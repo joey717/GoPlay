@@ -1,0 +1,16 @@
+# 用例 A13（L2/机）：实体归一化（canonicalGroups 死判）
+# 断言（用例文档 v1.4 原文）：同实体不同表面串聚合层归一到同一 canonicalId，票数合并不散；归一化表（别名→canonical）来源可为 FlyAI 匹配或抽取器实体归并；无 canonical 可归时保留原始串但不散票（同串合并）
+# 实现状态：已实现｜backlog：-｜复用：新建内联（eval/harness/a13Groups.ts 死判校验器 ＋ server mergeGuideMentions 真实聚合层，golden rawList 全串输入）
+# 时间：2026-11-03T16:01:24.128Z
+
+A13 golden: rawList=11 串（兰花谷、过江龙索桥、非诚勿扰2【试婚房】、山顶公园、婚礼礼堂大草坪、沧海观景台、天街商业街、沧海观景台、鸟巢雨林栈道、山顶婚礼草坪、玻璃观景台）
+A13 canonicalGroup「沧海观景台」surfaces=[沧海观景台] rule=同名出现 2 次，去重为 1 个实体；A13 若散成 2 票判 FAIL。
+A13 canonicalGroup「山顶公园/山顶婚礼草坪」surfaces=[山顶公园、山顶婚礼草坪、婚礼礼堂大草坪] rule=归一为 {山顶公园} 或 {山顶婚礼草坪/婚礼礼堂大草坪} 任意一个 canonical 均算命中（PASS）；困难时全归 山顶公园 也可接受；但把『山顶婚礼草坪』与『婚礼礼堂大草坪』拆成两个不同实体判 FAIL。
+A13 assert(自证PASS形态): 全归一 → violations=0（期望 0；含「全归山顶公园 PASS」）
+A13 assert(自证PASS形态): 沧海观景台同名 2 次 → 落位地点数=1（期望 1，去重合并）
+A13 assert(自证FAIL形态): 沧海散成2票+草坪拆两实体 → violations=2（期望 2，两组各命中且档位正确）：沧海观景台(duplicate_split)；山顶公园/山顶婚礼草坪(alias_gap)
+A13 merge 产物: places=8 → 兰花谷[n:兰花谷]×1票、过江龙索桥[n:过江龙索桥]×1票、非诚勿扰2【试婚房】[n:非诚勿扰2]×1票、山顶公园[n:山顶公园]×3票、沧海观景台[n:沧海观景台]×2票、天街商业街[n:天街商业街]×1票、鸟巢雨林栈道[n:鸟巢雨林栈道]×1票、玻璃观景台[n:玻璃观景台]×1票
+A13 assert(merge): 沧海观景台（rawList 同名 2 次）→ 落位地点数=1（golden rule：去重为 1，散成 2 票 FAIL）
+A13 note: 归一化表来源＝poiAlias.ts 显式别名（Task #286 PD 裁定补「山顶婚礼草坪/婚礼礼堂大草坪」→「山顶公园」，唯一允许的功能源码改动）；同名去重与别名折叠两档硬断言全绿，#285 alias_gap finding 转硬绿（评测侧不私设映射迎合）
+
+result: pass（1ms）

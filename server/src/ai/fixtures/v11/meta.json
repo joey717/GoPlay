@@ -1,0 +1,13 @@
+{
+  "schema": "GoPlay v1.1 OperationSet 合成夹具（Task #49）",
+  "baselineTrip": "标准三亚验收行程（createFixtureSanyaTrip() 显式生成：itemRegistry 含 item_wzz/item_bridge/item_beach/item_rock/item_market/item_daxiaodongtian，visits 含 visit_wzz/visit_market，stops 含 stop_bridge/stop_beach/stop_rock/stop_snack，初始 version=1）",
+  "fixtures": {
+    "full-replan-1.txt": "合法全量重排：5 条单日 plan（scopeRef=day），assignments 合计覆盖 day_2/day_3 两个 dayIndex → isFullPlanBatch=true，引用 item_daxiaodongtian（globalPool point 进入 Day3 时创建 ordinary Visit）",
+    "full-replan-2.txt": "markdown fence 包裹 + 中文全量 scopeRef（裸值 \"全部\"）+ baseVersion/数值字段字符串变体 → 归一化后 allDays + 跨天 → 挂起",
+    "full-replan-3.txt": "括号交错损坏（两条 plan 之间缺逗号、operations 数组未闭合）→ 无可安全修复候选，整体解析为 null",
+    "full-replan-4.txt": "EOF 字符串字面量内截断（干净截断点）→ 保守修复补引号后解析成功（仅损失 reason 尾部）",
+    "single-day-replan.txt": "clarify 反问（operations 为空数组）",
+    "stop-reorder.txt": "Stop 内部玩法 move（visit 容器内改序）：非敏感、单容器 → 直接应用"
+  },
+  "note": "本目录为 v1.1 合成基线；可用 npx tsx server/src/ai/capture-v11.ts 以真实百炼输出覆写同名文件（capture 幂等，已存在则跳过）。"
+}

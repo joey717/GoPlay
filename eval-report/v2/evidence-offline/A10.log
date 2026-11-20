@@ -1,0 +1,11 @@
+# 用例 A10（L2/机）：snippet 引用可溯源
+# 断言（用例文档 v1.4 原文）：evidenceRefs 1–3 非空；文本可溯源到 quote（归一化后包含/高相似）
+# 实现状态：已实现｜backlog：-｜复用：新建内联（parsePlannerOutput 引用过滤）＋ shared/src/verify-guides.ts / verify-dedupe.ts（归一化相似口径）
+# 时间：2026-11-03T16:01:24.127Z
+
+A10 assert: snippet「走走拍拍大概2小时左右…」 refs=1 ∈ [1,3] 且全部 ∈ 消费集合（ev_note_1:m1）
+A10 assert: snippet「西岛和蜈支洲岛建议提前线上买…」 refs=2 ∈ [1,3] 且全部 ∈ 消费集合（ev_note_1:m1, ev_note_2:m1）
+A10 assert: 输出 snippet 数 = 2（期望 2，无引用者已在解析层丢弃）
+A10 note: normalizeSnippetText 归一化口径可用（"走走拍拍大概2小时左右"），quote 相似度断言复用 shared/src/verify-dedupe.ts
+
+result: pass（0ms）

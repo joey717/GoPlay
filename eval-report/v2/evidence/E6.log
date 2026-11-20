@@ -1,0 +1,29 @@
+# 用例 E6（L1/机）：同 canonicalUrl 去重
+# 断言（用例文档 v1.4 原文）：同 canonicalUrl 粘两次去重为 1 源
+# 实现状态：已实现｜backlog：-｜复用：新建内联（submitGuideSource.duplicate 真实链路）＋ shared/src/verify-guides.ts（findDuplicateGuideSource 纯函数）
+# 时间：2026-11-03T15:53:41.930Z
+
+[EVAL-FIXTURE] extractEntries 已替换为 fixture：来源=S1，条目=2（西岛、椰梦长廊）
+[AI] 抽取点位「西岛」对齐飞猪 POI「西岛」（id=2611）
+[AI] 抽取点位「椰梦长廊」对齐飞猪 POI「椰梦长廊」（id=163575）
+[AI] GUIDES 装配搜索（Task #313）：对齐请求 2 次 → 唯一查询 2 条（去重命中 0；scheduler=pool，concurrency=6）
+[GUIDES] 正文证据写盘：ev_note_2（mentions 2）
+[GUIDES] 文字来源分段耗时（Task #313）：抽取 1ms ＋ 装配写盘 4ms（entries=2，committed=true）
+[GUIDES] 来源结算：src_c0aec884 → ready（正文）
+FX1 assert: installFixtureExtraction() === true（EVAL_FIXTURE=1 注入生效）
+FX1 assert: fixtureStats.calls = 1 > 0（业务链路确实调到 fixture extractEntries）
+FX1 assert: source.status = "ready"（期望 ready；partial/failed 即注入链路异常）
+FX1 assert: mentionRefs.length = 2 > 0（fixture claims 已装配为 mentions）
+[EVAL-FIXTURE] fetchNote 已桩替换：url=https://www.xiaohongshu.com/explore/6a6812d3000000001101a289?xsec_token=abc123 → S1
+[GUIDES] 链接抓取元信息已保存（src_80b83c7f，图片 0 张，沿用已完成 0 张，下载失败 0 张页码占位）
+[EVAL-FIXTURE] extractEntries 已替换为 fixture：来源=S1，条目=2（西岛、椰梦长廊）
+[GUIDES] 正文证据写盘：ev_note_3（mentions 2）
+[GUIDES] 来源结算：src_80b83c7f → ready（正文）
+E6 assert: first.duplicate = false（期望 false，首次提交）
+E6 assert: second.duplicate = true（期望 true，同 canonicalUrl 命中去重）
+E6 assert: second.sourceId === first.sourceId（src_80b83c7f === src_80b83c7f）
+[env] 已加载仓库根目录 .env，百炼变量 4/4 项已配置，FlyAI 变量 1/1 项已配置
+E6 assert: 同 canonicalUrl 来源数 = 1（期望 1）
+
+result: pass（288ms）
+# 附：FX1 harness 自检断言与 E6 合并执行（见上方 FX1 行）

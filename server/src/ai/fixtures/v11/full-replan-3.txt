@@ -1,0 +1,4 @@
+{"baseVersion":1,"operations":[
+{"op":"plan","scopeRef":{"kind":"day","dayIndex":2},"assignments":[{"subjectRef":{"kind":"visit","id":"visit_wzz"},"containerRef":{"kind":"day","dayIndex":2},"order":0}],"reason":"重排第二天"}
+{"op":"plan","scopeRef":{"kind":"day","dayIndex":3},"assignments":[{"subjectRef":{"kind":"visit","id":"visit_market"},"containerRef":{"kind":"day","dayIndex":3},"order":0}],"reason":"重排第三天"},
+"unplaced":[],"proposedNew":[],"clarify":null}

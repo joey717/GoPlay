@@ -1,0 +1,7 @@
+{"baseVersion":1,"operations":[
+{"op":"plan","scopeRef":{"kind":"day","dayIndex":1},"assignments":[],"reason":"到达日只休整，不排景点"},
+{"op":"plan","scopeRef":{"kind":"day","dayIndex":2},"assignments":[{"subjectRef":{"kind":"visit","id":"visit_wzz"},"containerRef":{"kind":"day","dayIndex":2},"order":0}],"reason":"蜈支洲岛保留在第二天"},
+{"op":"plan","scopeRef":{"kind":"day","dayIndex":3},"assignments":[{"subjectRef":{"kind":"point","id":"item_daxiaodongtian"},"containerRef":{"kind":"day","dayIndex":3},"order":0},{"subjectRef":{"kind":"visit","id":"visit_market"},"containerRef":{"kind":"day","dayIndex":3},"order":1}],"reason":"大小洞天加入第三天上午，第一市场顺延到下午"},
+{"op":"plan","scopeRef":{"kind":"day","dayIndex":4},"assignments":[],"reason":"第四天留白机动"},
+{"op":"plan","scopeRef":{"kind":"day","dayIndex":5},"assignments":[],"reason":"返程日不排景点"}],
+"unplaced":[],"proposedNew":[],"clarify":null}

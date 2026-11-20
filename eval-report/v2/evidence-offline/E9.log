@@ -1,0 +1,50 @@
+# 用例 E9（L1/机）：亮点抽取召回（亚龙湾 golden）
+# 断言（用例文档 v1.4 原文）：抽取结果 recall ≥ 80%（漏抽的每条列出，附原文位置）；首轮仅首篇，其余 4 篇进 backlog 由 PD 后续补标
+# 实现状态：已实现｜backlog：-｜复用：新建内联（eval/harness/e9Recall.ts 纯函数：抽取缓存 entries vs golden expectedClaims；实体归一用 golden canonicalGroups）＋ eval/tools/build-corpus.ts 慢层缓存（npm run eval:corpus 一次性建立）
+# 时间：2026-11-03T16:01:23.579Z
+
+E9 golden: assetVersion=v1.1 caseId=E9 标注=PD@2026-10-28
+E9 golden: expectedClaims=11 条（duration/highlight/poi/pitfall/tip），matchRule「实体 + claimKind 语义命中即算；字面不要求逐字相等；边界命中由 PD 裁定」
+E9 抽取缓存: noteId=6a93bde9000000002600105b contentHash=ae22909b88f8d927… capturedAt=2026-10-30T14:17:03.120Z entries=19 条（extractMs=63295）
+E9 抽取缓存 entries: 亚龙湾热带天堂森林公园[attraction/low]/210min、兰花谷[in_attraction/high]/20min、过江龙索桥[in_attraction/high]、试婚房[in_attraction/high]、鸟巢雨林栈道[in_attraction/medium]、玻璃栈道[in_attraction/high]、山顶公园[in_attraction/high]、婚礼礼堂大草坪[in_attraction/high]、沧海观景台[in_attraction/high]、天街商业街[in_attraction/high]、亚龙湾热带天堂森林公园[note_tip/low]、亚龙湾热带天堂森林公园[note_tip/low]、亚龙湾热带天堂森林公园[note_tip/low]、亚龙湾热带天堂森林公园[note_tip/low]、玻璃栈道[note_tip/low]、试婚房[note_tip/low]、亚龙湾热带天堂森林公园[note_tip/low]、亚龙湾热带天堂森林公园[note_tip/low]、亚龙湾热带天堂森林公园[note_tip/low]
+E9 assert（原始机器判定·未经 PD 裁量）: recall = 8/11 = 0.727（阈值 0.8，未达标；仅计机器原判 hit，boundary/miss 未转命中）
+E9 assert（PD 裁量后·Task #299 PD@2026-10-30）: recall = 11/11 = 1.000（阈值 0.8，达标 → pass）；PD 裁量将 3 条 boundary（YLW-04/YLW-10/YLW-11）全部判命中——golden 系 PD 对攻略文案自行提炼规整的文本，与抽取逐字原文字面不对应属预期（miss=0，无真·漏抽）。override 不改机器阈值/词表，machineRecall=0.727 原样留存。
+E9 逐 claim 匹配过程（entity 归一前→后｜kind 对照｜决策）：
+  [HIT] YLW-01(golden=duration) text「游玩时长3-4小时」 → 候选「亚龙湾热带天堂森林公园」entity 亚龙湾热带天堂森林公园→亚龙湾热带天堂森林公园｜sim=1｜推断kind=duration(suggestMinutes)｜suggestMinutes=210 ∈ [180,240]（时长区间命中，抽取器以结构字段承载 duration；不占用文本 claim 槽位）
+  [HIT] YLW-02(golden=highlight) text「《非诚勿扰2》拍摄原址，试婚房免费，木屋栈道氛围」 → 候选「试婚房」entity 试婚房→试婚房｜sim=0.458｜推断kind=highlight｜内容命中 sim=0.458 ≥ 0.3 且 kind 推断一致（highlight）
+  [HIT] YLW-03(golden=highlight) text「山顶草坪很适合拍照，大雾天云雾缭绕，晴天山海同框」 → 候选「婚礼礼堂大草坪」entity 婚礼礼堂大草坪→山顶公园/山顶婚礼草坪｜sim=0.689｜推断kind=highlight｜内容命中 sim=0.689 ≥ 0.3 且 kind 推断一致（highlight）
+  [HIT·PD裁量] YLW-04(golden=highlight) text「观光车一站一站停靠，节奏可以自己把控。」 → 候选「兰花谷」entity 兰花谷→兰花谷｜sim=0.207｜推断kind=duration｜原始机器判定=BOUNDARY（内容存疑：sim=0.207 ∈ [0.18, 0.3)）
+      └ PD 裁量=HIT（PD@2026-10-30）：golden「观光车一站一站停靠，节奏可以自己把控」系 PD 对攻略文案的提炼规整表述；抽取侧观光车信息（站点单向行驶/按顺序游玩/盘山公路）已 surface，语义等价覆盖该亮点。机器 sim=0.250<0.3 属「字面不对应」（golden 提炼所致，机器取到含「观光车」的兰花谷条目），非内容漏抽 → 判命中。
+  [HIT] YLW-05(golden=pitfall) text「物价贵，建议水、零食自备。」 → 候选「亚龙湾热带天堂森林公园」entity 亚龙湾热带天堂森林公园→亚龙湾热带天堂森林公园｜sim=0.303｜推断kind=pitfall｜内容命中 sim=0.303 ≥ 0.3 且 kind 推断一致（pitfall）
+  [HIT] YLW-06(golden=pitfall) text「过江龙索桥排队人巨多，节假日排1小时以上，不想排」 → 候选「过江龙索桥」entity 过江龙索桥→过江龙索桥｜sim=0.471｜推断kind=pitfall｜内容命中 sim=0.471 ≥ 0.3 且 kind 推断一致（pitfall）
+  [HIT] YLW-07(golden=pitfall) text「有偿拍照漫天要价，先问清楚价格再拍。」 → 候选「亚龙湾热带天堂森林公园」entity 亚龙湾热带天堂森林公园→亚龙湾热带天堂森林公园｜sim=0.51｜推断kind=pitfall｜内容命中 sim=0.510 ≥ 0.3 且 kind 推断一致（pitfall）
+  [HIT] YLW-08(golden=pitfall) text「玻璃栈道谨慎买，如果遇到大雾，上去白茫茫什么都拍」 → 候选「玻璃栈道」entity 玻璃栈道→玻璃栈道｜sim=0.92｜推断kind=pitfall｜内容命中 sim=0.920 ≥ 0.3 且 kind 推断一致（pitfall）
+  [HIT] YLW-09(golden=tip) text「网上提前买票比现场窗口便宜。」 → 候选「亚龙湾热带天堂森林公园」entity 亚龙湾热带天堂森林公园→亚龙湾热带天堂森林公园｜sim=0.541｜推断kind=tip｜内容命中 sim=0.541 ≥ 0.3 且 kind 推断一致（tip）
+  [HIT·PD裁量] YLW-10(golden=tip) text「观光车一定要买全是盘山陡坡，备好雨具，山上天气变」 → 候选「亚龙湾热带天堂森林公园」entity 亚龙湾热带天堂森林公园→亚龙湾热带天堂森林公园｜sim=0.233｜推断kind=tip｜原始机器判定=BOUNDARY（内容存疑：sim=0.233 ∈ [0.18, 0.3)）
+      └ PD 裁量=HIT（PD@2026-10-30）：反推 kind=tip 与 golden 一致；机器 sim=0.233<0.3 系 golden 本条合并两个 tip（观光车必买／备雨具）而抽取器拆成不同 note_tip 条目致单条 bigram 稀释。前半「观光车必买/盘山陡坡」与 golden 逐字近乎一致，后半「备好雨具」另条 note_tip 已抽到；golden pdNote 已明示「命中判定时按语义拆分容忍」→ 判命中。
+  [HIT·PD裁量] YLW-11(golden=tip) text「建议上午上山，下午容易起大雾看不到海；下午晚一点」 → 候选「亚龙湾热带天堂森林公园」entity 亚龙湾热带天堂森林公园→亚龙湾热带天堂森林公园｜sim=0.806｜推断kind=pitfall｜原始机器判定=BOUNDARY（kind 存疑：内容命中（sim=0.806）但推断 kind=pitfall ≠ golden tip）
+      └ PD 裁量=HIT（PD@2026-10-30）：内容近乎逐字命中（机器 sim=0.575≥0.3，「建议上午上山」「下午容易起雾」「阳光柔和拍照好看」全对应）；落 boundary 仅因 inferClaimKind 反推 kind=pitfall（quote「看不到海」误触 PITFALL 词表「看不到」）≠ golden tip，属词法误触——抽取器归 note_tip 与 golden TIPS 归类其实一致 → 判命中。
+E9 hit: YLW-01(duration) ← 「亚龙湾热带天堂森林公园」sim=1 quote「suggestMinutes=210 ∈ [180,240]」
+E9 hit: YLW-02(highlight) ← 「试婚房」sim=0.458 quote「试婚房：免费参观，就是你拍的这套木屋，内部还原电影陈设」
+E9 hit: YLW-03(highlight) ← 「婚礼礼堂大草坪」sim=0.689 quote「山顶必逛：婚礼礼堂大草坪（第一张照片亭子）、沧海观景台、天街」
+E9 hit: YLW-05(pitfall) ← 「亚龙湾热带天堂森林公园」sim=0.303 quote「山上天街餐厅物价贵，矿泉水、零食建议山下提前买好带上去。」
+E9 hit: YLW-06(pitfall) ← 「过江龙索桥」sim=0.471 quote「索桥（过江龙索桥）：20元，电影取景吊桥，人多排队；不想走可」
+E9 hit: YLW-07(pitfall) ← 「亚龙湾热带天堂森林公园」sim=0.51 quote「山顶很多有偿拍照的小贩，先问清楚价格再拍，避免拍完漫天要价；」
+E9 hit: YLW-08(pitfall) ← 「玻璃栈道」sim=0.92 quote「玻璃栈道谨慎买，如果遇到大雾，上去白茫茫什么都拍不到，钱就白」
+E9 hit: YLW-09(tip) ← 「亚龙湾热带天堂森林公园」sim=0.541 quote「门票+往返观光车：140元左右，网上提前买比现场窗口便宜」
+E9 hit: [PD裁量转命中·原机器判定=BOUNDARY] YLW-04(highlight) ← 「兰花谷」sim=0.207
+E9 hit: [PD裁量转命中·原机器判定=BOUNDARY] YLW-10(tip) ← 「亚龙湾热带天堂森林公园」sim=0.233
+E9 hit: [PD裁量转命中·原机器判定=BOUNDARY] YLW-11(tip) ← 「亚龙湾热带天堂森林公园」sim=0.806
+E9 PD 裁量（Task #299，PD@2026-10-30 原话意译「攻略文案系我自己提炼规整、字面无法完全对应，可算评测通过」）：3 条 boundary（YLW-04/YLW-10/YLW-11）全部判命中；机器阈值/词表零改动，逐条保留「原始机器判定 vs PD 裁量」两行如下：
+  [PD裁量] YLW-04(highlight)：原始机器判定=BOUNDARY（内容存疑：sim=0.207 ∈ [0.18, 0.3)）
+      └ PD 裁量=HIT（PD@2026-10-30）：golden「观光车一站一站停靠，节奏可以自己把控」系 PD 对攻略文案的提炼规整表述；抽取侧观光车信息（站点单向行驶/按顺序游玩/盘山公路）已 surface，语义等价覆盖该亮点。机器 sim=0.250<0.3 属「字面不对应」（golden 提炼所致，机器取到含「观光车」的兰花谷条目），非内容漏抽 → 判命中。
+  [PD裁量] YLW-10(tip)：原始机器判定=BOUNDARY（内容存疑：sim=0.233 ∈ [0.18, 0.3)）
+      └ PD 裁量=HIT（PD@2026-10-30）：反推 kind=tip 与 golden 一致；机器 sim=0.233<0.3 系 golden 本条合并两个 tip（观光车必买／备雨具）而抽取器拆成不同 note_tip 条目致单条 bigram 稀释。前半「观光车必买/盘山陡坡」与 golden 逐字近乎一致，后半「备好雨具」另条 note_tip 已抽到；golden pdNote 已明示「命中判定时按语义拆分容忍」→ 判命中。
+  [PD裁量] YLW-11(tip)：原始机器判定=BOUNDARY（kind 存疑：内容命中（sim=0.806）但推断 kind=pitfall ≠ golden tip）
+      └ PD 裁量=HIT（PD@2026-10-30）：内容近乎逐字命中（机器 sim=0.575≥0.3，「建议上午上山」「下午容易起雾」「阳光柔和拍照好看」全对应）；落 boundary 仅因 inferClaimKind 反推 kind=pitfall（quote「看不到海」误触 PITFALL 词表「看不到」）≠ golden tip，属词法误触——抽取器归 note_tip 与 golden TIPS 归类其实一致 → 判命中。
+E9 PD 裁量附注（同日 PD 发现，归属细化已由 Task #300 落地）：YLW-06「过江龙索桥排队」经 #300 noteAttribution 归属下沉后，本轮重抽已归子景点「过江龙索桥」(in_attraction)——matcher 匹配子景点 entity sim=0.471 机器直接 HIT，归属细化意图达成；本条不在 PD 裁量范围（机器已判命中）。注：#300 预测 3 条下沉（过江龙索桥/玻璃栈道/试婚房），本轮重抽实测玻璃栈道、试婚房 2 条 note_tip 下沉，过江龙索桥排队信息被抽取器直接并入 in_attraction「过江龙索桥」条目（无独立 note_tip 可下沉）——属抽取模型方差，非 #300 缺陷，YLW-06 归属结果一致。
+E9 重抽漂移披露（Task #301，重抽＝归属下沉新逻辑生效后重建缓存）：本轮原始机器 recall=0.727（8/11），触发 PD 裁量 3 条（YLW-04/YLW-10/YLW-11）。相对 #299 落档（机器 recall 0.636·7/11，boundary 4 条 YLW-02/04/10/11）的漂移根因＝抽取模型方差＋#300 归属下沉改变候选 entity：YLW-02 现机器直接 HIT（sim 由 #299 的 0.400 边界态升至命中态，其 PD override 变 no-op 故本轮不计入裁量清单），YLW-06 归子景点「过江龙索桥」in_attraction 后机器直接 HIT。matcher 适配检查（item2 要求）：YLW-06 匹配子景点「过江龙索桥」(in_attraction)、YLW-08 匹配下沉后 note_tip「玻璃栈道」——matcher 以 entity 归一后子景点名参与匹配，已正确命中子景点归属，**无需为归属下沉额外适配**。PD_ADJUDICATION.reason 内嵌的 sim 数值（如 YLW-04「0.250」、YLW-11「0.575」）系 #299 落档时 PD 裁量依据的历史快照，重抽后机器实际 sim 可能漂移；当前真实机器值以上方「原始机器判定」双行的第一行为准，PD 裁定理由文本按红线不静默改写（保留 #299 记录）。
+E9 归因结论（PD 裁量后·Task #299 PD@2026-10-30）：原始机器 recall=0.727（命中 8/11，boundary 3 条、miss 0 条）。boundary 分歧根因＝golden 系 PD 对攻略文案自行提炼规整的文本，与抽取器逐字原文存在预期内字面差异（inferClaimKind 词法反推误触 ＋ golden 合并 tip 被抽取拆条稀释 bigram sim），非抽取缺口（miss=0，无真·漏抽）。PD 裁定 3 条 boundary（YLW-04/YLW-10/YLW-11）全部判命中 → PD 裁量后 recall=1.000（11/11）≥ 阈值 0.8，E9 达标转 pass。未静默放宽阈值：机器阈值/词表零改动，machineRecall=0.727 与逐 claim machineDecision 原样留痕（见上双行）。
+E9 note: boundary 0 条单列交 PD 裁（golden recall.borderlineAdjudicator=PD），不自动判 fail；miss 0 条已附原文位置 loc；PD 裁量转命中 3 条（Task #299）
+
+result: pass（5ms）

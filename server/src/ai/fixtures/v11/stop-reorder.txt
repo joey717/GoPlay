@@ -1,0 +1,1 @@
+{"baseVersion":1,"operations":[{"op":"move","subjectRef":{"kind":"stop","id":"stop_rock"},"containerRef":{"kind":"visit","id":"visit_wzz"},"toOrder":0,"reason":"先去观日岩看海，再走情人桥"}],"unplaced":[],"proposedNew":[],"clarify":null}

@@ -1,0 +1,323 @@
+{
+  "sampleVersion": "1.0",
+  "purpose": "五篇攻略的产品整理与回归样例，不是已运行的GoPlay接口结果",
+  "capturedDate": "2026-10-19",
+  "retrievalContext": "用户已登录Chrome中的目标笔记正文；第2篇9张文字图全部人工识读，第1篇另识读路线封面。第3、4、5篇其余摄影图未逐张检查。评论未计入攻略来源。",
+  "limitations": [
+    "不证明未登录HTTP、无头浏览器或云服务器抓取成功率",
+    "未调用FlyAI核对商品、坐标或地图交通",
+    "未核对当日票价、开放、潮汐、天气、营业和房态",
+    "人工识读图中文字不等于原作者数字文本"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "noteId": "6a6812d3000000001101a289",
+      "url": "https://www.xiaohongshu.com/explore/6a6812d3000000001101a289",
+      "title": "第一次去三亚旅游，直接复制这条精华路线",
+      "author": "作者A",
+      "publishedAt": "2026-07-30T21:26:40+08:00",
+      "coverage": "正文与第1张路线封面；其余17张图未逐张识读",
+      "notes": "正文与封面的Day分配不一致；瓜子二手车卖车段不进入旅行整理。路线列出地点，不计作逐个强推。"
+    },
+    {
+      "id": "S2",
+      "noteId": "6a86d367000000003301aadc",
+      "url": "https://www.xiaohongshu.com/explore/6a86d367000000003301aadc",
+      "title": "本J人做的三亚旅游攻略已经next level",
+      "publishedAt": "2026-08-20T18:13:59+08:00",
+      "coverage": "正文仅话题与账号提及；全部9张文字图已人工识读",
+      "notes": "第1至5张为地图与路线，第6至7张游玩建议，第8张交通住宿，第9张餐厅。正文的话题标签不计为地点推荐。"
+    },
+    {
+      "id": "S3",
+      "noteId": "69b81092000000001a027db7",
+      "url": "https://www.xiaohongshu.com/explore/69b81092000000001a027db7",
+      "title": "三亚带娃的最后一站，把半天的犹豫给了西岛",
+      "author": "作者B",
+      "publishedAt": "2026-03-16T22:15:46+08:00",
+      "lastUpdateAt": "2026-06-28T22:57:28+08:00",
+      "coverage": "完整正文；5张摄影图未逐张检查",
+      "notes": "亲子西岛体验；珊瑚石墙、海上书屋、牛王岭作者说明未亲自拍摄，不升级为明确亲历路线。"
+    },
+    {
+      "id": "S4",
+      "noteId": "6ace31c6000000001b0202f7",
+      "url": "https://www.xiaohongshu.com/explore/6ace31c6000000001b0202f7",
+      "title": "三亚西岛太美啦，超全seawalk攻略看这篇",
+      "author": "作者C",
+      "publishedAt": "2026-10-13T21:27:34+08:00",
+      "coverage": "完整正文；18张摄影图未逐张检查",
+      "notes": "明确推荐西岛，并给出走到孤独的树后返程的约2小时拍照路线；不能换算成整个西岛只需2小时。"
+    },
+    {
+      "id": "S5",
+      "noteId": "6ac09246000000001c02e1fa",
+      "url": "https://www.xiaohongshu.com/explore/6ac09246000000001c02e1fa",
+      "title": "三亚后海村，差评看多了，实际体验竟然有惊喜",
+      "author": "作者D",
+      "publishedAt": "2026-10-03T13:27:34+08:00",
+      "coverage": "完整正文；12张摄影图未逐张检查",
+      "notes": "作者亲历正向；转述网上差评不能计作多个负面来源；喜来登为对照酒店，未说明具体分店且不是预订推荐。"
+    },
+    {
+      "id": "S6",
+      "noteId": "6a93bde9000000002600105b",
+      "url": "https://www.xiaohongshu.com/explore/6a93bde9000000002600105b?xsec_token=REDACTED_NOTE_A=&xsec_source=pc_search&source=web_explore_feed",
+      "title": "亚龙湾热带天堂森林公园",
+      "coverage": "E9 亮点召回 golden 的输入源（highlight-recall-yalongwan.json v1.1，PD 人工标 11 条 expectedClaims）",
+      "notes": "v1.4 语料前置新增（PD 口头拍板）：L1 抽取语料 8 源→10 源＝文档 5 真攻略+3 合成边界源+亚龙湾(S6)+西岛(S4 同一笔记 6ace31c6，语料串为历史成功抓取的分享全串，笔记已在 5 源内，不重复计源，uploads 抓取产物复用)。本篇 claims 未在 v1 人工标注——E9 召回评测用真实抽取缓存对比 golden expectedClaims，不消费本 fixture claims。"
+    }
+  ],
+  "claims": [
+    {
+      "id": "C01",
+      "entity": "西岛",
+      "source": "S1",
+      "locator": "正文行程Day2及游玩Tips",
+      "quote": "西岛和蜈支洲岛建议提前线上买票",
+      "stance": "route_and_tip",
+      "summary": "列入路线；提示买票与早班船，不计为一次具体强推。"
+    },
+    {
+      "id": "C02",
+      "entity": "西岛",
+      "source": "S2",
+      "locator": {
+        "imageIndex": 7,
+        "section": "建议12"
+      },
+      "quote": "行程紧张二选一就足够",
+      "textKind": "manual_image_transcription",
+      "stance": "conditional_recommend",
+      "summary": "西岛侧重闲逛拍照，蜈支洲侧重水上项目；天气与时间决定取舍，不是两岛都必须去。"
+    },
+    {
+      "id": "C03",
+      "entity": "西岛",
+      "source": "S3",
+      "locator": "正文开头与避坑提醒",
+      "quote": "一定给娃穿好鞋，不适合光脚跑",
+      "stance": "risk_of_activity",
+      "summary": "碎石与珊瑚风险属于赤脚沙滩玩法，不是排除西岛。晴天观海体验与阴天不同。"
+    },
+    {
+      "id": "C04",
+      "entity": "西岛",
+      "source": "S4",
+      "locator": "正文路线结尾",
+      "quote": "走走拍拍大概2小时左右",
+      "stance": "positive_experience",
+      "summary": "约2小时限该作者码头至孤独的树的拍照步行路线，不含全岛深度游。"
+    },
+    {
+      "id": "C05",
+      "entity": "西岛/木门与歪脖子椰子树",
+      "source": "S4",
+      "locator": "正文路线中段",
+      "quote": "人很多要排队",
+      "stance": "risk_of_activity",
+      "summary": "只约束这个打卡点；同篇推荐珊瑚墙前不排队椰林沙滩，不能把风险扩成整个西岛。"
+    },
+    {
+      "id": "C06",
+      "entity": "西岛/牛王岭、海上书屋、珊瑚石墙",
+      "source": "S3",
+      "locator": "网红打卡点末尾",
+      "quote": "以上景点均未亲自拍摄",
+      "stance": "reported_or_unverified_experience",
+      "summary": "保留为补充玩法信息；不作为作者明确亲历的顺序与耗时证据。"
+    },
+    {
+      "id": "C07",
+      "entity": "椰梦长廊",
+      "source": "S1",
+      "locator": "游玩Tips",
+      "quote": "椰梦长廊傍晚追日落绝美",
+      "stance": "positive",
+      "summary": "支持傍晚看日落；没有精确日落钟点。"
+    },
+    {
+      "id": "C08",
+      "entity": "椰梦长廊",
+      "source": "S2",
+      "locator": {
+        "imageIndex": 7,
+        "section": "建议11"
+      },
+      "quote": "别瞎逛浪费时间",
+      "textKind": "manual_image_transcription",
+      "stance": "tip",
+      "summary": "建议选具体拍照段，不等于劝退整个长廊。第2图另有傍晚与驱蚊提醒。"
+    },
+    {
+      "id": "C09",
+      "entity": "后海村/冲浪",
+      "source": "S2",
+      "locator": {
+        "imageIndex": 5,
+        "section": "后海村"
+      },
+      "quote": "多看真实学员评价",
+      "textKind": "manual_image_transcription",
+      "stance": "risk_of_provider",
+      "summary": "对比教练与俱乐部，不着急交费；不是排除后海村。"
+    },
+    {
+      "id": "C10",
+      "entity": "后海村/住宿",
+      "source": "S5",
+      "locator": "正文住宿与夜生活段",
+      "quote": "如果订了临海民宿，晚上会有点吵",
+      "stance": "conditional_risk",
+      "summary": "喜静或早睡用户的住宿风险，不代表夜间到访不适合。十一点多安静是作者当次体验，不作保证。"
+    },
+    {
+      "id": "C11",
+      "entity": "后海村",
+      "source": "S5",
+      "locator": "正文开头",
+      "quote": "亲身体验之后反而觉得很不错",
+      "stance": "positive_experience",
+      "summary": "网上差评只是作者转述，不增加独立负面计数。"
+    },
+    {
+      "id": "C12",
+      "entity": "三和风味馆",
+      "source": "S5",
+      "locator": "美食推荐第一项",
+      "quote": "我们待的三天连续吃了好几顿",
+      "stance": "positive_experience",
+      "summary": "单篇明确强推，有具体菜品与建议微辣；可作为已排后海村内餐饮建议，不因单篇而只能进候选。"
+    },
+    {
+      "id": "C13",
+      "entity": "亚龙湾海滩",
+      "source": "S2",
+      "locator": {
+        "imageIndex": 4,
+        "section": "亚龙湾海滩"
+      },
+      "quote": "下午四点再过来",
+      "textKind": "manual_image_transcription",
+      "stance": "time_tip",
+      "summary": "作者建议16时后玩海并防晒；原文不是日落精确时间。"
+    },
+    {
+      "id": "C14",
+      "entity": "亚龙湾海滩/入口",
+      "source": "S2",
+      "locator": {
+        "imageIndex": 7,
+        "section": "建议10"
+      },
+      "quote": "找爱立方滨海乐园旁边的小通道进去",
+      "textKind": "manual_image_transcription",
+      "stance": "access_tip_to_verify",
+      "summary": "攻略入口位置供参考；现时开放与合法通行须核对，不当成通行保证。"
+    },
+    {
+      "id": "C15",
+      "entity": "太阳湾公路",
+      "source": "S2",
+      "locator": {
+        "imageIndex": 4,
+        "section": "太阳湾公路"
+      },
+      "quote": "不要停路边",
+      "textKind": "manual_image_transcription",
+      "stance": "safety_tip",
+      "summary": "不安排路边停车摄影；原文称观景台限时7分钟，时效未核对。"
+    },
+    {
+      "id": "C16",
+      "entity": "蜈支洲岛",
+      "source": "S2",
+      "locator": {
+        "imageIndex": 5,
+        "section": "蜈支洲岛"
+      },
+      "quote": "岛上消费偏高",
+      "textKind": "manual_image_transcription",
+      "stance": "budget_condition",
+      "summary": "丰富水上项目与较高消费；不能仅因预算提醒整岛劝退。原文约20分钟船程非排队总耗时。"
+    },
+    {
+      "id": "C17",
+      "entity": "海棠湾/下海游泳",
+      "source": "S2",
+      "locator": {
+        "imageIndex": 8,
+        "section": "海棠湾"
+      },
+      "quote": "大多区域不适合下海游泳",
+      "textKind": "manual_image_transcription",
+      "stance": "risk_of_activity",
+      "summary": "不安排下海游泳；不等于酒店、海边散步或免税购物都不可去。"
+    },
+    {
+      "id": "C18",
+      "entity": "小东海/赶海",
+      "source": "S2",
+      "locator": {
+        "imageIndex": 3,
+        "section": "小东海"
+      },
+      "quote": "但礁石锋利注意脚下安全",
+      "textKind": "manual_image_transcription",
+      "stance": "risk_of_activity",
+      "summary": "赶海应按当天潮汐与现场安全判断；不能把另一地点的碎石提醒算作西岛第二篇避雷。"
+    },
+    {
+      "id": "C19",
+      "entity": "三亚/景区预约",
+      "source": "S2",
+      "locator": {
+        "imageIndex": 6,
+        "section": "建议1"
+      },
+      "quote": "免费的景区也是需要提前30分钟预约的",
+      "textKind": "manual_image_transcription",
+      "stance": "operational_claim_to_verify",
+      "summary": "可能过时的票务说法；保留攻略提醒，不宣称当前政策已核实。"
+    }
+  ],
+  "westIslandPhotoRoute": {
+    "source": "S4",
+    "order": [
+      "码头出岛内口后左转的彩色西岛字母",
+      "西岛墙",
+      "木门与歪脖子椰子树",
+      "珊瑚墙前椰林沙滩",
+      "小吃街",
+      "珊瑚墙",
+      "临海公路",
+      "孤独的树"
+    ],
+    "walkPhotoMinutes": 120,
+    "durationScope": "作者此段走拍路线；不是全岛总时长、完整往返船程或排队总耗时",
+    "alternateStops": [
+      {
+        "name": "木门与歪脖子椰子树",
+        "reason": "原文提到排队；赶时间可跳过",
+        "planningNature": "AI建议"
+      },
+      {
+        "name": "牛王岭日落",
+        "source": "S3",
+        "reason": "未在S4的2小时路线内，不默认并入",
+        "planningNature": "备选玩法"
+      }
+    ]
+  },
+  "aggregationChecks": [
+    "西岛4篇有相关信息，不显示为4篇强推",
+    "蜈支洲在比较或住宿理由中被提及，不自动增加强推票",
+    "同一笔记正文、封面、多张图片合计只算一个笔记来源",
+    "源5转述差评不增加负面来源，评论默认不参与计数",
+    "喜来登对照酒店、地图底图标签、无关卖车段不自动成为行程",
+    "西岛内部地点不升级为多个城市级景点，不重复生成门票与外部交通",
+    "单篇具体玩法或餐饮也可进入已选景点补充，来源少不等于无价值",
+    "多个玩法时长不得机械求平均或相加成全岛总时长"
+  ]
+}

@@ -1,0 +1,20 @@
+# 用例 A3（L2/机）：reported_opinion 差评不计负票
+# 断言（用例文档 v1.4 原文）：reported_opinion 差评不计负票；实体不因它进候选池
+# 实现状态：依赖planner输出｜backlog：-｜复用：新建（fixture C11 转述差评 → draft 断言无负向操作）
+# 时间：2026-11-03T16:01:24.125Z
+
+[shared-draft] tripId=0e1a2b3c-4d5e-4f60-8a7b-000000000276，sources=5，buildMs=540，planner=replay
+[shared-draft] fastPath=false（true=未调 AI），attempts=1，latencyMs=3，promptChars=11789
+[shared-draft] operations=4，snippets=7，optionGroups=0，unplaced=0，proposedNew=0，clarify=null
+[shared-draft] 按天分配：后海村→D1(plan)、椰梦长廊→D3(plan)、亚龙湾海滩→D4(plan)
+[shared-draft]   D1 后海村 reason：抵达日落地09:40，取行李加交通约11:00到海棠湾酒店；后海村紧邻海棠湾住宿片区，低承诺可随时退出，适合抵达当天散步
+[shared-draft]   D3 椰梦长廊 reason：椰梦长廊位于三亚湾西侧，与同在老城片区的第一市场同方向；攻略建议傍晚追日落，排在第一市场之后下午时段前往
+[shared-draft]   D4 亚龙湾海滩 reason：亚龙湾位于海棠湾与市区之间，距住宿片区较近；攻略建议下午四点再过来，安排Day4下午时段
+[shared-draft] proposedNew：（无）
+[shared-draft] snippet claimKinds：tip「提前线上买票，蜈支洲岛和」、tip「岛上消费偏高，建议自备饮」、experience「椰梦长廊傍晚追日落绝美，」、tip「下午四点再过来亚龙湾，避」、reported_opinion「后海村实际体验不错，值得」、comparison「行程紧张时蜈支洲岛与西岛」、tip「西岛走走拍拍约2小时，一」
+A3 assert: remove 操作目标 = [无]（后海村不应因转述差评被移除）
+A3 assert: 负面措辞 unplaced = [无]
+A3 note: C11「网上差评只是作者转述，不增加独立负面计数」；reported_opinion 不计负票规则在 prompt 层；本断言验证「无因转述差评产生的移除/负面落选」
+
+result: pass（0ms）
+planner: [replay]（共享草案，构建者触发真调）

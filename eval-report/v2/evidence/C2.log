@@ -1,0 +1,12 @@
+# 用例 C2（L4/机）：澄清抑制
+# 断言（用例文档 v1.4 原文）：锁定/已购内容已填满其余天 → 澄清被抑制
+# 实现状态：已实现｜backlog：赛后｜复用：内联 runC2（estimateGuideCoverage 纯函数：锁定/已购填满其余天 → suppressed=true；反证任一天未填满 → 抑制解除）＋ shared/src/verify-coverage.ts §4/§5
+# 时间：2026-11-03T15:54:42.059Z
+
+C2 基线: hasGap=true, suppressed=false, 可支撑 1/5 天（其余天未锁定 → 不抑制）
+C2 assert: 其余天锁定/已购填满后 suppressed=true（Day2 locked + Day3 bought + Day4 locked）→ 澄清被抑制
+C2 反证: 解锁 Day3 后 suppressed=false（抑制要求其余天「全部」锁定/已购）
+Minor5 assert: sourceHash 纳入覆盖估算——5天(total=5)=e4bb9f289835c919、扩到6天(total=6)=11c858e79df5dae7（不等 → 天数扩展后不复用旧答案）
+C2 pass: 锁定/已购填满其余天 → 澄清被抑制；任一天未填满 → 抑制解除；覆盖估算纳入 sourceHash（天数扩展→旧答案失效）
+
+result: pass（1ms）

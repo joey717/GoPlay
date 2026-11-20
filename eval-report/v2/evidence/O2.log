@@ -1,0 +1,15 @@
+# 用例 O2（L6/机）：撤销精确回滚
+# 断言（用例文档 v1.4 原文）：任意操作后撤销 → 状态精确回到操作前
+# 实现状态：已实现｜backlog：-｜复用：web/src/lib/verify-dayOrder.ts ＋ web vitest useTrip（removeVisitWithUndo 原位恢复：visit/stop/hotel 三态判别联合）
+# 时间：2026-11-03T15:54:48.266Z
+
+$ (cwd=web) npx tsx src/lib/verify-dayOrder.ts
+✓ A. [酒店H, 景点A] 移除 A 再撤销恢复 [酒店H, 景点A]
+✓ B. 路线总览按 displayOrder 混排展开（含酒店 / 岛内玩法，内部点位只出现一次）
+✓ C. 机场节点仅在约束明确时补起点/终点，不臆造、不重复
+✓ D. 批量撤销多个景点仍恢复原始交错位置
+
+全部通过：4 组场景
+exit=0
+
+result: pass（1889ms）

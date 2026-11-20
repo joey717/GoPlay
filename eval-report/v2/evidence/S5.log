@@ -1,0 +1,16 @@
+# 用例 S5（L3/机）：出发时间来源标签
+# 断言（用例文档 v1.4 原文）：灰字仅出现在抵达日/返程日出发时间旁与时间编辑态；普通日不显示；手改后「你设定」仅该 Day 时间行；不出现全局角标
+# 实现状态：已实现｜backlog：-｜复用：新建内联断言（deriveTimeSourceLabels 四状态矩阵 + buildFixtureSanyaTrip 夹具）＋ web vitest DayContent.test.tsx DOM 断言
+# 时间：2026-11-03T15:54:40.324Z
+
+S5 assert: Day1.timeSourceLabel = "按你的到达航班 09:40 算"（抵达日航班推算）
+S5 assert: Day5.timeSourceLabel = "按回程航班倒推，当天只排机场附近"（返程日倒推）
+S5 assert: Day2.timeSourceLabel = null（普通日不显示）
+S5 assert: Day3.timeSourceLabel = null（普通日不显示）
+S5 assert: Day4.timeSourceLabel = null（普通日不显示）
+S5 assert: Day1 手改后 timeSourceLabel = "你设定"（覆盖航班推算）
+S5 assert: deriveTimeSourceLabels 返回 5 条（= dayRefs.length）
+S5 pass: 四状态矩阵（抵达/返程/手改/普通日null）全部验证通过
+S5 note: DOM 级断言（无全局角标 + 编辑态灰字）由 DayContent.test.tsx vitest 覆盖
+
+result: pass（0ms）
