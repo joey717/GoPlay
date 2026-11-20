@@ -1,7 +1,7 @@
 {
   "version": "v1",
   "snapshotDate": "2026-10-19",
-  "sourcePath": "/Users/zhengying/.qoderwork/workspace/mv52l7wn2g52g25r/outputs",
+  "sourcePath": "<redacted-for-public-repo>",
   "caseDocVersion": "v1.1",
   "files": {
     "fixture": {
@@ -10,8 +10,8 @@
     },
     "golden": {
       "path": "GoPlay_攻略直出行程与原文回看_五篇实测整理_20261019.md",
-      "sha256": "a9969186d7be59d3be58e8311965f080d80ec76f11eeae0ab4846c1253642924"
+      "sha256": "051c4fd8cb17eea39c0563dfc62ddb6011aee8435a9fe124b762983badedacd8"
     }
   },
-  "contentHash": "sha256:42f125135c90f1e7dffbbb85a43b3b846e6c08a00e92f2c44e38b2099e1ae119+a9969186d7be59d3be58e8311965f080d80ec76f11eeae0ab4846c1253642924"
+  "contentHash": "sha256:42f125135c90f1e7dffbbb85a43b3b846e6c08a00e92f2c44e38b2099e1ae119+051c4fd8cb17eea39c0563dfc62ddb6011aee8435a9fe124b762983badedacd8"
 }

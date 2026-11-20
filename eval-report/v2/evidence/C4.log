@@ -10,7 +10,7 @@ C4 assert②c: 护栏降级——无真实飞猪 POI 的补充项不打标验证
 C4 assert②d: 本轮之前已排期的既有安排不追溯打标验证通过
 C4 assert②e: 用户池飞猪 POI（本轮前已存在）被 plan 排入不误标 AI 补充验证通过
 C4 assert③: 护栏 validateAiSupplementProvenance 拒绝无真实飞猪 POI 的 ai_supplement / 放行真实 POI 验证通过
-[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/Users/zhengying/goplay/web[39m
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m<repo>/web[39m
 
  [32m✓[39m src/components/TripChecklist.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 180[2mms[22m[39m
  [32m✓[39m src/components/ShareView.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 365[2mms[22m[39m

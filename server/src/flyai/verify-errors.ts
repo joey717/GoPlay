@@ -198,10 +198,10 @@ function verifyErrorMapping(): void {
   check("旧版完整报错 → 安全体不含敏感子串", legacyHit === null, `命中「${String(legacyHit)}」`);
 
   const redacted = redactSecretsForLog(
-    "request failed: apiKey=sk-live-abcdef1234567890 Authorization: Bearer abcdef1234567890.xyz",
+    "request failed: apiKey=sk-FAKE-NOT-A-REAL-KEY-000000 Authorization: Bearer FAKE-NOT-A-REAL-TOKEN",
   );
-  check("日志脱敏移除 sk- 令牌", !redacted.includes("sk-live-abcdef1234567890"), redacted);
-  check("日志脱敏移除 Bearer 令牌", !redacted.includes("abcdef1234567890.xyz"), redacted);
+  check("日志脱敏移除 sk- 令牌", !redacted.includes("sk-FAKE-NOT-A-REAL-KEY-000000"), redacted);
+  check("日志脱敏移除 Bearer 令牌", !redacted.includes("FAKE-NOT-A-REAL-TOKEN"), redacted);
 }
 
 // ===== B. HTTP 路由验证（注入桩函数） =====

@@ -5,7 +5,7 @@
 
 $ (cwd=web) npx vitest run src/components/VisitCard.test.tsx src/components/EvidenceSheet.test.tsx  [memoized：复用首次执行结果]
 
-[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/Users/zhengying/goplay/web[39m
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m<repo>/web[39m
 
  [32m✓[39m src/components/EvidenceSheet.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[32m 97[2mms[22m[39m
  [32m✓[39m src/components/VisitCard.test.tsx [2m([22m[2m78 tests[22m[2m)[22m[33m 373[2mms[22m[39m

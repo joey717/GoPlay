@@ -30,7 +30,7 @@ npm run dev
 | 服务 | 地址 | 说明 |
 |---|---|---|
 | Web | http://localhost:5173 | Vite dev server（`vite --host`，支持局域网访问） |
-| Server | http://localhost:8787 | Hono 后端，持有密钥；`PORT` 可覆盖端口 |
+| Server | http://localhost:8787 | Hono 后端，运行时从 `.env` 读取密钥（密钥不入库）；`PORT` 可覆盖端口 |
 | 健康检查 | http://localhost:8787/api/health | `GET /api/health`，返回 `{"status":"ok"}` |
 
 Vite 将浏览器侧的 `/api` 请求代理到 `http://localhost:8787`（见 [web/vite.config.ts](web/vite.config.ts)），前端不直接读环境变量。
@@ -169,7 +169,7 @@ docs/     技术文档与 FlyAI 真实报文样本
 
 ## 安全与数据
 
-- `.env` 含密钥，已被 [.gitignore](.gitignore) 排除，不入库；仓库只保留 `.env.example` 模板。
+- 仓库不存放任何密钥：`.env` 已被 [.gitignore](.gitignore) 排除，仓库只提供 `.env.example` 模板（变量名占位、值全为空），密钥由部署者自备。
 - `server/data/*.json` 为运行时行程数据，不入库（目录保留 `.gitkeep`）；`node_modules/`、`dist/`、`*.tmp.json` 同样被排除。
 - 日志与验证脚本只打印变量「已配置/未配置」，不打印明文密钥。
 

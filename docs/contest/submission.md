@@ -1,6 +1,6 @@
 # GoPlay（去玩）· 参赛提交稿
 
-> 本文档为参赛提交草稿，按官方模板逐节填写。标注 `TBD` / 占位说明的字段待提交前补齐（见文末「占位符清单」）。
+> 本文档按官方模板逐节填写，参赛必填项已补齐。团队名称暂按个人参赛口径填 `joey717`，最终以提交人确认为准。
 > 文中所有事实均来自仓库代码与自测记录；不包含任何密钥、环境变量真实值或 `.env` 内容。
 
 ---
@@ -14,9 +14,9 @@
 
 | 字段 | 内容 |
 |---|---|
-| 团队名称 | `TBD`（待填写） |
-| 主要提交人 GitHub ID | `joey717` |
-| 联系方式 | `TBD`（待填写） |
+| 团队名称 | `joey717`（个人参赛口径，暂定；最终以提交人确认为准） |
+| 唯一主要提交人 GitHub ID | `joey717`（主页 https://github.com/joey717，作为唯一联系入口） |
+| 联系方式 | 按比赛要求仅留 GitHub 主页入口，不提供手机号 / 邮箱 / 微信等私人联系方式 |
 
 ## 三、旅行场景与目标用户
 
@@ -75,9 +75,12 @@ POST /sessions/{id}/archive          收尾归档
 - 接入方式：服务端子进程直连（bundle 直跑、失败回落 npx），90 秒超时；输出归一化为 `FliggyPoi` / `HotelCandidate`。
 - 分工：百炼是「大脑」（意图理解、操作集/抽取/草案/OCR 输出），FlyAI 是「手脚」（真实 POI/酒店商品搜索）；FlyAI 同时充当护栏 2「候选池边界」的校验器。
 
-### 5.4 模型名称
+### 5.4 模型名称与代码位置
 
-**占位说明**：代码与配置中不硬编码模型名，模型由百炼 Managed Agent 控制台侧路由，仓库不指定。**提交时以百炼控制台该 Managed Agent 实际挂载的模型为准（TBD，待控制台核对后填写）**。
+- **模型名称**：**Qwen3.8-MAX**——由百炼 Managed Agent 控制台侧挂载并路由，仓库代码不硬编码模型名。
+- **能力形态**：Managed Agent（SSE 短会话），后端以 SSE 透传客户端直连其专用端点（见 5.1）。
+- **代码位置**：位于本开发仓库内（非独立运行时仓库）——百炼客户端 [`server/src/bailian/client.ts`](../../server/src/bailian/client.ts)，AI 抽取与意图编排流水线 [`server/src/ai/`](../../server/src/ai/)。
+- **输入 / 输出**：输入为攻略文本与用户自然语言意图；输出为结构化行程操作集（operations）与亮点片段（snippets）。
 
 ### 5.5 其他技术栈
 
@@ -105,6 +108,8 @@ POST /sessions/{id}/archive          收尾归档
 | ![只读分享页](assets/10-share-readonly.png) | 只读分享页：脱敏快照，访客仅可标记购票/订房状态 |
 | ![攻略草案浮层](assets/11-guide-draft-panel.png) | 攻略草案浮层展开态：9 项调整明细待确认，应用后才落行程 |
 
+> **演示视频**：由提交人另行提供（不随仓库打包）。上表 11 张截图为真实运行界面，已随仓库存放于 [`docs/contest/assets/`](assets/)，可直接查看，未新造截图。
+
 ## 七、项目链接与复现方式
 
 - **仓库地址**：`https://github.com/joey717/GoPlay`。
@@ -117,6 +122,8 @@ cp .env.example .env   # 填入四个百炼变量与 FlyAI Key（变量名见 .e
 npm run dev            # concurrently 同时拉起 server 与 web
 ```
 
+> **密钥不随包提供（重要）**：本仓库不含任何真实 API Key / Token / 凭证；`.env.example` 全部为空值占位（只有变量名，无值），真实 `.env` 已被 `.gitignore` 排除、从不入库。复现者需自行到阿里云百炼控制台与飞猪 FlyAI 平台申请密钥，填入本地 `.env`（4 个百炼变量 + 1 个 FlyAI Key）后才能跑通真实搜索与 AI 链路。密钥缺失时系统按 `ENV_NOT_CONFIGURED`（百炼侧）/ `FLYAI_NOT_CONFIGURED`（FlyAI 侧）安全降级——返回可读错误提示，不崩溃、不伪造数据、不静默回落共享试用通道。详见仓库根 [`SECURITY.md`](../../SECURITY.md)。
+
 | 服务 | 地址 |
 |---|---|
 | Web | http://localhost:5173 |
@@ -124,6 +131,8 @@ npm run dev            # concurrently 同时拉起 server 与 web
 | 健康检查 | `GET http://localhost:8787/api/health` → `{"status":"ok"}` |
 
 - 演示路径：初始化向导（目的地/日期/约束/片区意向）→ 粘贴攻略抽取入候选池 → 「说一句话」排一版（七类意图例句见 README 演示指引）→ 拖拽改序观察局部重算 → 生成攻略草案并确认应用 → 打开只读分享页。
+- **最终版本**：本次提交为参赛最终版本，三包（shared / server / web）版本标识均为 `0.1.0`（见各 `package.json`）。
+- **体验条件**：纯本地运行，无需注册登录账号；需自备百炼 API Key 与 FlyAI Key（缺失时按上文 `ENV_NOT_CONFIGURED` / `FLYAI_NOT_CONFIGURED` 安全降级，不阻断启动）。
 
 ## 八、踩坑记录
 
@@ -134,13 +143,14 @@ npm run dev            # concurrently 同时拉起 server 与 web
 5. **串行 FlyAI 装配无预算封顶成耗时黑洞**：逐条串行搜索最坏 N×90s。解法：入口记 deadline（120s 预算），耗尽即 break 返回部分结果、来源落 partial 可重试，不静默丢弃。
 6. **后台 dev 进程 SIGTTIN 挂起**：后台启动未重定向 stdin 致进程树 T 态、端口 LISTEN 但不 accept、信号杀不掉。解法：启动补 `< /dev/null`，健康判定必须 curl 探活而非看日志。
 
-## 附：占位符清单（待 PD / 提交人填写）
+## 附：必填项补齐记录
 
-| 占位 | 位置 | 说明 |
+| 字段 | 位置 | 状态 |
 |---|---|---|
-| 团队名称 `TBD` | 第二节 | 待填写 |
-| 联系方式 `TBD` | 第二节 | 待填写 |
-| 模型名称 `TBD` | 第 5.4 节 | 以百炼控制台 Managed Agent 实际挂载模型为准，仓库无法证实 |
+| 团队名称 | 第二节 | 已填 `joey717`（个人参赛口径，暂定；最终以提交人确认为准） |
+| 联系方式 | 第二节 | 已定：仅留 GitHub 主页入口，不留私人联系方式 |
+| 模型名称 | 第 5.4 节 | 已填 `Qwen3.8-MAX`（百炼控制台 Managed Agent 挂载） |
+| 仓库地址 | 第七节 | 已填 `https://github.com/joey717/GoPlay` |
 
 ## 附：资产与敏感信息自查
 

@@ -1,8 +1,8 @@
 /** 只读扫描：分析 trip JSON 中 snippets / sourceMentionRefs / guideSources 的重复形态 */
 import { readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 
-const dataDir = "/Users/zhengying/goplay/server/data";
+const dataDir = resolve(import.meta.dirname ?? ".", "../server/data");
 
 function lcsRatio(a, b) {
   const m = a.length, n = b.length;

@@ -8,7 +8,7 @@
     "platform": "xiaohongshu",
     "labeledBy": "PD",
     "labeledAt": "2026-10-28",
-    "corpusNote": "小Q 需将此 sourceUrl 加入 L1 抽取语料（8 源），否则 E9 无输入无法真跑。"
+    "corpusNote": "评测者需将此 sourceUrl 加入 L1 抽取语料（8 源），否则 E9 无输入无法真跑。"
   },
   "claimKindEnum": ["duration", "highlight", "poi", "pitfall", "tip"],
   "claimKindMapFromPD": {
