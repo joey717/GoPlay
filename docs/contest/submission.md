@@ -9,7 +9,7 @@
 
 | 字段 | 内容 |
 |---|---|
-| 唯一主要提交人 GitHub ID | `joey717`（主页 https://github.com/joey717，作为唯一联系入口） |
+| 唯一主要提交人 GitHub ID | `joey717` |
 
 ## 三、旅行场景与目标用户
 
