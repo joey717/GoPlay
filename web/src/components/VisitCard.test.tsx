@@ -41,6 +41,9 @@ beforeEach(() => {
  * 同一篇证据里还混排了无关地点，用于校验聚合范围未退化为「整篇展示」。
  * 任务 124 起父卡灰色入口改为「打开外部原链」语义（单源直开 / 多源极简列表 /
  * 无链接隐藏），EvidenceSheet 只由绿色 snippet chips 打开。
+ * Task #412：父卡兜底「查看攻略原文」改为只由父卡自身亮点证据驱动——证据范围会合并
+ * 内部玩法（lib/evidenceScope 层级规则），无自身 guideSnippets/sourceMentionRefs 时
+ * 不再渲染孤立外链；内部玩法与普通卡的入口不变。
  */
 function makeEvidence(): SourceEvidence {
   const mention = (mentionId: string, extractedName: string, quoteText: string) => ({
@@ -274,11 +277,11 @@ function parentEvidenceEntry(): Element | null {
 }
 
 describe("VisitCard 大景点原文入口（任务 124 外链语义）", () => {
-  it("单一来源（挂在内部玩法上）：父卡入口为外链 <a>，直接指向来源 sourceUrl，不弹 EvidenceSheet", () => {
+  it("父卡自身有亮点证据（单一来源）：父卡入口为外链 <a>，直接指向来源 sourceUrl，不弹 EvidenceSheet", () => {
     const niuwang = makeStop("stop_niuwang", "牛王岛", { sourceMentionRefs: ["ev_1:m_2"] });
     const visit = makeVisit("visit_xidao", "item_xidao", {
       kind: "large_attraction",
-      sourceMentionRefs: [],
+      sourceMentionRefs: ["ev_1:m_1"],
       guideSnippets: [],
       childStopRefs: ["stop_niuwang"],
     });
@@ -347,14 +350,14 @@ describe("VisitCard 大景点原文入口（任务 124 外链语义）", () => {
   });
 
   it("多来源：点击灰色入口弹极简来源列表（只列标题与打开原文），不弹 EvidenceSheet", () => {
-    // 同一玩法引用两篇来源的证据 → 父卡聚合出两个外部原链
+    // 父卡自身引用两篇来源的证据（#412 起父卡入口只由自身亮点驱动）→ 聚合出两个外部原链
     const village = makeStop("stop_village", "西岛渔村", {
       sourceMentionRefs: ["ev_1:m_1", "ev_2:n_1"],
       sourceEvidenceRefs: ["ev_1", "ev_2"],
     });
     const visit = makeVisit("visit_xidao", "item_xidao", {
       kind: "large_attraction",
-      sourceMentionRefs: [],
+      sourceMentionRefs: ["ev_1:m_1", "ev_2:n_1"],
       guideSnippets: [],
       childStopRefs: ["stop_village"],
     });
@@ -471,7 +474,7 @@ describe("VisitCard 大景点原文入口（任务 124 外链语义）", () => {
     expect(screen.queryByText(/查看攻略原文/)).toBeNull();
   });
 
-  it("父 Visit 缺精确 refs 但 sourceEvidenceRefs 名称降级可命中：入口照常显示（外链语义）", () => {
+  it("父 Visit 缺精确 refs、仅 item.sourceEvidenceRefs 可降级命中：父卡无自身亮点，不渲染入口（#412）", () => {
     const visit = makeVisit("visit_xidao", "item_xidao", {
       kind: "large_attraction",
       sourceMentionRefs: [],
@@ -494,10 +497,42 @@ describe("VisitCard 大景点原文入口（任务 124 外链语义）", () => {
       visit,
     );
 
-    const entry = parentEvidenceEntry();
-    expect(entry).not.toBeNull();
-    expect(entry?.tagName).toBe("A");
-    expect(entry?.getAttribute("href")).toBe("https://www.xiaohongshu.com/explore/legacy");
+    // 降级链路本身保留（证据范围仍可算），但父卡自身没有 guideSnippets/sourceMentionRefs，
+    // 不再挂「无引文只有外链」的孤立入口；内部玩法与普通卡的入口不受影响。
+    expect(parentEvidenceEntry()).toBeNull();
+    expect(screen.queryByText(/查看攻略原文/)).toBeNull();
+  });
+
+  it("#412 父卡无自身亮点证据（来源只挂在内部玩法）：父卡整块亮点不渲染，内部玩法入口保留", () => {
+    const niuwang = makeStop("stop_niuwang", "牛王岛", { sourceMentionRefs: ["ev_1:m_2"] });
+    const visit = makeVisit("visit_xidao", "item_xidao", {
+      kind: "large_attraction",
+      sourceMentionRefs: [],
+      guideSnippets: [],
+      childStopRefs: ["stop_niuwang"],
+    });
+    renderCard(
+      makeTrip({
+        visits: { visit_xidao: visit },
+        stops: { stop_niuwang: niuwang },
+        guideSources: {
+          s_1: makeSource("s_1", {
+            title: "西岛一日游攻略",
+            sourceUrl: "https://www.xiaohongshu.com/explore/xidao",
+            evidenceRefs: ["ev_1"],
+          }),
+        },
+      }),
+      visit,
+    );
+
+    // 父卡自身（不含岛内小行程）无引文块、无独立原文入口
+    expect(document.querySelector(".parent-card .guide-quote")).toBeNull();
+    expect(parentEvidenceEntry()).toBeNull();
+    // 内部玩法自己的原文入口照常保留
+    const childEntry = document.querySelector(".child-list .child-evidence");
+    expect(childEntry).not.toBeNull();
+    expect(childEntry?.getAttribute("href")).toBe("https://www.xiaohongshu.com/explore/xidao");
   });
 });
 

@@ -13,12 +13,16 @@
  * 归一化只补 scheme，绝不改写域名与路径）。
  */
 
-/** 带 scheme 的小红书链接（既有口径：xhslink.com 短链与 xiaohongshu.com 长链） */
+/** 带 scheme 的小红书链接（既有口径：xhslink 短链与 xiaohongshu.com 长链。
+ *  Task #394：小红书 App 现行分享口令的短链域名为 `xhslink.cn`（.cn 后缀），
+ *  旧口径只认 `.com` 导致口令里的 .cn 短链识别失败、整段被当纯文本提交
+ *  （链接链路不启动 → 图片不抓取 → 移动端看不到「解析图片」入口）。 */
 const XHS_SCHEMED_PATTERN =
-  /https?:\/\/(?:[a-z0-9-]+\.)*(?:xiaohongshu\.com|xhslink\.com)\/[^\s"'<>]*/i;
+  /https?:\/\/(?:[a-z0-9-]+\.)*(?:xiaohongshu\.com|xhslink\.(?:com|cn))\/[^\s"'<>]*/i;
 
 /**
- * 无 scheme 形态（Task #304）：行首或分隔符后的 `xiaohongshu.com/…`、`xhslink.com/…`。
+ * 无 scheme 形态（Task #304）：行首或分隔符后的 `xiaohongshu.com/…`、`xhslink.com/…`、
+ * `xhslink.cn/…`（Task #394 补 .cn 短链域名）。
  * 防误判设计：
  * - 前界负向断言 `(?<![a-zA-Z0-9._:/?=&-])`：域名不得紧跟字母 / 数字 / 点 / 冒号 /
  *   斜杠 / 查询分隔符——`notxiaohongshu.com/…`（伪造后缀域）、
@@ -32,7 +36,7 @@ const XHS_SCHEMED_PATTERN =
  * - 子域仅允许 `[a-z0-9-]+.` 标签（www. / 任意子域），不吞前缀字符。
  */
 const XHS_BARE_PATTERN =
-  /(?<![a-zA-Z0-9._:/?=&-])(?:[a-z0-9-]+\.)*(?:xiaohongshu\.com|xhslink\.com)(?![a-zA-Z0-9-]|\.(?=[a-zA-Z0-9-]))\/[^\s"'<>]*/i;
+  /(?<![a-zA-Z0-9._:/?=&-])(?:[a-z0-9-]+\.)*(?:xiaohongshu\.com|xhslink\.(?:com|cn))(?![a-zA-Z0-9-]|\.(?=[a-zA-Z0-9-]))\/[^\s"'<>]*/i;
 
 /** 链接尾部可能粘连的中文标点（分享文案常见「…链接。」收尾） */
 const TRAILING_CJK_PUNCTUATION = /[，。！？、）】》]+$/u;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Trip } from "@goplay/shared";
 import { shortDate } from "../lib/format";
-import { copyText, isShareCancelled, memoExcerpt, shareUrlFor } from "../lib/share";
+import { canNativeShare, copyText, isShareCancelled, memoExcerpt, prefersNativeShare, shareUrlFor } from "../lib/share";
 import { tripCoverInfo } from "../lib/tripCover";
 import { dayVisits, orderedDays } from "../lib/trip";
 import { ConfirmDialog } from "./ConfirmDialog";
@@ -57,6 +57,9 @@ export default function AppHead({
   /** Task #205 分享行程：轻量提示（降级复制成功 / 失败两种语气） */
   const [shareNotice, setShareNotice] = useState<{ text: string; tone: "ok" | "error" } | null>(null);
   const shareTimerRef = useRef<number | null>(null);
+  /** Task #401 分享小面板（移动端：复制链接为主 + 系统分享为辅；复制失败时也用它展示 URL） */
+  const [sharePanelOpen, setSharePanelOpen] = useState(false);
+  const sharePanelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(
     () => () => {
@@ -77,6 +80,28 @@ export default function AppHead({
     document.addEventListener("mousedown", onDocMouseDown);
     return () => document.removeEventListener("mousedown", onDocMouseDown);
   }, [menuOpen]);
+
+  /**
+   * 分享面板关闭途径（Task #401）：同 ⋯ 菜单的习惯——点面板外 / 按 Esc 收起。
+   * 面板锚在 ⋯ 按钮下方，点 ⋯ 本身由「外部点击」处理（随后 click 再开菜单）。
+   */
+  useEffect(() => {
+    if (!sharePanelOpen) return;
+    const onDocMouseDown = (event: MouseEvent) => {
+      if (sharePanelRef.current !== null && !sharePanelRef.current.contains(event.target as Node)) {
+        setSharePanelOpen(false);
+      }
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSharePanelOpen(false);
+    };
+    document.addEventListener("mousedown", onDocMouseDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onDocMouseDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [sharePanelOpen]);
 
   const showDeleteError = () => {
     setDeleteError("删除失败，请重试");
@@ -103,27 +128,28 @@ export default function AppHead({
   const shareUrl = shareUrlFor(trip.tripId);
 
   /**
-   * 降级复制链接（Task #264）：只写剪贴板，不唤起系统面板。
-   * 独立菜单项已移除——链接能力收进「分享行程」的降级分支，菜单不再重复提供。
+   * 复制只读链接（Task #401）：桌面端的默认动作，只写剪贴板，不唤起任何系统面板。
+   * - 成功 → 收起分享面板 + 「链接已复制」；
+   * - 失败（权限被拒且回退也失效）→ 打开小面板并提示手动复制（面板里是可全选的 URL）。
    */
   const copyShareUrl = () => {
     void copyText(shareUrl)
-      .then(() => showShareNotice("链接已复制"))
-      .catch(() => showShareNotice("复制失败，请手动复制", "error"));
+      .then(() => {
+        setSharePanelOpen(false);
+        showShareNotice("链接已复制");
+      })
+      .catch(() => {
+        setSharePanelOpen(true);
+        showShareNotice("复制失败，请手动复制链接", "error");
+      });
   };
 
   /**
-   * 分享行程（Task #205 / Task #264）：稳定链接 /share/:tripId，始终展示最新行程。
-   * 菜单只保留这一个入口，不再单列「复制链接」：
-   * - 有 Web Share API（移动端 Safari / Chrome）→ 系统面板，标题 / 摘要 / 链接一并带走，
-   *   成功后不再额外提示（面板本身已完成分享动作）；
-   * - 用户取消（AbortError）→ 静默返回，既不提示成功也不降级复制；
-   * - 不支持 Web Share（桌面浏览器 / 非 HTTPS）或系统面板调用失败（非取消）→
-   *   降级为复制链接 + 「链接已复制」，保证用户仍能拿到可分享的地址。
+   * 系统分享（Task #401 次通道，仅触屏设备有意义）：标题 / 摘要 / 链接一并带走。
+   * 用户取消（AbortError）静默返回；其余失败退回复制链接，保证总能拿到地址。
    */
-  const shareTrip = () => {
-    setMenuOpen(false);
-    if (typeof navigator === "undefined" || typeof navigator.share !== "function") {
+  const shareViaSystem = () => {
+    if (!canNativeShare()) {
       copyShareUrl();
       return;
     }
@@ -133,10 +159,27 @@ export default function AppHead({
         text: shareText,
         ...(shareUrl !== "" ? { url: shareUrl } : {}),
       })
+      .then(() => setSharePanelOpen(false))
       .catch((error: unknown) => {
         if (isShareCancelled(error)) return;
         copyShareUrl();
       });
+  };
+
+  /**
+   * 分享行程（Task #401 修正）：
+   * - 桌面（含 macOS Safari / Chrome 等「有 navigator.share 但只会弹系统面板」）→
+   *   直接复制 `${origin}/share/${tripId}` + 「链接已复制」，不再一上来弹系统面板；
+   * - 触屏设备且有 Web Share → 打开小面板，「复制链接」为主按钮、系统分享为辅；
+   * - 触屏但无 Web Share → 同样直接复制。
+   */
+  const shareTrip = () => {
+    setMenuOpen(false);
+    if (!prefersNativeShare()) {
+      copyShareUrl();
+      return;
+    }
+    setSharePanelOpen(true);
   };
 
   /** 确认新建：先关闭弹窗再执行删除；失败仅提示，不清理本地状态 */
@@ -221,8 +264,43 @@ export default function AppHead({
                 </button>
                 <button type="button" className="head-menu-item" role="menuitem" onClick={shareTrip}>
                   分享行程
-                  <small>发给朋友，不支持分享时自动复制链接</small>
+                  <small>{prefersNativeShare() ? "复制链接或系统分享" : "复制只读链接，粘贴即可查看"}</small>
                 </button>
+              </div>
+            ) : null}
+            {sharePanelOpen ? (
+              <div className="share-panel" role="dialog" aria-label="分享行程" ref={sharePanelRef}>
+                <div className="share-panel-head">
+                  <span className="share-panel-title">分享只读链接</span>
+                  <button
+                    type="button"
+                    className="share-panel-close"
+                    aria-label="关闭分享面板"
+                    onClick={() => setSharePanelOpen(false)}
+                  >
+                    ×
+                  </button>
+                </div>
+                <input
+                  className="share-url"
+                  type="text"
+                  readOnly
+                  aria-label="只读分享链接"
+                  value={shareUrl}
+                  onFocus={(event) => event.currentTarget.select()}
+                  onClick={(event) => event.currentTarget.select()}
+                />
+                <p className="share-panel-hint">朋友打开即只读浏览，不会改到你的行程。</p>
+                <div className="share-panel-actions">
+                  <button type="button" className="share-action is-primary" onClick={copyShareUrl}>
+                    复制链接
+                  </button>
+                  {canNativeShare() ? (
+                    <button type="button" className="share-action" onClick={shareViaSystem}>
+                      系统分享…
+                    </button>
+                  ) : null}
+                </div>
               </div>
             ) : null}
           </div>

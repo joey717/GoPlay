@@ -211,7 +211,7 @@ function validateSubmitInput(input: SubmitGuideSourceInput): void {
       throw new AiError("INVALID_REQUEST", "链接来源必须提供小红书笔记链接");
     }
     if (url.length > MAX_SOURCE_URL_LENGTH || !isXhsUrl(url)) {
-      throw new AiError("LINK_INVALID", "仅支持小红书笔记链接（xiaohongshu.com / xhslink.com）");
+      throw new AiError("LINK_INVALID", "仅支持小红书笔记链接（xiaohongshu.com / xhslink.com / xhslink.cn）");
     }
     return;
   }

@@ -54,8 +54,9 @@ const MAX_REDIRECTS = 5;
  */
 const MAX_IMAGES = 24;
 
-/** 允许抓取的站点根域（含其子域） */
-const ALLOWED_SITE_SUFFIXES = ["xiaohongshu.com", "xhslink.com"] as const;
+/** 允许抓取的站点根域（含其子域。Task #394：补 xhslink.cn——小红书 App 现行
+ *  分享口令短链域名为 .cn 后缀，缺它则口令链接被拒 / 被降级为纯文本来源） */
+const ALLOWED_SITE_SUFFIXES = ["xiaohongshu.com", "xhslink.com", "xhslink.cn"] as const;
 /** 允许代理下载的图片 CDN 根域（含其子域） */
 const ALLOWED_IMAGE_SUFFIXES = ["xhscdn.com", "xhscdn.net", "xiaohongshu.com"] as const;
 
@@ -660,7 +661,7 @@ function fallbackNoteId(rawUrl: string): string {
 export async function extractXhsNote(rawUrl: string): Promise<XhsNoteResult> {
   const trimmed = rawUrl.trim();
   if (!isXhsUrl(trimmed)) {
-    throw new XhsError("仅支持小红书笔记链接（xiaohongshu.com / xhslink.com）");
+    throw new XhsError("仅支持小红书笔记链接（xiaohongshu.com / xhslink.com / xhslink.cn）");
   }
 
   const noteUrl = await resolveNotePage(new URL(trimmed));

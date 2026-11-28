@@ -1,15 +1,16 @@
 /**
- * Task #264：行程标题栏 ⋯ 菜单的分享链路单测；Task #265 补入口清单口径。
+ * 行程标题栏 ⋯ 菜单的分享链路单测（Task #264 / #265 / #401）。
  *
- * 口径（菜单只保留「分享行程」一个入口，不再单列「复制链接」，两者语义重复）：
- * - 有 Web Share API → 系统面板，标题 / 摘要 / 链接三项都要有内容；
- * - 用户取消（AbortError）→ 静默返回，既不提示也不降级复制；
- * - 不支持 Web Share / 系统面板报错（非取消）→ 降级复制链接 + 「链接已复制」；
- * - 链接统一为 `${origin}/share/${tripId}`，与服务端 OG 路由同一个 URL。
+ * Task #401 修正后的口径（菜单仍只保留「分享行程」一个入口）：
+ * - 桌面（包括实现了 navigator.share 的 macOS Safari / Chrome）→ 直接复制
+ *   `${origin}/share/${tripId}` + 「链接已复制」，不再一上来弹系统分享面板；
+ * - 触屏设备且有 Web Share → 打开小面板：「复制链接」为主、「系统分享…」为辅；
+ * - 系统分享被取消（AbortError）→ 静默返回；报错（非取消）→ 退回复制链接；
+ * - 两套复制通道都不可用 → 提示手动复制，并给出可全选的链接面板。
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import type { Trip } from "@goplay/shared";
 import AppHead from "./AppHead";
 
@@ -66,6 +67,11 @@ function openMenu() {
 
 const SHARE_URL = `${window.location.origin}/share/trip-261`;
 
+/** 模拟触屏设备（手机 / iPad）：maxTouchPoints > 0 即判为触屏，系统分享才有意义 */
+function setMobile() {
+  Object.defineProperty(navigator, "maxTouchPoints", { configurable: true, value: 5 });
+}
+
 let writeText: ReturnType<typeof vi.fn>;
 
 beforeEach(() => {
@@ -81,9 +87,10 @@ afterEach(() => {
   vi.unstubAllGlobals();
   Reflect.deleteProperty(navigator, "clipboard");
   Reflect.deleteProperty(navigator, "share");
+  Reflect.deleteProperty(navigator, "maxTouchPoints");
 });
 
-describe("AppHead ⋯ 菜单分享入口（Task #264）", () => {
+describe("AppHead 分享行程（Task #401：桌面默认复制只读链接）", () => {
   it("只有一个「分享行程」入口，不再单列「复制链接」", () => {
     renderHead();
     openMenu();
@@ -91,58 +98,12 @@ describe("AppHead ⋯ 菜单分享入口（Task #264）", () => {
     const items = screen.getAllByRole("menuitem");
     // 新建行程 / 近期操作 / 待办清单 / 修改约束 / 分享行程
     expect(items).toHaveLength(5);
-    // 没有以「复制链接」开头的独立菜单项（降级复制已收进「分享行程」内部）
     const labels = items.map((item) => (item.textContent ?? "").trim());
     expect(labels.some((label) => label.startsWith("复制链接"))).toBe(false);
     expect(screen.getByRole("menuitem", { name: /^分享行程/ })).toBeInTheDocument();
   });
 
-  it("不支持 Web Share：点「分享行程」降级复制链接并提示「链接已复制」", async () => {
-    renderHead();
-    openMenu();
-    fireEvent.click(screen.getByRole("menuitem", { name: /分享行程/ }));
-
-    await waitFor(() => expect(writeText).toHaveBeenCalledTimes(1));
-    // 降级只复制链接本身（标题 / 摘要由系统面板承担）
-    expect(writeText).toHaveBeenCalledWith(SHARE_URL);
-    expect(await screen.findByText("链接已复制")).toBeInTheDocument();
-    expect(screen.queryByRole("alert")).toBeNull();
-    // 点击后菜单收起
-    expect(screen.queryByRole("menu")).toBeNull();
-  });
-
-  it("降级复制被拒绝时提示「复制失败，请手动复制」，走错误语气", async () => {
-    writeText.mockRejectedValueOnce(new Error("denied"));
-    const { container } = renderHead();
-    openMenu();
-    fireEvent.click(screen.getByRole("menuitem", { name: /分享行程/ }));
-
-    const toast = await screen.findByRole("alert");
-    expect(toast).toHaveTextContent("复制失败，请手动复制");
-    expect(toast).toHaveClass("share-toast");
-    expect(toast).toHaveClass("is-error");
-    expect(container.querySelector(".share-toast.is-error")).not.toBeNull();
-  });
-
-  it("系统分享面板报错（非取消）时退回复制链接，不弹失败提示", async () => {
-    const share = vi.fn(async () => {
-      throw new Error("NotAllowedError");
-    });
-    Object.defineProperty(navigator, "share", { configurable: true, value: share });
-
-    renderHead();
-    openMenu();
-    fireEvent.click(screen.getByRole("menuitem", { name: /分享行程/ }));
-
-    await waitFor(() => expect(share).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(writeText).toHaveBeenCalledWith(SHARE_URL));
-    expect(await screen.findByText("链接已复制")).toBeInTheDocument();
-    expect(screen.queryByRole("alert")).toBeNull();
-  });
-});
-
-describe("AppHead 分享行程（navigator.share 参数完整）", () => {
-  it("未命名行程：标题「城市 N天行程」，正文「城市 · N天N晚 · 日期区间」", async () => {
+  it("桌面即使实现了 navigator.share 也不弹系统面板：直接复制链接并提示「链接已复制」", async () => {
     const share = vi.fn(async () => {});
     Object.defineProperty(navigator, "share", { configurable: true, value: share });
 
@@ -150,15 +111,97 @@ describe("AppHead 分享行程（navigator.share 参数完整）", () => {
     openMenu();
     fireEvent.click(screen.getByRole("menuitem", { name: /分享行程/ }));
 
+    await waitFor(() => expect(writeText).toHaveBeenCalledTimes(1));
+    // 只复制链接本身（标题 / 摘要由系统分享或社交卡片承担）
+    expect(writeText).toHaveBeenCalledWith(SHARE_URL);
+    expect(share).not.toHaveBeenCalled();
+    expect(await screen.findByText("链接已复制")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).toBeNull();
+    // 一次点击就拿到链接：菜单收起，也不再额外弹面板
+    expect(screen.queryByRole("menu")).toBeNull();
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("复制被拒且回退不可用时提示手动复制，并展示可全选的链接面板", async () => {
+    writeText.mockRejectedValueOnce(new Error("denied"));
+    const { container } = renderHead();
+    openMenu();
+    fireEvent.click(screen.getByRole("menuitem", { name: /分享行程/ }));
+
+    const toast = await screen.findByRole("alert");
+    expect(toast).toHaveTextContent("复制失败，请手动复制链接");
+    expect(toast).toHaveClass("share-toast");
+    expect(toast).toHaveClass("is-error");
+    expect(container.querySelector(".share-toast.is-error")).not.toBeNull();
+    // 失败时把 URL 摆出来，用户仍能长按 / 全选手工复制
+    expect(await screen.findByLabelText("只读分享链接")).toHaveValue(SHARE_URL);
+  });
+});
+
+describe("AppHead 分享面板（触屏设备：复制为主 + 系统分享为辅）", () => {
+  it("点「分享行程」先弹小面板，不直接唤起系统面板；复制与系统分享都在", async () => {
+    setMobile();
+    const share = vi.fn(async () => {});
+    Object.defineProperty(navigator, "share", { configurable: true, value: share });
+
+    renderHead();
+    openMenu();
+    fireEvent.click(screen.getByRole("menuitem", { name: /分享行程/ }));
+
+    const panel = await screen.findByRole("dialog", { name: "分享行程" });
+    expect(share).not.toHaveBeenCalled();
+    expect(within(panel).getByLabelText("只读分享链接")).toHaveValue(SHARE_URL);
+    expect(within(panel).getByRole("button", { name: "复制链接" })).toBeInTheDocument();
+    expect(within(panel).getByRole("button", { name: "系统分享…" })).toBeInTheDocument();
+  });
+
+  it("面板内「复制链接」：写剪贴板 + 提示 + 收起面板", async () => {
+    setMobile();
+    Object.defineProperty(navigator, "share", { configurable: true, value: vi.fn(async () => {}) });
+
+    renderHead();
+    openMenu();
+    fireEvent.click(screen.getByRole("menuitem", { name: /分享行程/ }));
+    fireEvent.click(screen.getByRole("button", { name: "复制链接" }));
+
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(SHARE_URL));
+    expect(await screen.findByText("链接已复制")).toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("触屏但无 Web Share：不弹面板，直接复制链接", async () => {
+    setMobile();
+
+    renderHead();
+    openMenu();
+    fireEvent.click(screen.getByRole("menuitem", { name: /分享行程/ }));
+
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(SHARE_URL));
+    expect(await screen.findByText("链接已复制")).toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("面板内「系统分享…」：标题 / 摘要 / 链接三项完整", async () => {
+    setMobile();
+    const share = vi.fn(async () => {});
+    Object.defineProperty(navigator, "share", { configurable: true, value: share });
+
+    renderHead();
+    openMenu();
+    fireEvent.click(screen.getByRole("menuitem", { name: /分享行程/ }));
+    fireEvent.click(screen.getByRole("button", { name: "系统分享…" }));
+
     await waitFor(() => expect(share).toHaveBeenCalledTimes(1));
     expect(share).toHaveBeenCalledWith({
       title: "三亚 3天行程",
       text: "三亚 · 3天2晚 · 11/08-11/10",
       url: SHARE_URL,
     });
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
   });
 
   it("已命名且有备忘：标题用行程名，正文用备忘单行摘要（前 100 字）", async () => {
+    setMobile();
     const share = vi.fn(async (_payload: { title: string; text: string; url: string }) => {});
     Object.defineProperty(navigator, "share", { configurable: true, value: share });
     const memo = `带证件和泳衣\n\n${"记得提前订船票".repeat(20)}`;
@@ -166,6 +209,7 @@ describe("AppHead 分享行程（navigator.share 参数完整）", () => {
     renderHead(makeTrip({ tripName: "三亚亲子五日", memo }));
     openMenu();
     fireEvent.click(screen.getByRole("menuitem", { name: /分享行程/ }));
+    fireEvent.click(screen.getByRole("button", { name: "系统分享…" }));
 
     await waitFor(() => expect(share).toHaveBeenCalledTimes(1));
     const payload = share.mock.calls[0][0] as { title: string; text: string; url: string };
@@ -178,7 +222,8 @@ describe("AppHead 分享行程（navigator.share 参数完整）", () => {
     expect(payload.text).not.toContain("\n");
   });
 
-  it("用户取消系统分享（AbortError）不弹任何提示", async () => {
+  it("用户取消系统分享（AbortError）不弹任何提示，也不降级复制", async () => {
+    setMobile();
     const share = vi.fn(async () => {
       throw Object.assign(new Error("cancelled"), { name: "AbortError" });
     });
@@ -187,12 +232,31 @@ describe("AppHead 分享行程（navigator.share 参数完整）", () => {
     renderHead();
     openMenu();
     fireEvent.click(screen.getByRole("menuitem", { name: /分享行程/ }));
+    fireEvent.click(screen.getByRole("button", { name: "系统分享…" }));
 
     await waitFor(() => expect(share).toHaveBeenCalledTimes(1));
     expect(screen.queryByRole("status")).toBeNull();
     expect(screen.queryByRole("alert")).toBeNull();
     // 取消不降级到剪贴板
     expect(writeText).not.toHaveBeenCalled();
+  });
+
+  it("系统面板报错（非取消）时退回复制链接，不弹失败提示", async () => {
+    setMobile();
+    const share = vi.fn(async () => {
+      throw new Error("NotAllowedError");
+    });
+    Object.defineProperty(navigator, "share", { configurable: true, value: share });
+
+    renderHead();
+    openMenu();
+    fireEvent.click(screen.getByRole("menuitem", { name: /分享行程/ }));
+    fireEvent.click(screen.getByRole("button", { name: "系统分享…" }));
+
+    await waitFor(() => expect(share).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(SHARE_URL));
+    expect(await screen.findByText("链接已复制")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 });
 

@@ -2359,6 +2359,7 @@ img {
   background: var(--card);
   border-radius: 22px 22px 0 0;
   max-height: 60vh;
+    max-height: 60%;
   overflow-y: auto;
   z-index: 61;
   /* Task #142：顶部留白移交 .proposal-head（sticky 吸顶时头部背景铺满顶部圆角内侧）；
@@ -3426,6 +3427,47 @@ img {
   padding: 10px 16px 14px;
 }
 
+/* Task #394：移动端添加面板水平溢出收口（真机 iOS 内嵌 WebView 右缘裁切收口）。
+   真机现象：面板右缘控件（头部 ✕、保存、原文、移除 ✕）被推出屏外约 20-30px；
+   桌面引擎 390/320 盒级测量不溢出（与 Task #393 同族：真机专属溢出）。收口思路：
+   - 面板三段盒钉死视口上限（max-width: 100vw / 100%）：WebView 误解析包含块
+     宽度时盒子也撑不出视觉视口；
+   - 右对齐行全部给收缩 / 换行退路：标题可省略、操作行可换行——真机字号放大或
+     容器宽度误解析时控件收进行内，而不是被顶出屏外；
+   - 正文区水平方向 hidden：面板内永不产生第二个水平滚动区（竖向滚动仍唯一
+     由 .note-input-body 承载；.note-results-actions 的 -16px 负 margin 恰抵
+     内边距，不被裁）。桌面宽屏宽度充裕，所有收口条件不触发，布局不变。 */
+.note-input-sheet {
+  max-width: 100vw;
+}
+
+.note-input-head,
+.note-input-body,
+.note-input-foot {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.note-input-head h3 {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.note-input-body {
+  overflow-x: hidden;
+}
+
+.note-input-actions {
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.note-input-actions .extract-btn {
+  max-width: 100%;
+}
+
 .note-input-head h3 {
   font-size: 17px;
   font-weight: 600;
@@ -4150,6 +4192,35 @@ img {
   gap: 10px;
 }
 
+/* Task #393：iOS WKWebView（微信内置浏览器）下 date/datetime-local 的
+   ::-webkit-calendar-picker-indicator 是带固有尺寸（≈60px）的白色圆角 affordance；
+   窄屏输入框比控件固有宽窄时，indicator 被绘制到 border-box 之外，在卡片右缘形成
+   溢出的白色圆角块（第一步日期、第二步时间两处同因）。桌面引擎盒级不溢出但真机溢出，
+   故此处按绘制层收口：indicator margin/padding 归零；窄屏直接隐藏（触屏点输入框本身
+   即弹原生选择器，indicator 非唯一入口）；输入框 overflow:hidden 把内部绘制裁回
+   border-box 双保险；日期 grid 项允许收缩到 min-content 以下。桌面宽屏不受影响。 */
+.init-dates > .init-field {
+  min-width: 0;
+}
+
+.init-field input[type="date"],
+.init-field input[type="datetime-local"] {
+  overflow: hidden;
+}
+
+.init-field input[type="date"]::-webkit-calendar-picker-indicator,
+.init-field input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 430px) {
+  .init-field input[type="date"]::-webkit-calendar-picker-indicator,
+  .init-field input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    display: none;
+  }
+}
+
 .init-error {
   font-size: 11.5px;
   color: var(--warn);
@@ -4266,6 +4337,7 @@ img {
    面板比草案面板略高：已有约束列表 + 新增表单同时存在时内容更长。 */
 .constraint-sheet {
   max-height: 74vh;
+    max-height: 74%;
 }
 
 /* 空态：还没录入约束时的占位说明（浮层与内嵌共用） */
@@ -6781,6 +6853,106 @@ img {
 .head-menu-item:hover {
   background: var(--card2);
   color: var(--ink);
+}
+
+/* ---------- Task #401 分享小面板（锚在 ⋯ 按钮下方，比菜单宽、层级高于菜单） ---------- */
+.share-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 268px;
+  max-width: calc(100vw - 24px);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 14px 30px -16px rgba(60, 48, 36, 0.55);
+  padding: 10px 12px 12px;
+  z-index: 21;
+  animation: rise 0.18s ease both;
+  text-align: left;
+}
+
+.share-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.share-panel-title {
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.share-panel-close {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--card2);
+  color: var(--ink2);
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* 链接本身可点选/长按复制：即便两套复制通道都被拦，用户仍能手动取到地址 */
+.share-url {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 7px 9px;
+  border: 1px dashed var(--line2);
+  border-radius: 9px;
+  background: var(--card2);
+  color: var(--ink2);
+  font-size: 11px;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+.share-panel-hint {
+  margin: 7px 0 0;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--ink3);
+}
+
+.share-panel-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.share-action {
+  flex: 1 1 0;
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 1px solid var(--line2);
+  border-radius: 9px;
+  background: var(--card);
+  color: var(--ink2);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.share-action.is-primary {
+  flex: 1.4 1 0;
+  border-color: var(--clay-deep);
+  background: var(--clay-deep);
+  color: #fff;
+}
+
+.share-action:hover {
+  border-color: var(--clay);
+  color: var(--clay-deep);
+}
+
+.share-action.is-primary:hover {
+  background: var(--clay);
+  border-color: var(--clay);
+  color: #fff;
 }
 
 /* 单行灰字状态：已排 X/Y 天 · 航班已确定 · 攻略素材 N 篇 */

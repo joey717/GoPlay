@@ -11,8 +11,14 @@
  * - shareUrlFor：只读分享链接（同源 /share/:tripId），复制链接与系统分享共用同一 URL；
  * - copyText：只复制文本、不唤起系统面板。
  *
- * Task #264：⋯ 菜单不再单列「复制链接」（与「分享行程」重复），copyText 只作为
- * 「分享行程」在不支持 Web Share 时的降级分支使用。
+ * Task #264：⋯ 菜单不再单列「复制链接」（与「分享行程」重复），copyText 作为
+ * 「分享行程」的桌面主通道 / 系统分享的降级分支使用。
+ *
+ * Task #401：桌面浏览器（含 macOS Safari / Chrome）同样实现了 navigator.share，
+ * 直接调它只会弹出「隔空投送 / 邮件 / 信息」系统面板，用户拿不到可粘贴的链接。
+ * 因此新增平台判定：桌面一律默认「复制只读链接」，只有触屏设备才把系统分享
+ * 当主通道，且必须同时能复制链接。复制保留 execCommand 回退（非安全上下文 /
+ * 权限被拒时仍能写剪贴板）。
  */
 
 export interface SharePayload {
@@ -48,16 +54,87 @@ export function memoExcerpt(memo: string, max: number = SHARE_DESC_MAX): string 
 }
 
 /**
- * 复制纯文本到剪贴板（Task #261 / Task #264）：不唤起系统分享面板。
- * 环境不支持（http 页面 / 无 clipboard API）或被用户/浏览器拒绝时 reject，
- * 由调用方提示「复制失败，请手动复制」，不静默吞错。
+ * 复制纯文本到剪贴板（Task #261 / #264 / #401）：不唤起系统分享面板。
+ *
+ * 通道顺序：
+ * 1) navigator.clipboard.writeText —— 安全上下文（https / localhost）正常路径；
+ * 2) 隐藏 textarea + document.execCommand("copy") —— 非安全上下文、iframe
+ *    权限策略或用户拒绝剪贴板权限时仍可用（不依赖异步 API）；
+ * 3) 都不可用 → reject，由调用方提示「复制失败，请手动复制」，不静默吞错。
  */
 export async function copyText(text: string): Promise<void> {
   const clipboard = typeof navigator !== "undefined" ? navigator.clipboard : undefined;
-  if (clipboard === undefined || typeof clipboard.writeText !== "function") {
-    throw new Error("clipboard-unavailable");
+  if (clipboard !== undefined && typeof clipboard.writeText === "function") {
+    try {
+      await clipboard.writeText(text);
+      return;
+    } catch {
+      // 权限被拒 / 非安全上下文：继续走 execCommand 回退，不直接失败
+    }
   }
-  await clipboard.writeText(text);
+  if (legacyCopy(text)) return;
+  throw new Error("copy-unavailable");
+}
+
+/**
+ * 隐藏 textarea + execCommand("copy") 回退（Task #401）。
+ * 只在同步调用栈内工作（浏览器要求复制动作紧贴用户手势），因此 copyText
+ * 先用剪贴板 API 但失败后立即同步重试这条路径。
+ * 返回是否复制成功；DOM/execCommand 不可用时返回 false，由调用方给可读提示。
+ */
+function legacyCopy(text: string): boolean {
+  if (typeof document === "undefined" || typeof document.execCommand !== "function") {
+    return false;
+  }
+  const area = document.createElement("textarea");
+  area.value = text;
+  area.setAttribute("readonly", "");
+  // 固定定位到视口外，避免 iOS 键盘弹起与页面滚动
+  area.style.position = "fixed";
+  area.style.top = "-1000px";
+  area.style.left = "0";
+  area.style.opacity = "0";
+  document.body.appendChild(area);
+  let copied = false;
+  try {
+    area.select();
+    area.setSelectionRange(0, area.value.length);
+    copied = document.execCommand("copy");
+  } catch {
+    copied = false;
+  } finally {
+    document.body.removeChild(area);
+  }
+  return copied;
+}
+
+/** 是否有 Web Share API（移动端 Safari / Chrome；桌面 Chrome / Safari 也可能有） */
+export function canNativeShare(): boolean {
+  return typeof navigator !== "undefined" && typeof navigator.share === "function";
+}
+
+/**
+ * 是否为触屏 / 移动设备：coarse pointer 或 maxTouchPoints > 0。
+ * 桌面（含 macOS Safari 的「支持 Web Share」）判为 false —— 系统分享面板在桌面
+ * 只能选隔空投送 / 邮件等应用，拿不到链接文本（Task #401 的根因）。
+ */
+export function isTouchLike(): boolean {
+  if (typeof window === "undefined" || typeof navigator === "undefined") return false;
+  if (typeof navigator.maxTouchPoints === "number" && navigator.maxTouchPoints > 0) return true;
+  if (typeof window.matchMedia !== "function") return false;
+  try {
+    return window.matchMedia("(pointer: coarse)").matches;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 分享默认通道（Task #401）：只有触屏设备且有 Web Share 才默认弹系统面板，
+ * 其余情况（桌面 / 无 Web Share）一律默认复制只读链接。
+ */
+export function prefersNativeShare(): boolean {
+  return isTouchLike() && canNativeShare();
 }
 
 export async function shareCard(payload: SharePayload): Promise<void> {
@@ -98,9 +175,10 @@ export async function shareLink(payload: SharePayload): Promise<ShareChannel> {
       if (isShareCancelled(error)) throw error;
     }
   }
-  if (typeof navigator !== "undefined" && navigator.clipboard !== undefined) {
-    await navigator.clipboard.writeText(lines.join("\n"));
+  try {
+    await copyText(lines.join("\n"));
     return "clipboard";
+  } catch {
+    throw new Error("share-unavailable");
   }
-  throw new Error("share-unavailable");
 }

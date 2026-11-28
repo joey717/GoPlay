@@ -188,6 +188,34 @@ describe("ConstraintEditor 移动端无横向溢出样式契约（Task #378）",
   });
 });
 
+// ===== Task #393：iOS WKWebView 下 date/datetime-local 的 picker indicator 绘制溢出收口契约 =====
+// 真机（iOS 微信 WKWebView）上 indicator 是带固有尺寸的白色圆角 affordance，输入框比控件
+// 固有宽窄时被绘制到 border-box 之外、卡片右缘出现溢出白块；桌面引擎盒级不溢出复现不了，
+// 故对样式源断言三条收口：indicator margin/padding 归零、窄屏隐藏 indicator、
+// 输入框 overflow:hidden 把内部绘制裁回 border-box、日期 grid 项可收缩。
+describe("ConstraintEditor 移动端无横向溢出样式契约（Task #393）", () => {
+  it("样式契约：窄屏隐藏日期/时间 picker indicator 且输入框裁剪内部绘制", () => {
+    const css = readStylesCss();
+    expect(cssRuleBody(css, ".init-dates > .init-field")).toContain("min-width: 0");
+    expect(
+      cssRuleBody(css, '.init-field input[type="date"],\n.init-field input[type="datetime-local"]'),
+    ).toContain("overflow: hidden");
+    expect(
+      cssRuleBody(
+        css,
+        '.init-field input[type="date"]::-webkit-calendar-picker-indicator,\n' +
+          '.init-field input[type="datetime-local"]::-webkit-calendar-picker-indicator',
+      ),
+    ).toContain("margin: 0");
+    const media = /@media \(max-width: 430px\) \{([\s\S]*?)\n\}/.exec(css);
+    expect(media).not.toBeNull();
+    const block = media?.[1] ?? "";
+    expect(block).toContain('.init-field input[type="date"]::-webkit-calendar-picker-indicator');
+    expect(block).toContain('.init-field input[type="datetime-local"]::-webkit-calendar-picker-indicator');
+    expect(block).toContain("display: none");
+  });
+});
+
 /**
  * 读取 styles.css 源文本供样式契约断言（jsdom 无布局），兼容 vitest 从 web 包或仓库根运行。
  */

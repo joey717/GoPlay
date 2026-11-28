@@ -503,6 +503,14 @@ export default function VisitCard({
    * 并定位对应提及（下方 chips 逻辑保持不变）。
    */
   const sourceLinks = useMemo(() => resolveEntitySourceLinks(trip, undefined, visit), [trip, visit]);
+  /**
+   * Task #412：父卡是否拥有「自己的」亮点证据（景区自身 guideSnippets 或 sourceMentionRefs）。
+   * 父卡证据范围按层级规则会合并已归属内部玩法的提及（lib/evidenceScope），因此
+   * sourceLinks 非空并不等于父卡自己有亮点：没有自身亮点时父卡不再单独挂「查看攻略原文」
+   * 兜底入口（否则会形成「无引文只有外链」的孤立块）；内部玩法各自的原文入口不受影响。
+   */
+  const parentOwnEvidence =
+    (visit.guideSnippets?.length ?? 0) > 0 || (visit.sourceMentionRefs?.length ?? 0) > 0;
 
   // 外部交通（只算到景区入口）；null 视为 0 分钟（同址/紧邻），不渲染交通行
   const leg = visit.externalLeg;
@@ -788,7 +796,8 @@ export default function VisitCard({
                 )}
               </div>
             ) : null}
-            {!selectMode && snippetClusters.length === 0 && sourceLinks.length > 0 ? (
+            {/* Task #412：无自身亮点证据的父卡不渲染兜底原文入口（源链接可能全部来自内部玩法） */}
+            {!selectMode && snippetClusters.length === 0 && sourceLinks.length > 0 && parentOwnEvidence ? (
               <SourceLinkEntry
                 links={sourceLinks}
                 className="evidence-link"

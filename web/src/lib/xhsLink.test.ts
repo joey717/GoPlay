@@ -73,6 +73,35 @@ describe("findXhsLink：带 scheme 形态回归（既有口径不变）", () => 
   });
 });
 
+describe("findXhsLink：xhslink.cn 短链域名（Task #394 根因回归）", () => {
+  it("真机口令原文（带 scheme .cn 短链）：命中链接，不降级为文字来源", () => {
+    const paste =
+      "三亚西岛太美啦🌊超全seawalk攻略看这篇！ 三亚的海是... https://xhslink.cn/o/7GeFbr7bhlw 去【小红书】看看这篇宝藏笔记吧！";
+    const found = findXhsLink(paste);
+    expect(found).not.toBeNull();
+    expect(found!.raw).toBe("https://xhslink.cn/o/7GeFbr7bhlw");
+    expect(found!.url).toBe("https://xhslink.cn/o/7GeFbr7bhlw");
+  });
+
+  it("无 scheme .cn 短链同样命中并补 scheme", () => {
+    const found = findXhsLink("xhslink.cn/o/6Wh8DNmg8PR");
+    expect(found).not.toBeNull();
+    expect(found!.url).toBe("https://xhslink.cn/o/6Wh8DNmg8PR");
+  });
+
+  it(".cn 伪造后缀 / 前缀域名不命中", () => {
+    expect(findXhsLink("xhslink.cn.evil.io/o/abc")).toBeNull();
+    expect(findXhsLink("notxhslink.cn/o/abc")).toBeNull();
+  });
+
+  it("normalizeXhsLinkInput：.cn 短链整串带 scheme 原样、无 scheme 补 scheme", () => {
+    expect(normalizeXhsLinkInput("  https://xhslink.cn/o/7OG7eJ6uE3Q  ")).toBe(
+      "https://xhslink.cn/o/7OG7eJ6uE3Q",
+    );
+    expect(normalizeXhsLinkInput("xhslink.cn/o/7OG7eJ6uE3Q")).toBe("https://xhslink.cn/o/7OG7eJ6uE3Q");
+  });
+});
+
 describe("findXhsLink：防误判（普通文字 / 纯数字 / 伪造域名不命中）", () => {
   it.each([
     ["普通中文攻略文字", "三亚五天四晚攻略：第一天亚龙湾沙滩，第二天蜈支洲岛潜水"],

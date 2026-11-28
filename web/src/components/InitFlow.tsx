@@ -139,7 +139,7 @@ export default function InitFlow({ notice = null, onComplete }: InitFlowProps) {
         <div className="init-mark">G</div>
         <div>
           <b>GoPlay · 去玩</b>
-          <span>先把日期立住，约束锁住，剩下的慢慢排</span>
+          <span>攻略在手，行程随心定</span>
         </div>
       </div>
 
