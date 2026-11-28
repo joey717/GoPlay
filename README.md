@@ -21,7 +21,8 @@ npm install
 # 2. 配置环境变量：复制模板并填入四个百炼变量（变量名见下文，密钥不入库）
 cp .env.example .env
 
-# 3. 一键启动（concurrently 同时拉起 server 与 web）
+# 3. 一键启动（concurrently 同时拉起 server 与 web；首次运行会先自动构建 shared，
+#    由根目录 package.json 的 predev 钩子完成，无需手动 npm run build）
 npm run dev
 ```
 
@@ -35,12 +36,14 @@ npm run dev
 
 Vite 将浏览器侧的 `/api` 请求代理到 `http://localhost:8787`（见 [web/vite.config.ts](web/vite.config.ts)），前端不直接读环境变量。
 
+> 端口提示：Web 默认占用 5173、API 默认占用 8787。若 5173 已被其它进程占用，Vite 会直接退出（`strictPort: true`，避免静默漂移到 5174），请先释放该端口，或用 `npm run dev -w web -- --port 5274` 换端口（若改 Server 端口，需同步改 `web/vite.config.ts` 的代理目标）。
+
 ## 常用命令
 
 均以 npm workspaces 编排，定义在根 [package.json](package.json)：
 
 ```bash
-npm run dev        # 同时启动 server（tsx watch）与 web（vite）
+npm run dev        # 同时启动 server（tsx watch）与 web（vite）；首次运行先自动构建 shared
 npm run typecheck  # 按 shared → server → web 串行执行 tsc --noEmit
 npm run build      # 按 shared → server → web 串行构建（shared 产物供另两个包消费）
 ```
